@@ -1,0 +1,235 @@
+'use client';
+
+import { useMemo, useRef, lazy, Suspense } from 'react';
+import type { Shot, YardageCardClub, YardageCardConfig, EnvironmentConditions } from '@/lib/types';
+import { sortClubs } from '@/lib/types';
+import { percentile, mean, filterShots } from '@/lib/stats';
+import { adjustCarry, STANDARD_CONDITIONS } from '@/lib/environment';
+import { svgToPng, downloadBlob } from '@/lib/export';
+
+const YardageCardPDFButtonInner = lazy(() => import('./YardageCardPDF'));
+
+function YardageCardPDFButtonLazy(props: { shots: Shot[]; config: YardageCardConfig; sessionEnv?: EnvironmentConditions | null; destEnv?: EnvironmentConditions | null }) {
+  return (
+    <Suspense fallback={<button className="px-3 py-1 text-xs bg-gray-800 rounded text-gray-500" disabled>Export PDF</button>}>
+      <YardageCardPDFButtonInner {...props} />
+    </Suspense>
+  );
+}
+
+interface Props {
+  shots: Shot[];
+  config: YardageCardConfig;
+  sessionEnv?: EnvironmentConditions | null;
+  destEnv?: EnvironmentConditions | null;
+}
+
+function computeCardClubs(
+  shots: Shot[],
+  config: YardageCardConfig,
+  sessionEnv?: EnvironmentConditions | null,
+  destEnv?: EnvironmentConditions | null
+): YardageCardClub[] {
+  // Apply full shot filter
+  const filtered = filterShots(shots, {
+    fullShotsOnly: config.fullShotsOnly,
+    includePartials: !config.fullShotsOnly,
+    onlyWithTargets: false,
+    targetWindow: null,
+  });
+
+  // Group by club
+  const byClub = new Map<string, Shot[]>();
+  for (const s of filtered) {
+    if (config.includedClubs.length > 0 && !config.includedClubs.includes(s.club_name)) continue;
+    const arr = byClub.get(s.club_name) ?? [];
+    arr.push(s);
+    byClub.set(s.club_name, arr);
+  }
+
+  const [pLow, pHigh] = config.percentileBand === 'P10-P90' ? [10, 90] : [20, 80];
+
+  const clubs: YardageCardClub[] = [];
+  const sortedNames = sortClubs(Array.from(byClub.keys()));
+
+  for (const name of sortedNames) {
+    const clubShots = byClub.get(name)!;
+    const n = clubShots.length;
+
+    if (n < config.minShotThreshold && !config.includeLowConfidence) continue;
+
+    // Get distances, optionally adjusted for environment
+    let carryDistances = clubShots.map((s) => s.carry_distance_yd);
+    let totalDistances = clubShots.map((s) => s.total_distance_yd);
+    const laterals = clubShots.map((s) => s.carry_lateral_yd);
+
+    if (config.distanceMode === 'normalized' && sessionEnv) {
+      carryDistances = carryDistances.map((d) => adjustCarry(d, sessionEnv, STANDARD_CONDITIONS));
+      totalDistances = totalDistances.map((d) => adjustCarry(d, sessionEnv, STANDARD_CONDITIONS));
+    } else if (config.distanceMode === 'simulated' && sessionEnv && destEnv) {
+      carryDistances = carryDistances.map((d) => {
+        const normalized = adjustCarry(d, sessionEnv, STANDARD_CONDITIONS);
+        return adjustCarry(normalized, STANDARD_CONDITIONS, destEnv);
+      });
+      totalDistances = totalDistances.map((d) => {
+        const normalized = adjustCarry(d, sessionEnv, STANDARD_CONDITIONS);
+        return adjustCarry(normalized, STANDARD_CONDITIONS, destEnv);
+      });
+    }
+
+    const sortedCarry = [...carryDistances].sort((a, b) => a - b);
+    const sortedTotal = [...totalDistances].sort((a, b) => a - b);
+
+    const tendency = mean(laterals);
+    const confidence: 'Low' | 'Med' | 'High' = n >= 12 ? 'High' : n >= 8 ? 'Med' : 'Low';
+
+    clubs.push({
+      clubName: name,
+      clubType: clubShots[0].club_type,
+      carryRange: [
+        Math.round(percentile(sortedCarry, pLow)),
+        Math.round(percentile(sortedCarry, pHigh)),
+      ],
+      totalRange: [
+        Math.round(percentile(sortedTotal, pLow)),
+        Math.round(percentile(sortedTotal, pHigh)),
+      ],
+      tendency: Math.round(tendency * 10) / 10,
+      tendencyLabel: tendency > 0.5 ? `+${tendency.toFixed(1)}y R` : tendency < -0.5 ? `${tendency.toFixed(1)}y L` : 'Straight',
+      confidence,
+      n,
+    });
+  }
+
+  // Compute gaps
+  for (let i = 0; i < clubs.length - 1; i++) {
+    const current = (clubs[i].carryRange[0] + clubs[i].carryRange[1]) / 2;
+    const next = (clubs[i + 1].carryRange[0] + clubs[i + 1].carryRange[1]) / 2;
+    clubs[i].gapToNext = Math.round(current - next);
+  }
+
+  return clubs;
+}
+
+export default function YardageCardPreview({ shots, config, sessionEnv, destEnv }: Props) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const clubs = useMemo(
+    () => computeCardClubs(shots, config, sessionEnv, destEnv),
+    [shots, config, sessionEnv, destEnv]
+  );
+
+  const handleExportPng = async () => {
+    if (!cardRef.current) return;
+    try {
+      const { toPng } = await import('html-to-image');
+      const dataUrl = await toPng(cardRef.current, { backgroundColor: '#111827', pixelRatio: 3 });
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+      downloadBlob(blob, 'yardage-card.png');
+    } catch (err) {
+      console.error('PNG export failed', err);
+    }
+  };
+
+  const bandLabel = config.percentileBand === 'P10-P90' ? 'P10–P90' : 'P20–P80';
+  const modeLabel = config.distanceMode === 'normalized'
+    ? 'Normalized (Std Conditions)'
+    : config.distanceMode === 'simulated'
+    ? 'Simulated (Destination)'
+    : 'Observed';
+
+  return (
+    <div>
+      <div
+        ref={cardRef}
+        className="bg-gray-900 border border-gray-700 rounded-lg p-4 max-w-lg mx-auto"
+      >
+        <div className="text-center mb-3">
+          <h2 className="text-green-400 font-bold text-lg">Yardage Card</h2>
+          <p className="text-[10px] text-gray-500">
+            {bandLabel} range | {config.fullShotsOnly ? 'Full shots' : 'All shots'} | {modeLabel}
+          </p>
+          {config.distanceMode === 'simulated' && destEnv && (
+            <p className="text-[10px] text-yellow-500 mt-0.5">
+              Simulated: {destEnv.elevationFt}ft / {destEnv.temperatureF}°F / {destEnv.relativeHumidityPct}% RH
+            </p>
+          )}
+        </div>
+
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="border-b border-gray-700 text-gray-500 uppercase">
+              <th className="p-1 text-left">Club</th>
+              <th className="p-1 text-center">Carry</th>
+              <th className="p-1 text-center">Total</th>
+              {config.showGaps && <th className="p-1 text-center">Gap</th>}
+              {config.showTendency && <th className="p-1 text-center">Tend</th>}
+              {config.showConfidence && <th className="p-1 text-center">Conf</th>}
+              <th className="p-1 text-center">n</th>
+            </tr>
+          </thead>
+          <tbody>
+            {clubs.map((club) => (
+              <tr key={club.clubName} className="border-b border-gray-800/50">
+                <td className="p-1 text-gray-200 font-medium">{club.clubName}</td>
+                <td className="p-1 text-center text-gray-300">
+                  {club.carryRange[0]}–{club.carryRange[1]}
+                </td>
+                <td className="p-1 text-center text-gray-400">
+                  {club.totalRange[0]}–{club.totalRange[1]}
+                </td>
+                {config.showGaps && (
+                  <td className="p-1 text-center text-gray-500">
+                    {club.gapToNext != null ? club.gapToNext : '—'}
+                  </td>
+                )}
+                {config.showTendency && (
+                  <td className="p-1 text-center">
+                    <span className={club.tendency > 0.5 ? 'text-yellow-400' : club.tendency < -0.5 ? 'text-blue-400' : 'text-gray-500'}>
+                      {club.tendencyLabel}
+                    </span>
+                  </td>
+                )}
+                {config.showConfidence && (
+                  <td className="p-1 text-center">
+                    <span className={
+                      club.confidence === 'High' ? 'text-green-400' :
+                      club.confidence === 'Med' ? 'text-yellow-400' : 'text-red-400'
+                    }>
+                      {club.confidence}
+                    </span>
+                  </td>
+                )}
+                <td className="p-1 text-center text-gray-500">{club.n}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {clubs.length === 0 && (
+          <div className="text-center text-gray-600 py-4">
+            No clubs meet the minimum shot threshold ({config.minShotThreshold})
+          </div>
+        )}
+
+        <p className="text-[9px] text-gray-600 mt-2 text-center">
+          {config.distanceMode !== 'observed' && 'Distances are estimates. '}
+          Generated by Dispersion Lab
+        </p>
+      </div>
+
+      <div className="flex gap-2 mt-3 justify-center">
+        <button
+          onClick={handleExportPng}
+          className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
+        >
+          Export PNG
+        </button>
+        <YardageCardPDFButtonLazy shots={shots} config={config} sessionEnv={sessionEnv} destEnv={destEnv} />
+      </div>
+    </div>
+  );
+}
+
+export { computeCardClubs };
