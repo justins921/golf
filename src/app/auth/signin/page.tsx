@@ -18,12 +18,17 @@ export default function SignInPage() {
     setError(null);
     setLoading(true);
 
-    const { error: err } = await signIn(email, password);
-    if (err) {
-      setError(err);
+    try {
+      const { error: err } = await signIn(email, password);
+      if (err) {
+        setError(err);
+        setLoading(false);
+      } else {
+        router.push('/');
+      }
+    } catch (err) {
+      setError(`Sign in failed: ${(err as Error).message}`);
       setLoading(false);
-    } else {
-      router.push('/');
     }
   };
 

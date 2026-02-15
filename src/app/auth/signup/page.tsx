@@ -30,12 +30,17 @@ export default function SignUpPage() {
 
     setLoading(true);
 
-    const { error: err } = await signUp(email, password);
-    if (err) {
-      setError(err);
+    try {
+      const { error: err } = await signUp(email, password);
+      if (err) {
+        setError(err);
+        setLoading(false);
+      } else {
+        router.push('/');
+      }
+    } catch (err) {
+      setError(`Sign up failed: ${(err as Error).message}`);
       setLoading(false);
-    } else {
-      router.push('/');
     }
   };
 
