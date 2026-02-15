@@ -11,7 +11,7 @@ import { useSessions, useAllShots } from '@/lib/hooks';
 import { computeClubStats, filterShots, getClubSpecificSessions } from '@/lib/stats';
 import { normalizeShots, simulateShots, STANDARD_CONDITIONS } from '@/lib/environment';
 import { sortClubs, DEFAULT_FILTER } from '@/lib/types';
-import type { ShotFilter, EnvironmentConditions } from '@/lib/types';
+import type { Shot, ShotFilter, EnvironmentConditions } from '@/lib/types';
 
 const COLORS = [
   '#22c55e', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6',
@@ -39,7 +39,7 @@ function Compare() {
   const [distanceMode, setDistanceMode] = useState<'observed' | 'normalized'>('observed');
   const [chartMode, setChartMode] = useState<'carry' | 'total'>('carry');
   const [filter, setFilter] = useState<ShotFilter>(DEFAULT_FILTER);
-  const [selectedClub, setSelectedClub] = useState<string | null>(null);
+  const [selectedClubs, setSelectedClubs] = useState<Set<string>>(new Set());
 
   const allClubs = useMemo(() => {
     const set = new Set(allShots.map((s) => s.club_name));
@@ -48,10 +48,20 @@ function Compare() {
 
   // Select first club by default
   useEffect(() => {
-    if (allClubs.length > 0 && !selectedClub) {
-      setSelectedClub(allClubs[0]);
+    if (allClubs.length > 0 && selectedClubs.size === 0) {
+      setSelectedClubs(new Set([allClubs[0]]));
     }
-  }, [allClubs, selectedClub]);
+  }, [allClubs, selectedClubs]);
+
+  const toggleClub = (club: string) => {
+    const next = new Set(selectedClubs);
+    if (next.has(club)) {
+      if (next.size > 1) next.delete(club); // keep at least one selected
+    } else {
+      next.add(club);
+    }
+    setSelectedClubs(next);
+  };
 
   const toggleSession = (id: string) => {
     const next = new Set(selectedSessionIds);
@@ -62,13 +72,12 @@ function Compare() {
 
   // Determine shots for the current view
   const { overlayGroups, aggregateStats, rollingInfo } = useMemo(() => {
-    if (!selectedClub) return { overlayGroups: [], aggregateStats: [], rollingInfo: null };
+    if (selectedClubs.size === 0) return { overlayGroups: [] as { label: string; shots: Shot[]; color: string }[], aggregateStats: [] as ReturnType<typeof computeClubStats>, rollingInfo: null as { sessionIds: string[]; totalSessions: number; totalShots: number } | null };
 
     let shotsInScope = allShots;
 
     // Apply environment normalization
     if (distanceMode === 'normalized') {
-      // Normalize each session's shots based on its environment
       const normalizedShots = allShots.map((shot) => {
         const session = sessions.find((s) => s.id === shot.session_id);
         const env = session?.environment as EnvironmentConditions | null;
@@ -80,18 +89,26 @@ function Compare() {
       shotsInScope = normalizedShots;
     }
 
-    const filtered = filterShots(shotsInScope, { ...filter, clubNames: [selectedClub] });
+    const clubsArr = Array.from(selectedClubs);
 
     if (mode === 'selected') {
-      const groups = Array.from(selectedSessionIds).map((id, i) => {
-        const session = sessions.find((s) => s.id === id);
-        const sessionShots = filtered.filter((s) => s.session_id === id);
-        return {
-          label: session?.name ?? id.slice(0, 8),
-          shots: sessionShots,
-          color: COLORS[i % COLORS.length],
-        };
-      });
+      // Each club × session combination becomes a group
+      let colorIdx = 0;
+      const groups: { label: string; shots: Shot[]; color: string }[] = [];
+      for (const club of clubsArr) {
+        const filtered = filterShots(shotsInScope, { ...filter, clubNames: [club] });
+        for (const id of Array.from(selectedSessionIds)) {
+          const session = sessions.find((s) => s.id === id);
+          const sessionShots = filtered.filter((s) => s.session_id === id);
+          if (sessionShots.length > 0) {
+            groups.push({
+              label: clubsArr.length > 1 ? `${club} – ${session?.name ?? id.slice(0, 8)}` : (session?.name ?? id.slice(0, 8)),
+              shots: sessionShots,
+              color: COLORS[colorIdx++ % COLORS.length],
+            });
+          }
+        }
+      }
       const allFiltered = groups.flatMap((g) => g.shots);
       return {
         overlayGroups: groups,
@@ -101,22 +118,43 @@ function Compare() {
     }
 
     if (mode === 'rolling') {
-      const info = getClubSpecificSessions(allShots, selectedClub, sessions, rollingN);
-      const rollingShots = filtered.filter((s) => info.sessionIds.includes(s.session_id));
+      const groups: { label: string; shots: Shot[]; color: string }[] = [];
+      let firstInfo: { sessionIds: string[]; totalSessions: number; totalShots: number } | null = null;
+      clubsArr.forEach((club, i) => {
+        const info = getClubSpecificSessions(allShots, club, sessions, rollingN);
+        if (i === 0) firstInfo = info;
+        const filtered = filterShots(shotsInScope, { ...filter, clubNames: [club] });
+        const rollingShots = filtered.filter((s) => info.sessionIds.includes(s.session_id));
+        groups.push({
+          label: clubsArr.length > 1 ? `${club} (last ${rollingN})` : `Rolling ${rollingN} sessions`,
+          shots: rollingShots,
+          color: COLORS[i % COLORS.length],
+        });
+      });
+      const allFiltered = groups.flatMap((g) => g.shots);
       return {
-        overlayGroups: [{ label: `Rolling ${rollingN} sessions`, shots: rollingShots, color: COLORS[0] }],
-        aggregateStats: computeClubStats(rollingShots),
-        rollingInfo: info,
+        overlayGroups: groups,
+        aggregateStats: computeClubStats(allFiltered),
+        rollingInfo: firstInfo,
       };
     }
 
-    // all-time
+    // all-time: one group per club
+    const groups = clubsArr.map((club, i) => {
+      const filtered = filterShots(shotsInScope, { ...filter, clubNames: [club] });
+      return {
+        label: clubsArr.length > 1 ? club : 'All-time',
+        shots: filtered,
+        color: COLORS[i % COLORS.length],
+      };
+    });
+    const allFiltered = groups.flatMap((g) => g.shots);
     return {
-      overlayGroups: [{ label: 'All-time', shots: filtered, color: COLORS[0] }],
-      aggregateStats: computeClubStats(filtered),
+      overlayGroups: groups,
+      aggregateStats: computeClubStats(allFiltered),
       rollingInfo: null,
     };
-  }, [allShots, sessions, selectedClub, mode, selectedSessionIds, rollingN, filter, distanceMode]);
+  }, [allShots, sessions, selectedClubs, mode, selectedSessionIds, rollingN, filter, distanceMode]);
 
   if (loading) {
     return (
@@ -172,20 +210,20 @@ function Compare() {
             </div>
           )}
 
-          {/* Club selector */}
+          {/* Club selector (multi-select) */}
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Club</label>
+            <label className="block text-xs text-gray-500 mb-1">Clubs</label>
             <div className="flex flex-col gap-1 max-h-60 overflow-y-auto">
               {allClubs.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setSelectedClub(c)}
-                  className={`px-3 py-1 text-sm rounded text-left ${
-                    selectedClub === c ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                  }`}
-                >
-                  {c}
-                </button>
+                <label key={c} className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer hover:text-gray-300 px-2 py-1 rounded hover:bg-gray-800">
+                  <input
+                    type="checkbox"
+                    checked={selectedClubs.has(c)}
+                    onChange={() => toggleClub(c)}
+                    className="accent-green-500"
+                  />
+                  <span>{c}</span>
+                </label>
               ))}
             </div>
           </div>
@@ -253,7 +291,7 @@ function Compare() {
             shots={[]}
             mode={chartMode}
             overlayGroups={overlayGroups}
-            title={selectedClub ?? 'Select a club'}
+            title={selectedClubs.size > 0 ? Array.from(selectedClubs).join(', ') : 'Select a club'}
             width={700}
             height={500}
           />
