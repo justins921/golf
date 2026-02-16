@@ -195,6 +195,56 @@ export const CLUB_ORDER: Record<string, number> = {
   '64': 20.5,
 };
 
+// ============================================================
+// Putter comparison types
+// ============================================================
+
+export interface Putter {
+  id: string;
+  user_id: string;
+  name: string;
+  length_in: number | null;
+  lie_angle_deg: number | null;
+  loft_deg: number | null;
+  neck_type: string | null;
+  grip: string | null;
+  swing_weight: string | null;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface PutterTest {
+  id: string;
+  putter_id: string;
+  test_date: string;
+  drill: string;
+  distance_ft: number | null;
+  made: number;
+  attempted: number;
+  notes: string | null;
+  created_at: string;
+}
+
+export const PUTTER_DRILLS = [
+  '3ft Straight',
+  '4ft Straight',
+  '5ft Straight',
+  '6ft Straight',
+  '8ft Straight',
+  '10ft Straight',
+  '15ft Lag',
+  '20ft Lag',
+  '30ft Lag',
+  '3ft Breaking',
+  '6ft Breaking',
+  '10ft Breaking',
+  'Gate Drill',
+  'Clock Drill',
+  'Speed Control',
+  'Devil Ball',
+  'Other',
+] as const;
+
 export function sortClubs(clubs: string[]): string[] {
   return [...clubs].sort((a, b) => {
     const orderA = CLUB_ORDER[a] ?? 50;

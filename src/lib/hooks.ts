@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from './supabase';
-import type { Session, Shot, ShotFilter } from './types';
+import type { Session, Shot, ShotFilter, Putter, PutterTest } from './types';
 import { filterShots } from './stats';
 
 export function useSessions() {
@@ -163,4 +163,85 @@ export function useShotCounts(sessions: Session[]) {
   }, [sessions]);
 
   return { counts, loading };
+}
+
+// ============================================================
+// Putter hooks
+// ============================================================
+
+export function usePutters() {
+  const [putters, setPutters] = useState<Putter[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchPutters = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('putters')
+      .select('*')
+      .order('created_at', { ascending: true });
+    if (!error && data) setPutters(data as Putter[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchPutters(); }, [fetchPutters]);
+
+  const upsertPutter = async (putter: Partial<Putter> & { name: string }) => {
+    if (putter.id) {
+      const { error } = await supabase.from('putters').update(putter).eq('id', putter.id);
+      if (!error) await fetchPutters();
+      return error;
+    }
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return new Error('Not authenticated');
+    const { error } = await supabase.from('putters').insert({ ...putter, user_id: user.id });
+    if (!error) await fetchPutters();
+    return error;
+  };
+
+  const deletePutter = async (id: string) => {
+    const { error } = await supabase.from('putters').delete().eq('id', id);
+    if (!error) await fetchPutters();
+    return error;
+  };
+
+  return { putters, loading, refetch: fetchPutters, upsertPutter, deletePutter };
+}
+
+export function usePutterTests(putterIds: string[]) {
+  const [tests, setTests] = useState<PutterTest[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchTests = useCallback(async () => {
+    if (putterIds.length === 0) {
+      setTests([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('putter_tests')
+      .select('*')
+      .in('putter_id', putterIds)
+      .order('test_date', { ascending: false });
+    if (!error && data) setTests(data as PutterTest[]);
+    setLoading(false);
+  }, [putterIds.join(',')]);
+
+  useEffect(() => { fetchTests(); }, [fetchTests]);
+
+  const addTest = async (test: Omit<PutterTest, 'id' | 'created_at'>) => {
+    const { error } = await supabase.from('putter_tests').insert(test);
+    if (!error) await fetchTests();
+    return error;
+  };
+
+  const deleteTest = async (id: string) => {
+    const { error } = await supabase.from('putter_tests').delete().eq('id', id);
+    if (!error) await fetchTests();
+    return error;
+  };
+
+  return { tests, loading, refetch: fetchTests, addTest, deleteTest };
 }

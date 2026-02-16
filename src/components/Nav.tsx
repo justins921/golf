@@ -7,6 +7,7 @@ import { useAuth } from '@/lib/auth';
 const links = [
   { href: '/', label: 'Dashboard' },
   { href: '/compare', label: 'Compare' },
+  { href: '/putters', label: 'Putter Lab' },
   { href: '/yardage', label: 'Yardage Card' },
   { href: '/calculator', label: 'Calculator' },
 ];
