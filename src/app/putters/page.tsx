@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import Nav from '@/components/Nav';
 import AuthGuard from '@/components/AuthGuard';
 import { usePutters, usePutterTests } from '@/lib/hooks';
@@ -277,6 +277,8 @@ function DrillLogger({
   const [testNotes, setTestNotes] = useState('');
   const [saving, setSaving] = useState(false);
   const [randomDrill, setRandomDrill] = useState<DrillInfo | null>(null);
+  const [drillApplied, setDrillApplied] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   // Exclude 'Other' from random picks
   const randomizableDrills = PUTTER_DRILLS.filter((d) => d !== 'Other');
@@ -287,11 +289,18 @@ function DrillLogger({
       : randomizableDrills;
     const pick = pool[Math.floor(Math.random() * pool.length)];
     const info = DRILL_INFO[pick];
-    if (info) setRandomDrill(info);
+    if (info) {
+      setRandomDrill(info);
+      setDrillApplied(false);
+    }
   }, [randomizableDrills]);
 
   const useRandomDrill = useCallback(() => {
     if (!randomDrill) return;
+    // Auto-select first putter if none selected
+    if (!showTestForm && putters.length > 0) {
+      setShowTestForm(putters[0].id);
+    }
     setDrill(randomDrill.name);
     if (randomDrill.defaultDistanceFt != null) {
       setDistanceFt(randomDrill.defaultDistanceFt.toString());
@@ -299,7 +308,12 @@ function DrillLogger({
       setDistanceFt('');
     }
     setAttempted(randomDrill.defaultAttempts.toString());
-  }, [randomDrill]);
+    setDrillApplied(true);
+    // Scroll to form after React renders it
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }, [randomDrill, showTestForm, putters, setShowTestForm]);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -400,12 +414,17 @@ function DrillLogger({
               </div>
             </div>
 
-            {showTestForm && (
+            {drillApplied ? (
+              <div className="flex items-center gap-2 text-sm text-green-400">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                Drill loaded into form below
+              </div>
+            ) : (
               <button
                 onClick={useRandomDrill}
                 className="px-3 py-1.5 text-sm bg-green-600 hover:bg-green-500 text-white rounded-md"
               >
-                Use this drill
+                Use this drill {!showTestForm && putters.length > 0 ? `with ${putters[0].name}` : ''}
               </button>
             )}
           </div>
@@ -416,7 +435,7 @@ function DrillLogger({
 
       {/* Log form */}
       {showTestForm && (
-        <form onSubmit={handleAdd} className="bg-gray-900 border border-gray-700 rounded-lg p-4 space-y-3">
+        <form ref={formRef} onSubmit={handleAdd} className="bg-gray-900 border border-gray-700 rounded-lg p-4 space-y-3">
           <h3 className="text-sm font-medium text-white">
             Log drill for {putters.find((p) => p.id === showTestForm)?.name}
           </h3>
