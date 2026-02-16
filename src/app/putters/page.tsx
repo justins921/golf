@@ -58,16 +58,16 @@ function PutterLab() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6">
+      <div className="flex flex-wrap gap-1 mb-6">
         {(['specs', 'test', 'results'] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm rounded-md font-medium ${
+            className={`px-3 sm:px-4 py-2 text-sm rounded-md font-medium ${
               tab === t ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
             }`}
           >
-            {t === 'specs' ? 'Specs Comparison' : t === 'test' ? 'Log Drills' : 'Results'}
+            {t === 'specs' ? 'Specs' : t === 'test' ? 'Log Drills' : 'Results'}
           </button>
         ))}
       </div>
@@ -150,8 +150,8 @@ function PutterForm({
   const inputCls = 'w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500';
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-700 rounded-lg p-6 w-full max-w-md space-y-3">
+    <div className="fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
+      <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-700 rounded-t-lg sm:rounded-lg p-5 sm:p-6 w-full sm:max-w-md space-y-3 max-h-[90vh] overflow-y-auto">
         <h2 className="text-lg font-semibold text-white mb-2">{putter ? 'Edit Putter' : 'Add Putter'}</h2>
         <input className={inputCls} placeholder="Putter name *" value={name} onChange={(e) => setName(e.target.value)} required />
         <div className="grid grid-cols-2 gap-3">
@@ -401,13 +401,13 @@ function DrillLogger({
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-800 text-gray-500 text-left">
-                  <th className="py-2 px-2">Date</th>
+                  <th className="py-2 px-2 hidden sm:table-cell">Date</th>
                   <th className="py-2 px-2">Putter</th>
                   <th className="py-2 px-2">Drill</th>
-                  <th className="py-2 px-2">Dist</th>
+                  <th className="py-2 px-2 hidden md:table-cell">Dist</th>
                   <th className="py-2 px-2">Result</th>
                   <th className="py-2 px-2">%</th>
-                  <th className="py-2 px-2">Notes</th>
+                  <th className="py-2 px-2 hidden md:table-cell">Notes</th>
                   <th className="py-2 px-2" />
                 </tr>
               </thead>
@@ -418,16 +418,16 @@ function DrillLogger({
                   const pct = t.attempted > 0 ? ((t.made / t.attempted) * 100).toFixed(0) : '—';
                   return (
                     <tr key={t.id} className="border-b border-gray-800/50 text-gray-300">
-                      <td className="py-1.5 px-2 text-gray-500">{t.test_date}</td>
+                      <td className="py-1.5 px-2 text-gray-500 hidden sm:table-cell">{t.test_date}</td>
                       <td className="py-1.5 px-2">
                         <span className="inline-block w-2 h-2 rounded-full mr-1.5" style={{ backgroundColor: colorFor(pi) }} />
                         {p?.name ?? '?'}
                       </td>
                       <td className="py-1.5 px-2">{t.drill}</td>
-                      <td className="py-1.5 px-2 text-gray-500">{t.distance_ft ? `${t.distance_ft}ft` : '—'}</td>
+                      <td className="py-1.5 px-2 text-gray-500 hidden md:table-cell">{t.distance_ft ? `${t.distance_ft}ft` : '—'}</td>
                       <td className="py-1.5 px-2">{t.made}/{t.attempted}</td>
                       <td className="py-1.5 px-2 font-mono">{pct}%</td>
-                      <td className="py-1.5 px-2 text-gray-500 text-xs truncate max-w-[150px]">{t.notes ?? ''}</td>
+                      <td className="py-1.5 px-2 text-gray-500 text-xs truncate max-w-[150px] hidden md:table-cell">{t.notes ?? ''}</td>
                       <td className="py-1.5 px-2">
                         <button onClick={() => deleteTest(t.id)} className="text-xs text-red-400 hover:text-red-300">x</button>
                       </td>
@@ -609,7 +609,7 @@ function ResultsDashboard({ putters, tests }: { putters: Putter[]; tests: Putter
               .sort((a, b) => (b.pct ?? 0) - (a.pct ?? 0))
               .map((s) => (
                 <div key={s.putter.id} className="flex items-center gap-3">
-                  <span className="text-sm text-gray-400 w-32 truncate">{s.putter.name}</span>
+                  <span className="text-sm text-gray-400 w-20 sm:w-32 truncate shrink-0">{s.putter.name}</span>
                   <div className="flex-1 bg-gray-800 rounded-full h-5 relative overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"

@@ -72,31 +72,31 @@ function SessionDetail({ sessionId }: { sessionId: string }) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">{session?.name ?? 'Session'}</h1>
-          <div className="flex gap-4 text-sm text-gray-500 mt-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-white">{session?.name ?? 'Session'}</h1>
+          <div className="flex flex-wrap gap-3 text-sm text-gray-500 mt-1">
             {session?.played_at && <span>{new Date(session.played_at).toLocaleDateString()}</span>}
             <span>{shots.length} shots</span>
             <span>{clubs.length} clubs</span>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => downloadFile(shotsToCSV(filteredShots), `${session?.name ?? 'shots'}.csv`)}
-            className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
+            className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
           >
             Export Shots CSV
           </button>
           <button
             onClick={() => downloadFile(statsToCSV(stats), `${session?.name ?? 'stats'}-stats.csv`)}
-            className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
+            className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
           >
             Export Stats CSV
           </button>
           <button
             onClick={() => downloadFile(statsToJSON(stats), `${session?.name ?? 'stats'}-stats.json`, 'application/json')}
-            className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
+            className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
           >
             Export Stats JSON
           </button>

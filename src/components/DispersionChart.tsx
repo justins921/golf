@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useMemo, useState } from 'react';
+import { useRef, useEffect, useMemo, useState, useCallback } from 'react';
 import * as d3 from 'd3';
 import type { Shot, EllipseParams } from '@/lib/types';
 import { computeClubStats, isOutlier } from '@/lib/stats';
@@ -27,13 +27,32 @@ export default function DispersionChart({
   mode = 'carry',
   showOutliers = true,
   overlayGroups,
-  width = 600,
-  height = 500,
+  width: propWidth,
+  height: propHeight,
 }: Props) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
   const [selectedClub, setSelectedClub] = useState<string | null>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  // Measure container width for responsive sizing
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const measure = () => setContainerWidth(el.clientWidth);
+    measure();
+
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Compute actual chart dimensions
+  const width = propWidth ? Math.min(propWidth, containerWidth || propWidth) : (containerWidth || 600);
+  const height = propHeight ? Math.min(propHeight, Math.round(width * 0.83)) : Math.round(width * 0.83);
 
   const clubs = useMemo(() => {
     const set = new Set(shots.map((s) => s.club_name));
@@ -46,7 +65,7 @@ export default function DispersionChart({
   }, [shots, selectedClub]);
 
   useEffect(() => {
-    if (!svgRef.current) return;
+    if (!svgRef.current || width === 0) return;
 
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
@@ -102,10 +121,6 @@ export default function DispersionChart({
     const yScale = d3.scaleLinear()
       .domain([dExtent[0] - dPad, dExtent[1] + dPad])
       .range([h, 0]);
-
-    // Keep base domains for zoom reset
-    const xDomain0 = xScale.domain() as [number, number];
-    const yDomain0 = yScale.domain() as [number, number];
 
     // Axis groups (re-drawn on zoom)
     const xAxisG = g.append('g')
@@ -297,7 +312,7 @@ export default function DispersionChart({
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       {clubs.length > 1 && (
         <div className="flex flex-wrap gap-2 mb-3">
           <button
@@ -322,7 +337,7 @@ export default function DispersionChart({
         </div>
       )}
 
-      <div className="relative inline-block">
+      <div className="relative overflow-x-auto">
         <svg ref={svgRef} />
         <div
           ref={tooltipRef}
@@ -331,7 +346,7 @@ export default function DispersionChart({
         />
       </div>
 
-      <div className="flex gap-2 mt-2">
+      <div className="flex flex-wrap gap-2 mt-2">
         <button
           onClick={() => {
             if (svgRef.current && zoomRef.current) {

@@ -138,7 +138,7 @@ function Dashboard() {
       </div>
 
       {/* Quick shortcuts */}
-      <div className="flex gap-3 mb-6">
+      <div className="flex flex-wrap gap-3 mb-6">
         <button
           onClick={() => router.push('/compare')}
           className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-sm text-gray-300 transition-colors"

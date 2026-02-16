@@ -172,7 +172,7 @@ function Compare() {
           {/* Mode selector */}
           <div>
             <label className="block text-xs text-gray-500 mb-1">Compare Mode</label>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-row lg:flex-col gap-1 flex-wrap">
               {([
                 { value: 'all-time' as CompareMode, label: 'All-time average' },
                 { value: 'rolling' as CompareMode, label: 'Rolling last N' },
@@ -213,7 +213,7 @@ function Compare() {
           {/* Club selector (multi-select) */}
           <div>
             <label className="block text-xs text-gray-500 mb-1">Clubs</label>
-            <div className="flex flex-col gap-1 max-h-60 overflow-y-auto">
+            <div className="flex flex-row flex-wrap lg:flex-col gap-1 max-h-60 overflow-y-auto">
               {allClubs.map((c) => (
                 <label key={c} className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer hover:text-gray-300 px-2 py-1 rounded hover:bg-gray-800">
                   <input
@@ -292,8 +292,6 @@ function Compare() {
             mode={chartMode}
             overlayGroups={overlayGroups}
             title={selectedClubs.size > 0 ? Array.from(selectedClubs).join(', ') : 'Select a club'}
-            width={700}
-            height={500}
           />
 
           <div className="mt-6">

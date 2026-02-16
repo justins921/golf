@@ -129,7 +129,7 @@ function YardageBuilder() {
           {/* Scope */}
           <div>
             <label className="block text-xs text-gray-500 mb-1">Dataset Scope</label>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-row lg:flex-col gap-1 flex-wrap">
               {[
                 { value: 'all-time', label: 'All-time' },
                 { value: 'rolling', label: 'Rolling last N' },
@@ -271,7 +271,7 @@ function YardageBuilder() {
           {/* Distance mode / Destination card */}
           <div>
             <label className="block text-xs text-gray-500 mb-1">Distance Mode</label>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-row lg:flex-col gap-1 flex-wrap">
               {[
                 { value: 'observed', label: 'Observed (home)' },
                 { value: 'normalized', label: 'Normalized (std conditions)' },

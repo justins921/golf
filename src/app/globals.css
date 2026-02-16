@@ -4,6 +4,26 @@ body {
   background: #030712;
   color: #f3f4f6;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent iOS zoom on input focus */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Touch-friendly tap targets */
+@media (pointer: coarse) {
+  button, a, label, select {
+    min-height: 44px;
+  }
+
+  table button, table a {
+    min-height: 36px;
+  }
 }
 
 /* Scrollbar styling */

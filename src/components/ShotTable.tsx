@@ -198,11 +198,11 @@ export default function ShotTable({ shots, onUpdate }: Props) {
               <th className="p-2 text-left">Club</th>
               <th className="p-2 text-right">Carry</th>
               <th className="p-2 text-right">Lateral</th>
-              <th className="p-2 text-right">Total</th>
-              <th className="p-2 text-center">Full</th>
-              <th className="p-2 text-right">Target</th>
-              <th className="p-2 text-left">Tags</th>
-              <th className="p-2 text-left">Notes</th>
+              <th className="p-2 text-right hidden sm:table-cell">Total</th>
+              <th className="p-2 text-center hidden md:table-cell">Full</th>
+              <th className="p-2 text-right hidden md:table-cell">Target</th>
+              <th className="p-2 text-left hidden lg:table-cell">Tags</th>
+              <th className="p-2 text-left hidden lg:table-cell">Notes</th>
               <th className="p-2 text-center">Actions</th>
             </tr>
           </thead>
@@ -230,10 +230,10 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                     {shot.carry_lateral_yd > 0 ? ' R' : shot.carry_lateral_yd < 0 ? ' L' : ''}
                   </span>
                 </td>
-                <td className="p-2 text-right text-gray-300">{shot.total_distance_yd.toFixed(1)}</td>
+                <td className="p-2 text-right text-gray-300 hidden sm:table-cell">{shot.total_distance_yd.toFixed(1)}</td>
                 {editingId === shot.id ? (
                   <>
-                    <td className="p-2 text-center">
+                    <td className="p-2 text-center hidden md:table-cell">
                       <input
                         type="checkbox"
                         checked={editValues.is_full_shot ?? true}
@@ -241,7 +241,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                         className="accent-green-500"
                       />
                     </td>
-                    <td className="p-2">
+                    <td className="p-2 hidden md:table-cell">
                       <input
                         type="number"
                         value={editValues.target_distance_yd ?? ''}
@@ -254,7 +254,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                         className="w-16 px-1 py-0.5 text-sm bg-gray-900 border border-gray-600 rounded text-white text-right"
                       />
                     </td>
-                    <td className="p-2">
+                    <td className="p-2 hidden lg:table-cell">
                       <input
                         type="text"
                         value={(editValues.tags ?? []).join(', ')}
@@ -268,7 +268,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                         placeholder="tag1, tag2"
                       />
                     </td>
-                    <td className="p-2">
+                    <td className="p-2 hidden lg:table-cell">
                       <input
                         type="text"
                         value={editValues.notes ?? ''}
@@ -287,20 +287,20 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                   </>
                 ) : (
                   <>
-                    <td className="p-2 text-center">
+                    <td className="p-2 text-center hidden md:table-cell">
                       {shot.is_full_shot ? (
                         <span className="text-green-400 text-xs">Full</span>
                       ) : (
                         <span className="text-yellow-400 text-xs">Partial</span>
                       )}
                     </td>
-                    <td className="p-2 text-right text-gray-400">
+                    <td className="p-2 text-right text-gray-400 hidden md:table-cell">
                       {shot.target_distance_yd ?? '—'}
                     </td>
-                    <td className="p-2 text-gray-500 text-xs">
+                    <td className="p-2 text-gray-500 text-xs hidden lg:table-cell">
                       {shot.tags.length > 0 ? shot.tags.join(', ') : '—'}
                     </td>
-                    <td className="p-2 text-gray-500 text-xs truncate max-w-[100px]">
+                    <td className="p-2 text-gray-500 text-xs truncate max-w-[100px] hidden lg:table-cell">
                       {shot.notes ?? '—'}
                     </td>
                     <td className="p-2 text-center">
