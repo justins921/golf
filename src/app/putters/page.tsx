@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import Nav from '@/components/Nav';
 import AuthGuard from '@/components/AuthGuard';
 import { usePutters, usePutterTests } from '@/lib/hooks';
-import { PUTTER_DRILLS } from '@/lib/types';
-import type { Putter, PutterTest } from '@/lib/types';
+import { PUTTER_DRILLS, DRILL_INFO } from '@/lib/types';
+import type { Putter, PutterTest, DrillInfo } from '@/lib/types';
 
 export default function PuttersPage() {
   return (
@@ -276,6 +276,30 @@ function DrillLogger({
   const [attempted, setAttempted] = useState('10');
   const [testNotes, setTestNotes] = useState('');
   const [saving, setSaving] = useState(false);
+  const [randomDrill, setRandomDrill] = useState<DrillInfo | null>(null);
+
+  // Exclude 'Other' from random picks
+  const randomizableDrills = PUTTER_DRILLS.filter((d) => d !== 'Other');
+
+  const generateRandomDrill = useCallback((excludeName?: string) => {
+    const pool = excludeName
+      ? randomizableDrills.filter((d) => d !== excludeName)
+      : randomizableDrills;
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    const info = DRILL_INFO[pick];
+    if (info) setRandomDrill(info);
+  }, [randomizableDrills]);
+
+  const useRandomDrill = useCallback(() => {
+    if (!randomDrill) return;
+    setDrill(randomDrill.name);
+    if (randomDrill.defaultDistanceFt != null) {
+      setDistanceFt(randomDrill.defaultDistanceFt.toString());
+    } else {
+      setDistanceFt('');
+    }
+    setAttempted(randomDrill.defaultAttempts.toString());
+  }, [randomDrill]);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -323,6 +347,71 @@ function DrillLogger({
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Random drill generator */}
+      <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
+          <h3 className="text-sm font-medium text-white">Random Drill</h3>
+          <div className="flex gap-2">
+            <button
+              onClick={() => generateRandomDrill()}
+              className="px-3 py-1.5 text-sm bg-purple-600 hover:bg-purple-500 text-white rounded-md"
+            >
+              Generate
+            </button>
+            {randomDrill && (
+              <button
+                onClick={() => generateRandomDrill(randomDrill.name)}
+                className="px-3 py-1.5 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-md border border-gray-600"
+              >
+                Reroll
+              </button>
+            )}
+          </div>
+        </div>
+
+        {randomDrill ? (
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <h4 className="text-base font-semibold text-green-400">{randomDrill.name}</h4>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                    randomDrill.spaceNeeded === 'small' ? 'bg-green-900/50 text-green-400' :
+                    randomDrill.spaceNeeded === 'medium' ? 'bg-yellow-900/50 text-yellow-400' :
+                    'bg-red-900/50 text-red-400'
+                  }`}>
+                    {randomDrill.spaceNeeded} space
+                  </span>
+                </div>
+                <p className="text-sm text-gray-300">{randomDrill.description}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div className="bg-gray-800/50 rounded-lg p-3">
+                <span className="text-xs text-gray-500 block mb-1">Setup</span>
+                <p className="text-gray-300">{randomDrill.setup}</p>
+              </div>
+              <div className="bg-gray-800/50 rounded-lg p-3">
+                <span className="text-xs text-gray-500 block mb-1">Focus</span>
+                <p className="text-gray-300">{randomDrill.focus}</p>
+              </div>
+            </div>
+
+            {showTestForm && (
+              <button
+                onClick={useRandomDrill}
+                className="px-3 py-1.5 text-sm bg-green-600 hover:bg-green-500 text-white rounded-md"
+              >
+                Use this drill
+              </button>
+            )}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500">Tap Generate to get a random drill with instructions.</p>
+        )}
       </div>
 
       {/* Log form */}
@@ -375,6 +464,9 @@ function DrillLogger({
               />
             </div>
           </div>
+          {DRILL_INFO[drill] && drill !== 'Other' && (
+            <p className="text-xs text-gray-500 -mt-1">{DRILL_INFO[drill].description}</p>
+          )}
           <input
             value={testNotes}
             onChange={(e) => setTestNotes(e.target.value)}
