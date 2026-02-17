@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 
 const links = [
-  { href: '/', label: 'Dashboard' },
+  { href: '/', label: 'Shot Data' },
   { href: '/practice', label: 'Practice' },
   { href: '/compare', label: 'Compare' },
   { href: '/putters', label: 'Putter Lab' },
