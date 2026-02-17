@@ -106,6 +106,11 @@ export default function SignUpPage() {
             Sign in
           </Link>
         </p>
+        <p className="text-center text-xs text-gray-600 mt-2">
+          <Link href="/landing" className="hover:text-gray-400 transition-colors">
+            What is Golf OS?
+          </Link>
+        </p>
       </div>
     </div>
   );
