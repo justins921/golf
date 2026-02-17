@@ -25,53 +25,57 @@ export default function YardageCardPDFButton({ shots, config, sessionEnv, destEn
     // Dynamic import to avoid SSR issues with react-pdf
     const { Document, Page, Text, View, StyleSheet, pdf } = await import('@react-pdf/renderer');
 
+    // Count optional columns to distribute widths
+    const optCols = [config.showGaps, config.showDispersionArc, config.showTendency, config.showConfidence].filter(Boolean).length;
+    // Base columns: Club(18%) + Carry(17%) + Total(17%) + n(7%) = 59%
+    // Remaining 41% distributed among optional columns
+    const optWidth = optCols > 0 ? `${Math.floor(41 / optCols)}%` : '0%';
+
     const styles = StyleSheet.create({
       page: {
-        padding: 16,
+        padding: 12,
         backgroundColor: '#111827',
       },
       title: {
-        fontSize: 14,
+        fontSize: 11,
         fontWeight: 'bold',
         color: '#4ade80',
         textAlign: 'center',
-        marginBottom: 4,
+        marginBottom: 2,
       },
       subtitle: {
-        fontSize: 7,
+        fontSize: 6,
         color: '#9ca3af',
         textAlign: 'center',
-        marginBottom: 8,
+        marginBottom: 6,
       },
       headerRow: {
         flexDirection: 'row',
         borderBottomWidth: 1,
         borderBottomColor: '#374151',
-        paddingBottom: 3,
-        marginBottom: 3,
+        paddingBottom: 2,
+        marginBottom: 2,
       },
       row: {
         flexDirection: 'row',
         borderBottomWidth: 0.5,
         borderBottomColor: '#1f2937',
-        paddingVertical: 2,
+        paddingVertical: 1.5,
       },
-      cellClub: { width: '20%', fontSize: 8, color: '#e5e7eb', fontWeight: 'bold' },
-      cellCarry: { width: '18%', fontSize: 8, color: '#d1d5db', textAlign: 'center' },
-      cellTotal: { width: '18%', fontSize: 8, color: '#9ca3af', textAlign: 'center' },
-      cellGap: { width: '10%', fontSize: 8, color: '#6b7280', textAlign: 'center' },
-      cellTend: { width: '15%', fontSize: 8, textAlign: 'center' },
-      cellConf: { width: '10%', fontSize: 8, textAlign: 'center' },
-      cellN: { width: '9%', fontSize: 8, color: '#6b7280', textAlign: 'center' },
-      headerText: { fontSize: 7, color: '#6b7280', textTransform: 'uppercase' },
-      footer: { fontSize: 6, color: '#4b5563', textAlign: 'center', marginTop: 6 },
+      cellClub: { width: '18%', fontSize: 7, color: '#e5e7eb', fontWeight: 'bold' },
+      cellCarry: { width: '17%', fontSize: 7, color: '#d1d5db', textAlign: 'center' },
+      cellTotal: { width: '17%', fontSize: 7, color: '#9ca3af', textAlign: 'center' },
+      cellOpt: { width: optWidth, fontSize: 7, textAlign: 'center' },
+      cellN: { width: '7%', fontSize: 7, color: '#6b7280', textAlign: 'center' },
+      headerText: { fontSize: 6, color: '#6b7280', textTransform: 'uppercase' },
+      footer: { fontSize: 5, color: '#4b5563', textAlign: 'center', marginTop: 4 },
     });
 
     const bandLabel = config.percentileBand === 'P10-P90' ? 'P10-P90' : 'P20-P80';
 
     const doc = (
       <Document>
-        <Page size={[252, 360]} style={styles.page}>
+        <Page size={[288, 432]} style={styles.page}>
           <Text style={styles.title}>Yardage Card</Text>
           <Text style={styles.subtitle}>
             {bandLabel} | {config.fullShotsOnly ? 'Full shots' : 'All shots'}
@@ -81,9 +85,10 @@ export default function YardageCardPDFButton({ shots, config, sessionEnv, destEn
             <Text style={[styles.cellClub, styles.headerText]}>Club</Text>
             <Text style={[styles.cellCarry, styles.headerText]}>Carry</Text>
             <Text style={[styles.cellTotal, styles.headerText]}>Total</Text>
-            {config.showGaps && <Text style={[styles.cellGap, styles.headerText]}>Gap</Text>}
-            {config.showTendency && <Text style={[styles.cellTend, styles.headerText]}>Tend</Text>}
-            {config.showConfidence && <Text style={[styles.cellConf, styles.headerText]}>Conf</Text>}
+            {config.showGaps && <Text style={[styles.cellOpt, styles.headerText]}>Gap</Text>}
+            {config.showDispersionArc && <Text style={[styles.cellOpt, styles.headerText]}>Arc</Text>}
+            {config.showTendency && <Text style={[styles.cellOpt, styles.headerText]}>Tend</Text>}
+            {config.showConfidence && <Text style={[styles.cellOpt, styles.headerText]}>Conf</Text>}
             <Text style={[styles.cellN, styles.headerText]}>n</Text>
           </View>
 
@@ -97,17 +102,24 @@ export default function YardageCardPDFButton({ shots, config, sessionEnv, destEn
                 {club.totalRange[0]}-{club.totalRange[1]}
               </Text>
               {config.showGaps && (
-                <Text style={styles.cellGap}>
+                <Text style={[styles.cellOpt, { color: '#6b7280' }]}>
                   {club.gapToNext != null ? String(club.gapToNext) : '-'}
                 </Text>
               )}
+              {config.showDispersionArc && (
+                <Text style={[styles.cellOpt, {
+                  color: club.dispersionBias === 'R' ? '#facc15' : club.dispersionBias === 'L' ? '#60a5fa' : '#9ca3af'
+                }]}>
+                  {`${club.dispersionArc} ${club.dispersionBias === 'C' ? '' : club.dispersionLeft + 'L-' + club.dispersionRight + 'R'}`}
+                </Text>
+              )}
               {config.showTendency && (
-                <Text style={[styles.cellTend, { color: club.tendency > 0.5 ? '#facc15' : club.tendency < -0.5 ? '#60a5fa' : '#6b7280' }]}>
+                <Text style={[styles.cellOpt, { color: club.tendency > 0.5 ? '#facc15' : club.tendency < -0.5 ? '#60a5fa' : '#6b7280' }]}>
                   {club.tendencyLabel}
                 </Text>
               )}
               {config.showConfidence && (
-                <Text style={[styles.cellConf, {
+                <Text style={[styles.cellOpt, {
                   color: club.confidence === 'High' ? '#4ade80' : club.confidence === 'Med' ? '#facc15' : '#f87171'
                 }]}>
                   {club.confidence}

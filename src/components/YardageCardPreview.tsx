@@ -84,6 +84,15 @@ function computeCardClubs(
     const tendency = mean(laterals);
     const confidence: 'Low' | 'Med' | 'High' = n >= 12 ? 'High' : n >= 8 ? 'Med' : 'Low';
 
+    // Dispersion arc: use P10-P90 of lateral values for realistic spread
+    const sortedLateral = [...laterals].sort((a, b) => a - b);
+    const latP10 = percentile(sortedLateral, 10); // left edge (negative = left)
+    const latP90 = percentile(sortedLateral, 90); // right edge (positive = right)
+    const dispLeft = Math.round(Math.abs(Math.min(latP10, 0)));  // yards left of center
+    const dispRight = Math.round(Math.max(latP90, 0));           // yards right of center
+    const dispArc = dispLeft + dispRight;
+    const dispBias: 'L' | 'R' | 'C' = dispRight - dispLeft > 3 ? 'R' : dispLeft - dispRight > 3 ? 'L' : 'C';
+
     clubs.push({
       clubName: name,
       clubType: clubShots[0].club_type,
@@ -99,6 +108,10 @@ function computeCardClubs(
       tendencyLabel: tendency > 0.5 ? `+${tendency.toFixed(1)}y R` : tendency < -0.5 ? `${tendency.toFixed(1)}y L` : 'Straight',
       confidence,
       n,
+      dispersionArc: dispArc,
+      dispersionLeft: dispLeft,
+      dispersionRight: dispRight,
+      dispersionBias: dispBias,
     });
   }
 
@@ -144,56 +157,67 @@ export default function YardageCardPreview({ shots, config, sessionEnv, destEnv,
     <div>
       <div
         ref={cardRef}
-        className="bg-gray-900 border border-gray-700 rounded-lg p-4 max-w-lg mx-auto"
+        className="bg-gray-900 border border-gray-700 rounded-lg p-3 max-w-sm mx-auto"
       >
-        <div className="text-center mb-3">
-          <h2 className="text-green-400 font-bold text-lg">Yardage Card</h2>
-          <p className="text-[10px] text-gray-500">
-            {bandLabel} range | {config.fullShotsOnly ? 'Full shots' : 'All shots'} | {modeLabel}
+        <div className="text-center mb-2">
+          <h2 className="text-green-400 font-bold text-sm">Yardage Card</h2>
+          <p className="text-[8px] text-gray-500 leading-tight">
+            {bandLabel} | {config.fullShotsOnly ? 'Full' : 'All'} | {modeLabel}
           </p>
           {config.distanceMode === 'simulated' && destEnv && (
-            <p className="text-[10px] text-yellow-500 mt-0.5">
-              Simulated: {destEnv.elevationFt}ft / {destEnv.temperatureF}°F / {destEnv.relativeHumidityPct}% RH
+            <p className="text-[8px] text-yellow-500 leading-tight">
+              {destEnv.elevationFt}ft / {destEnv.temperatureF}°F / {destEnv.relativeHumidityPct}%RH
             </p>
           )}
         </div>
 
-        <table className="w-full text-xs">
+        <table className="w-full text-[10px]">
           <thead>
-            <tr className="border-b border-gray-700 text-gray-500 uppercase">
-              <th className="p-1 text-left">Club</th>
-              <th className="p-1 text-center">Carry</th>
-              <th className="p-1 text-center">Total</th>
-              {config.showGaps && <th className="p-1 text-center">Gap</th>}
-              {config.showTendency && <th className="p-1 text-center">Tend</th>}
-              {config.showConfidence && <th className="p-1 text-center">Conf</th>}
-              <th className="p-1 text-center">n</th>
+            <tr className="border-b border-gray-700 text-gray-500 uppercase text-[7px]">
+              <th className="py-0.5 px-0.5 text-left">Club</th>
+              <th className="py-0.5 px-0.5 text-center">Carry</th>
+              <th className="py-0.5 px-0.5 text-center">Total</th>
+              {config.showGaps && <th className="py-0.5 px-0.5 text-center">Gap</th>}
+              {config.showDispersionArc && <th className="py-0.5 px-0.5 text-center">Arc</th>}
+              {config.showTendency && <th className="py-0.5 px-0.5 text-center">Tend</th>}
+              {config.showConfidence && <th className="py-0.5 px-0.5 text-center">Conf</th>}
+              <th className="py-0.5 px-0.5 text-center">n</th>
             </tr>
           </thead>
           <tbody>
             {clubs.map((club) => (
               <tr key={club.clubName} className="border-b border-gray-800/50">
-                <td className="p-1 text-gray-200 font-medium">{club.clubName}</td>
-                <td className="p-1 text-center text-gray-300">
+                <td className="py-0.5 px-0.5 text-gray-200 font-medium whitespace-nowrap">{club.clubName}</td>
+                <td className="py-0.5 px-0.5 text-center text-gray-300">
                   {club.carryRange[0]}–{club.carryRange[1]}
                 </td>
-                <td className="p-1 text-center text-gray-400">
+                <td className="py-0.5 px-0.5 text-center text-gray-400">
                   {club.totalRange[0]}–{club.totalRange[1]}
                 </td>
                 {config.showGaps && (
-                  <td className="p-1 text-center text-gray-500">
+                  <td className="py-0.5 px-0.5 text-center text-gray-500">
                     {club.gapToNext != null ? club.gapToNext : '—'}
                   </td>
                 )}
+                {config.showDispersionArc && (
+                  <td className="py-0.5 px-0.5 text-center whitespace-nowrap">
+                    <span className={club.dispersionBias === 'R' ? 'text-yellow-400' : club.dispersionBias === 'L' ? 'text-blue-400' : 'text-gray-400'}>
+                      {club.dispersionArc}
+                    </span>
+                    <span className="text-[7px] text-gray-500 ml-0.5">
+                      {club.dispersionBias === 'R' ? `${club.dispersionLeft}L·${club.dispersionRight}R` : club.dispersionBias === 'L' ? `${club.dispersionLeft}L·${club.dispersionRight}R` : ''}
+                    </span>
+                  </td>
+                )}
                 {config.showTendency && (
-                  <td className="p-1 text-center">
+                  <td className="py-0.5 px-0.5 text-center">
                     <span className={club.tendency > 0.5 ? 'text-yellow-400' : club.tendency < -0.5 ? 'text-blue-400' : 'text-gray-500'}>
                       {club.tendencyLabel}
                     </span>
                   </td>
                 )}
                 {config.showConfidence && (
-                  <td className="p-1 text-center">
+                  <td className="py-0.5 px-0.5 text-center">
                     <span className={
                       club.confidence === 'High' ? 'text-green-400' :
                       club.confidence === 'Med' ? 'text-yellow-400' : 'text-red-400'
@@ -202,14 +226,14 @@ export default function YardageCardPreview({ shots, config, sessionEnv, destEnv,
                     </span>
                   </td>
                 )}
-                <td className="p-1 text-center text-gray-500">{club.n}</td>
+                <td className="py-0.5 px-0.5 text-center text-gray-500">{club.n}</td>
               </tr>
             ))}
           </tbody>
         </table>
 
         {clubs.length === 0 && (
-          <div className="text-center text-gray-600 py-4">
+          <div className="text-center text-gray-600 py-3 text-xs">
             No clubs meet the minimum shot threshold ({config.minShotThreshold})
           </div>
         )}
@@ -250,13 +274,13 @@ export default function YardageCardPreview({ shots, config, sessionEnv, destEnv,
           </div>
         )}
 
-        <p className="text-[9px] text-gray-600 mt-2 text-center">
+        <p className="text-[7px] text-gray-600 mt-1.5 text-center">
           {config.distanceMode !== 'observed' && 'Distances are estimates. '}
           Generated by The Golf Lab
         </p>
       </div>
 
-      <div className="flex gap-2 mt-3 justify-center">
+      <div className="flex gap-2 mt-2 justify-center">
         <button
           onClick={handleExportPng}
           className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"

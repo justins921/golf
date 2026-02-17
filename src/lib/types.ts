@@ -108,6 +108,10 @@ export interface YardageCardClub {
   confidence: 'Low' | 'Med' | 'High';
   n: number;
   gapToNext?: number;
+  dispersionArc: number;     // total lateral spread in yards (P10-P90)
+  dispersionLeft: number;    // yards left of center (positive number)
+  dispersionRight: number;   // yards right of center (positive number)
+  dispersionBias: 'L' | 'R' | 'C'; // which direction has more spread
 }
 
 export interface YardageCardConfig {
@@ -120,6 +124,7 @@ export interface YardageCardConfig {
   showGaps: boolean;
   showTendency: boolean;
   showConfidence: boolean;
+  showDispersionArc: boolean;
   minShotThreshold: number;
   includeLowConfidence: boolean;
   environment?: EnvironmentConditions | null;

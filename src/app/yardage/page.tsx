@@ -39,6 +39,7 @@ function YardageBuilder() {
   const [showGaps, setShowGaps] = useState(true);
   const [showTendency, setShowTendency] = useState(true);
   const [showConfidence, setShowConfidence] = useState(true);
+  const [showDispersionArc, setShowDispersionArc] = useState(true);
   const [minShots, setMinShots] = useState(8);
   const [includeLowConfidence, setIncludeLowConfidence] = useState(false);
   const [distanceMode, setDistanceMode] = useState<'observed' | 'normalized' | 'simulated'>('observed');
@@ -99,6 +100,7 @@ function YardageBuilder() {
     showGaps,
     showTendency,
     showConfidence,
+    showDispersionArc,
     minShotThreshold: minShots,
     includeLowConfidence,
     distanceMode,
@@ -219,6 +221,7 @@ function YardageBuilder() {
             <label className="block text-xs text-gray-500 mb-1">Display</label>
             {[
               { label: 'Show gaps', value: showGaps, set: setShowGaps },
+              { label: 'Show dispersion arc', value: showDispersionArc, set: setShowDispersionArc },
               { label: 'Show tendency', value: showTendency, set: setShowTendency },
               { label: 'Show confidence', value: showConfidence, set: setShowConfidence },
               { label: 'Include low-confidence', value: includeLowConfidence, set: setIncludeLowConfidence },
