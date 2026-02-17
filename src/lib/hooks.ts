@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from './supabase';
-import type { Session, Shot, ShotFilter, Putter, PutterTest } from './types';
+import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem } from './types';
 import { filterShots } from './stats';
 
 export function useSessions() {
@@ -244,4 +244,98 @@ export function usePutterTests(putterIds: string[]) {
   };
 
   return { tests, loading, refetch: fetchTests, addTest, deleteTest };
+}
+
+// ============================================================
+// Bag club hooks
+// ============================================================
+
+export function useBagClubs() {
+  const [clubs, setClubs] = useState<BagClub[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchClubs = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('bag_clubs')
+      .select('*')
+      .order('created_at', { ascending: true });
+    if (!error && data) setClubs(data as BagClub[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchClubs(); }, [fetchClubs]);
+
+  const upsertClub = async (club: Partial<BagClub> & { club_name: string }) => {
+    if (club.id) {
+      const { error } = await supabase.from('bag_clubs').update(club).eq('id', club.id);
+      if (!error) await fetchClubs();
+      return error;
+    }
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return new Error('Not authenticated');
+    const { error } = await supabase.from('bag_clubs').insert({ ...club, user_id: user.id });
+    if (!error) await fetchClubs();
+    return error;
+  };
+
+  const deleteClub = async (id: string) => {
+    const { error } = await supabase.from('bag_clubs').delete().eq('id', id);
+    if (!error) await fetchClubs();
+    return error;
+  };
+
+  return { clubs, loading, refetch: fetchClubs, upsertClub, deleteClub };
+}
+
+// ============================================================
+// Wedge matrix hooks
+// ============================================================
+
+export function useWedgeMatrix() {
+  const [matrix, setMatrix] = useState<WedgeMatrix | null>(null);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchMatrix = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('wedge_matrix')
+      .select('*')
+      .limit(1)
+      .maybeSingle();
+    if (!error && data) setMatrix(data as WedgeMatrix);
+    else setMatrix(null);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchMatrix(); }, [fetchMatrix]);
+
+  const saveMatrix = async (updates: {
+    swing_system: SwingSystem;
+    swing_labels: string[];
+    wedge_clubs: string[];
+    distances: Record<string, number>;
+    notes?: string | null;
+  }) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return new Error('Not authenticated');
+
+    if (matrix?.id) {
+      const { error } = await supabase
+        .from('wedge_matrix')
+        .update(updates)
+        .eq('id', matrix.id);
+      if (!error) await fetchMatrix();
+      return error;
+    }
+    const { error } = await supabase
+      .from('wedge_matrix')
+      .insert({ ...updates, user_id: user.id });
+    if (!error) await fetchMatrix();
+    return error;
+  };
+
+  return { matrix, loading, refetch: fetchMatrix, saveMatrix };
 }

@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo, useRef, lazy, Suspense } from 'react';
-import type { Shot, YardageCardClub, YardageCardConfig, EnvironmentConditions } from '@/lib/types';
-import { sortClubs } from '@/lib/types';
+import type { Shot, YardageCardClub, YardageCardConfig, EnvironmentConditions, WedgeMatrix } from '@/lib/types';
+import { sortClubs, SWING_SYSTEM_LABELS } from '@/lib/types';
 import { percentile, mean, filterShots } from '@/lib/stats';
 import { adjustCarry, STANDARD_CONDITIONS } from '@/lib/environment';
 import { svgToPng, downloadBlob } from '@/lib/export';
@@ -22,6 +22,7 @@ interface Props {
   config: YardageCardConfig;
   sessionEnv?: EnvironmentConditions | null;
   destEnv?: EnvironmentConditions | null;
+  wedgeMatrix?: WedgeMatrix | null;
 }
 
 function computeCardClubs(
@@ -111,7 +112,7 @@ function computeCardClubs(
   return clubs;
 }
 
-export default function YardageCardPreview({ shots, config, sessionEnv, destEnv }: Props) {
+export default function YardageCardPreview({ shots, config, sessionEnv, destEnv, wedgeMatrix }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   const clubs = useMemo(
@@ -210,6 +211,42 @@ export default function YardageCardPreview({ shots, config, sessionEnv, destEnv 
         {clubs.length === 0 && (
           <div className="text-center text-gray-600 py-4">
             No clubs meet the minimum shot threshold ({config.minShotThreshold})
+          </div>
+        )}
+
+        {/* Wedge matrix section */}
+        {wedgeMatrix && wedgeMatrix.swing_labels.length > 0 && wedgeMatrix.wedge_clubs.length > 0 && Object.keys(wedgeMatrix.distances).length > 0 && (
+          <div className="mt-4 pt-3 border-t border-gray-700">
+            <h3 className="text-xs font-medium text-green-400 text-center mb-2">
+              Wedge Matrix
+              <span className="text-gray-500 font-normal ml-1">({SWING_SYSTEM_LABELS[wedgeMatrix.swing_system]})</span>
+            </h3>
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-gray-700 text-gray-500 uppercase">
+                  <th className="p-1 text-left">Swing</th>
+                  {wedgeMatrix.wedge_clubs.map((club) => (
+                    <th key={club} className="p-1 text-center">{club}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {wedgeMatrix.swing_labels.map((label) => (
+                  <tr key={label} className="border-b border-gray-800/50">
+                    <td className="p-1 text-gray-400 font-medium">{label}</td>
+                    {wedgeMatrix.wedge_clubs.map((club) => {
+                      const key = `${club}|${label}`;
+                      const dist = wedgeMatrix.distances[key];
+                      return (
+                        <td key={club} className="p-1 text-center text-gray-300">
+                          {dist != null ? dist : <span className="text-gray-600">—</span>}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
 

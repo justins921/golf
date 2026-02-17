@@ -191,3 +191,60 @@ create policy "Users can delete own putter tests"
       where p.id = putter_tests.putter_id and p.user_id = auth.uid()
     )
   );
+
+-- ============================================================
+-- Bag clubs table (user's 14-club bag)
+-- ============================================================
+create table public.bag_clubs (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  club_name text not null,        -- matches Shot.club_name (e.g. "PW", "7 Iron")
+  brand text,
+  model text,
+  loft_deg float8,
+  shaft text,
+  flex text,
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+create index idx_bag_clubs_user on public.bag_clubs(user_id);
+
+alter table public.bag_clubs enable row level security;
+
+create policy "Users can view own bag clubs"
+  on public.bag_clubs for select using (auth.uid() = user_id);
+create policy "Users can insert own bag clubs"
+  on public.bag_clubs for insert with check (auth.uid() = user_id);
+create policy "Users can update own bag clubs"
+  on public.bag_clubs for update using (auth.uid() = user_id);
+create policy "Users can delete own bag clubs"
+  on public.bag_clubs for delete using (auth.uid() = user_id);
+
+-- ============================================================
+-- Wedge matrix table (one per user)
+-- ============================================================
+create table public.wedge_matrix (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  swing_system text not null default 'clock',
+  swing_labels text[] not null default '{}',
+  wedge_clubs text[] not null default '{}',
+  distances jsonb not null default '{}',  -- { "PW|9:00": 85, "SW|7:30": 45, ... }
+  notes text,
+  created_at timestamptz not null default now(),
+  unique(user_id)
+);
+
+create index idx_wedge_matrix_user on public.wedge_matrix(user_id);
+
+alter table public.wedge_matrix enable row level security;
+
+create policy "Users can view own wedge matrix"
+  on public.wedge_matrix for select using (auth.uid() = user_id);
+create policy "Users can insert own wedge matrix"
+  on public.wedge_matrix for insert with check (auth.uid() = user_id);
+create policy "Users can update own wedge matrix"
+  on public.wedge_matrix for update using (auth.uid() = user_id);
+create policy "Users can delete own wedge matrix"
+  on public.wedge_matrix for delete using (auth.uid() = user_id);

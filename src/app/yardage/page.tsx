@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import Nav from '@/components/Nav';
 import AuthGuard from '@/components/AuthGuard';
 import YardageCardPreview from '@/components/YardageCardPreview';
-import { useSessions, useAllShots } from '@/lib/hooks';
+import { useSessions, useAllShots, useWedgeMatrix } from '@/lib/hooks';
 import { sortClubs } from '@/lib/types';
 import type { YardageCardConfig, EnvironmentConditions } from '@/lib/types';
 import { STANDARD_CONDITIONS } from '@/lib/environment';
@@ -22,6 +22,7 @@ export default function YardagePage() {
 function YardageBuilder() {
   const { sessions } = useSessions();
   const { shots: allShots, loading } = useAllShots();
+  const { matrix: wedgeMatrix } = useWedgeMatrix();
 
   const allClubs = useMemo(() => {
     const set = new Set(allShots.map((s) => s.club_name));
@@ -351,6 +352,7 @@ function YardageBuilder() {
             config={config}
             sessionEnv={sessionEnv}
             destEnv={distanceMode === 'simulated' ? destEnv : null}
+            wedgeMatrix={wedgeMatrix}
           />
         </div>
       </div>

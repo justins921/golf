@@ -419,3 +419,55 @@ export function sortClubs(clubs: string[]): string[] {
     return a.localeCompare(b);
   });
 }
+
+// ============================================================
+// Bag club types
+// ============================================================
+
+export interface BagClub {
+  id: string;
+  user_id: string;
+  club_name: string;
+  brand: string | null;
+  model: string | null;
+  loft_deg: number | null;
+  shaft: string | null;
+  flex: string | null;
+  notes: string | null;
+  created_at: string;
+}
+
+// ============================================================
+// Wedge matrix types
+// ============================================================
+
+export type SwingSystem = 'clock' | 'percentage' | 'body' | 'thirds' | 'custom';
+
+export const SWING_SYSTEM_LABELS: Record<SwingSystem, string> = {
+  clock: 'Clock System',
+  percentage: 'Percentage',
+  body: 'Body Reference',
+  thirds: 'Thirds',
+  custom: 'Custom',
+};
+
+export const SWING_SYSTEM_PRESETS: Record<SwingSystem, string[]> = {
+  clock: ['7:30', '9:00', '10:30'],
+  percentage: ['50%', '75%', '100%'],
+  body: ['Hips', 'Chest', 'Full'],
+  thirds: ['1/3', '2/3', 'Full'],
+  custom: [],
+};
+
+export const WEDGE_CLUB_PRESETS = ['PW', 'GW', 'SW', 'LW'] as const;
+
+export interface WedgeMatrix {
+  id: string;
+  user_id: string;
+  swing_system: SwingSystem;
+  swing_labels: string[];
+  wedge_clubs: string[];
+  distances: Record<string, number>; // "PW|9:00" -> 85
+  notes: string | null;
+  created_at: string;
+}

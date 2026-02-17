@@ -9,6 +9,7 @@ const links = [
   { href: '/', label: 'Dashboard' },
   { href: '/compare', label: 'Compare' },
   { href: '/putters', label: 'Putter Lab' },
+  { href: '/wedges', label: 'Wedge Lab' },
   { href: '/yardage', label: 'Yardage Card' },
   { href: '/calculator', label: 'Calculator' },
 ];
