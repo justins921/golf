@@ -1,5 +1,5 @@
 // ============================================================
-// Core domain types for Dispersion Lab
+// Core domain types for The Golf Lab
 // ============================================================
 
 export interface Session {

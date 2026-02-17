@@ -1,4 +1,4 @@
-# Dispersion Lab — Deployment Guide
+# The Golf Lab — Deployment Guide
 
 ## Prerequisites
 
@@ -48,7 +48,7 @@ npm run dev
 ## Features
 
 - **Import**: Upload Garmin R50 CSV files
-- **Dispersion Charts**: D3-based scatter plots with 1σ/2σ ellipses
+- **Shot Dispersion**: D3-based scatter plots with 1σ/2σ ellipses
 - **Shot Editing**: Inline + bulk edit (target, full/partial, tags)
 - **Compare**: Multi-session overlay, rolling averages, normalized distances
 - **Yardage Card**: Configurable card with P20–P80 ranges, PDF/PNG export

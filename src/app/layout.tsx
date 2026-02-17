@@ -3,8 +3,8 @@ import './globals.css';
 import { AuthProvider } from '@/lib/auth';
 
 export const metadata: Metadata = {
-  title: 'Dispersion Lab',
-  description: 'Golf shot pattern analysis for Garmin Approach R50',
+  title: 'The Golf Lab',
+  description: 'Your ultimate golf practice companion — by Sobojinski Solutions',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

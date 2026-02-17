@@ -1,4 +1,4 @@
--- Dispersion Lab: Supabase Schema + RLS
+-- The Golf Lab: Supabase Schema + RLS
 -- Run this in the Supabase SQL Editor
 
 -- Enable UUID generation
