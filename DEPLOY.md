@@ -1,4 +1,4 @@
-# The Golf Lab — Deployment Guide
+# Golf OS — Deployment Guide
 
 ## Prerequisites
 

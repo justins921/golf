@@ -223,8 +223,7 @@ function YardageBuilder() {
               { label: 'Show gaps', value: showGaps, set: setShowGaps },
               { label: 'Show dispersion arc', value: showDispersionArc, set: setShowDispersionArc },
               { label: 'Show tendency', value: showTendency, set: setShowTendency },
-              { label: 'Show confidence', value: showConfidence, set: setShowConfidence },
-              { label: 'Include low-confidence', value: includeLowConfidence, set: setIncludeLowConfidence },
+              { label: 'Include low-confidence clubs', value: includeLowConfidence, set: setIncludeLowConfidence },
             ].map((opt) => (
               <label key={opt.label} className="flex items-center gap-2 text-xs text-gray-400">
                 <input

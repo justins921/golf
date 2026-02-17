@@ -1,4 +1,4 @@
--- The Golf Lab: Supabase Schema + RLS
+-- Golf OS: Supabase Schema + RLS
 -- Run this in the Supabase SQL Editor
 
 -- Enable UUID generation

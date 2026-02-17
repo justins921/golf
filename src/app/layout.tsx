@@ -3,7 +3,7 @@ import './globals.css';
 import { AuthProvider } from '@/lib/auth';
 
 export const metadata: Metadata = {
-  title: 'The Golf Lab',
+  title: 'Golf OS',
   description: 'Your ultimate golf practice companion — by Sobojinski Solutions',
 };
 

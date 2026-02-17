@@ -1,5 +1,5 @@
 // ============================================================
-// Core domain types for The Golf Lab
+// Core domain types for Golf OS
 // ============================================================
 
 export interface Session {

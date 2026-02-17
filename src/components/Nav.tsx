@@ -31,7 +31,7 @@ export default function Nav() {
         <div className="flex items-center justify-between h-14">
           <div className="flex items-center gap-1">
             <Link href="/" className="text-green-400 font-bold text-lg mr-6">
-              The Golf Lab
+              Golf OS
             </Link>
             <div className="hidden md:flex items-center gap-1">
               {links.map((l) => (
