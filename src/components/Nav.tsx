@@ -7,6 +7,7 @@ import { useAuth } from '@/lib/auth';
 
 const links = [
   { href: '/', label: 'Dashboard' },
+  { href: '/practice', label: 'Practice' },
   { href: '/compare', label: 'Compare' },
   { href: '/putters', label: 'Putter Lab' },
   { href: '/wedges', label: 'Wedge Lab' },
@@ -18,6 +19,9 @@ export default function Nav() {
   const pathname = usePathname();
   const { user, signOut } = useAuth();
   const [open, setOpen] = useState(false);
+
+  const isActive = (href: string) =>
+    href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href + '/');
 
   if (!user) return null;
 
@@ -35,7 +39,7 @@ export default function Nav() {
                   key={l.href}
                   href={l.href}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    pathname === l.href
+                    isActive(l.href)
                       ? 'bg-gray-800 text-white'
                       : 'text-gray-400 hover:text-white hover:bg-gray-800'
                   }`}
@@ -80,7 +84,7 @@ export default function Nav() {
               href={l.href}
               onClick={() => setOpen(false)}
               className={`block px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
-                pathname === l.href
+                isActive(l.href)
                   ? 'bg-gray-800 text-white'
                   : 'text-gray-400 hover:text-white hover:bg-gray-800'
               }`}
