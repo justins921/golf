@@ -72,10 +72,6 @@ const FAQ = [
     a: 'Currently Golf OS imports CSV files from the Garmin Approach R50. If your launch monitor exports CSV data with carry distance, lateral, and club info, it may work too. We\'re expanding device support.',
   },
   {
-    q: 'Is Golf OS free?',
-    a: 'Yes. Golf OS runs on free-tier infrastructure (Supabase + Vercel). Sign up, import your data, and start using it — no credit card required.',
-  },
-  {
     q: 'How is this different from the Garmin Golf app?',
     a: 'The Garmin app shows individual shots. Golf OS analyzes your patterns — dispersion ellipses, percentile-based yardage ranges, environment-adjusted distances, and structured practice with strokes-gained scoring. It turns raw data into decisions.',
   },
@@ -91,6 +87,14 @@ const FAQ = [
     q: 'Does this work on my phone?',
     a: 'Yes. Golf OS is a responsive web app that works on any device. Yardage cards are sized for phone screens and 4×6 print cards. Voice input during practice sessions is optimized for mobile.',
   },
+  {
+    q: 'Which plan is right for me?',
+    a: 'If you just want the calculator, basic practice drills, and to try out the putter/wedge labs — Free works great. If you use a Garmin R50 and want yardage cards, dispersion analysis, practice scoring, and full exports — go Pro.',
+  },
+  {
+    q: 'Can I cancel anytime?',
+    a: 'Yes. No contracts, no cancellation fees. Your data stays available on the Free tier if you downgrade.',
+  },
 ];
 
 const STATS = [
@@ -102,6 +106,7 @@ const STATS = [
 
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
 
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100">
@@ -110,6 +115,9 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
           <span className="text-green-400 font-bold text-lg">Golf OS</span>
           <div className="flex items-center gap-3">
+            <a href="#pricing" className="hidden sm:inline text-sm text-gray-400 hover:text-white transition-colors">
+              Pricing
+            </a>
             <Link href="/auth/signin" className="text-sm text-gray-400 hover:text-white transition-colors">
               Sign In
             </Link>
@@ -149,7 +157,7 @@ export default function LandingPage() {
           </a>
         </div>
         <p className="mt-4 text-xs text-gray-600">
-          Free forever on Supabase free tier. Your data stays yours.
+          Free tier available forever. Pro from $4.08/mo. Your data stays yours.
         </p>
       </section>
 
@@ -226,7 +234,7 @@ export default function LandingPage() {
           </h2>
           <div className="grid sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
             {[
-              { step: '1', title: 'Create an account', desc: 'Email and password. No credit card. No trial that expires.' },
+              { step: '1', title: 'Create an account', desc: 'Email and password. Free tier starts instantly — no credit card.' },
               { step: '2', title: 'Import your R50 CSV', desc: 'Drag and drop your DrivingRange CSV file. All 25+ data points are captured.' },
               { step: '3', title: 'See your real numbers', desc: 'Dispersion charts, yardage card, and practice recommendations — instantly.' },
             ].map((s) => (
@@ -238,6 +246,139 @@ export default function LandingPage() {
                 <p className="text-sm text-gray-400">{s.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section id="pricing" className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">
+            Simple pricing. Start free.
+          </h2>
+          <p className="mt-3 text-gray-500 max-w-xl mx-auto">
+            Use the free tools forever. Upgrade when you want the full picture.
+          </p>
+          {/* Billing toggle */}
+          <div className="mt-6 inline-flex items-center bg-gray-900 border border-gray-800 rounded-lg p-1">
+            <button
+              onClick={() => setBillingCycle('monthly')}
+              className={`px-4 py-1.5 text-sm rounded-md transition-colors ${
+                billingCycle === 'monthly' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingCycle('annual')}
+              className={`px-4 py-1.5 text-sm rounded-md transition-colors ${
+                billingCycle === 'annual' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              Annual <span className="text-green-400 text-xs ml-1">Save 18%</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+          {/* Free tier */}
+          <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+            <h3 className="text-white font-semibold text-lg">Free</h3>
+            <div className="mt-3 mb-5">
+              <span className="text-3xl font-bold text-white">$0</span>
+              <span className="text-gray-500 text-sm ml-1">forever</span>
+            </div>
+            <p className="text-sm text-gray-400 mb-6">Try the core tools — no credit card, no time limit.</p>
+            <Link
+              href="/auth/signup"
+              className="block w-full text-center px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium rounded-lg transition-colors text-sm"
+            >
+              Get Started Free
+            </Link>
+            <ul className="mt-6 space-y-2.5 text-sm">
+              <li className="flex gap-2.5 text-gray-400">
+                <svg className="w-4 h-4 text-gray-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                Plays-like yardage calculator
+              </li>
+              <li className="flex gap-2.5 text-gray-400">
+                <svg className="w-4 h-4 text-gray-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                Practice drills (no scoring)
+              </li>
+              <li className="flex gap-2.5 text-gray-400">
+                <svg className="w-4 h-4 text-gray-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                Putter Lab (2 putters)
+              </li>
+              <li className="flex gap-2.5 text-gray-400">
+                <svg className="w-4 h-4 text-gray-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                Wedge Lab (basic matrix)
+              </li>
+              <li className="flex gap-2.5 text-gray-400">
+                <svg className="w-4 h-4 text-gray-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                1 session import
+              </li>
+            </ul>
+          </div>
+
+          {/* Pro tier — highlighted */}
+          <div className="bg-gray-900 border-2 border-green-600 rounded-lg p-6 relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+              <span className="bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                Most Popular
+              </span>
+            </div>
+            <h3 className="text-white font-semibold text-lg">Pro</h3>
+            <div className="mt-3 mb-5">
+              <span className="text-3xl font-bold text-white">
+                {billingCycle === 'annual' ? '$49' : '$5'}
+              </span>
+              <span className="text-gray-500 text-sm ml-1">
+                {billingCycle === 'annual' ? '/year' : '/month'}
+              </span>
+              {billingCycle === 'annual' && (
+                <span className="text-green-400 text-xs ml-2">$4.08/mo</span>
+              )}
+            </div>
+            <p className="text-sm text-gray-400 mb-6">Full access to everything Golf OS offers.</p>
+            <Link
+              href="/auth/signup"
+              className="block w-full text-center px-4 py-2.5 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg transition-colors text-sm"
+            >
+              Start Pro — 7-Day Free Trial
+            </Link>
+            <ul className="mt-6 space-y-2.5 text-sm">
+              <li className="flex gap-2.5 text-gray-300">
+                <svg className="w-4 h-4 text-green-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                Everything in Free
+              </li>
+              <li className="flex gap-2.5 text-gray-300">
+                <svg className="w-4 h-4 text-green-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                Unlimited session imports
+              </li>
+              <li className="flex gap-2.5 text-gray-300">
+                <svg className="w-4 h-4 text-green-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                Full yardage card builder + environment adjust
+              </li>
+              <li className="flex gap-2.5 text-gray-300">
+                <svg className="w-4 h-4 text-green-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                Dispersion analysis with ellipses + arcs
+              </li>
+              <li className="flex gap-2.5 text-gray-300">
+                <svg className="w-4 h-4 text-green-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                Strokes-gained practice scoring + insights
+              </li>
+              <li className="flex gap-2.5 text-gray-300">
+                <svg className="w-4 h-4 text-green-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                Voice input for hands-free logging
+              </li>
+              <li className="flex gap-2.5 text-gray-300">
+                <svg className="w-4 h-4 text-green-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                Unlimited putters + full Wedge Lab
+              </li>
+              <li className="flex gap-2.5 text-gray-300">
+                <svg className="w-4 h-4 text-green-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                PDF + PNG export
+              </li>
+            </ul>
           </div>
         </div>
       </section>
@@ -281,13 +422,21 @@ export default function LandingPage() {
           <p className="text-gray-400 mb-8 max-w-xl mx-auto">
             Import your first CSV and see what your data has been trying to tell you.
           </p>
-          <Link
-            href="/auth/signup"
-            className="inline-block px-8 py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg text-lg transition-colors"
-          >
-            Create Your Free Account
-          </Link>
-          <p className="mt-3 text-xs text-gray-600">Free forever. No credit card required.</p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/auth/signup"
+              className="w-full sm:w-auto px-8 py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg text-lg transition-colors"
+            >
+              Try Pro Free for 7 Days
+            </Link>
+            <Link
+              href="/auth/signup"
+              className="w-full sm:w-auto px-8 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium rounded-lg text-lg transition-colors text-center"
+            >
+              Start with Free
+            </Link>
+          </div>
+          <p className="mt-3 text-xs text-gray-600">No credit card for Free. Cancel anytime on Pro.</p>
         </div>
       </section>
 
@@ -324,12 +473,28 @@ export default function LandingPage() {
                 applicationCategory: 'SportsApplication',
                 operatingSystem: 'Web',
                 description: 'Golf performance analytics and practice companion. Import Garmin R50 data, build yardage cards, analyze dispersion, and practice with purpose.',
-                offers: {
-                  '@type': 'Offer',
-                  price: '0',
-                  priceCurrency: 'USD',
-                  availability: 'https://schema.org/InStock',
-                },
+                offers: [
+                  {
+                    '@type': 'Offer',
+                    name: 'Free',
+                    price: '0',
+                    priceCurrency: 'USD',
+                    availability: 'https://schema.org/InStock',
+                  },
+                  {
+                    '@type': 'Offer',
+                    name: 'Pro',
+                    price: '5',
+                    priceCurrency: 'USD',
+                    availability: 'https://schema.org/InStock',
+                    priceSpecification: {
+                      '@type': 'UnitPriceSpecification',
+                      price: '5',
+                      priceCurrency: 'USD',
+                      billingDuration: 'P1M',
+                    },
+                  },
+                ],
                 creator: {
                   '@type': 'Organization',
                   name: 'Sobojinski Solutions',
