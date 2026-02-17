@@ -6,7 +6,8 @@ import Nav from '@/components/Nav';
 import AuthGuard from '@/components/AuthGuard';
 import { usePracticeSessions, usePracticeShots, useScoringSettings } from '@/lib/practice/hooks';
 import { scoreShot, scoreSession, isWedgeClub } from '@/lib/practice/scoring';
-import type { PracticeSession, SessionPlan, PlanBlock } from '@/lib/practice/types';
+import { useVoiceInput } from '@/lib/practice/voice';
+import type { SessionPlan } from '@/lib/practice/types';
 
 export default function SessionPage() {
   return (
@@ -37,10 +38,14 @@ function SessionLogger() {
   }, []);
 
   // Current state tracking for ladder-style programs
-  const [currentBlockIdx, setCurrentBlockIdx] = useState(0);
   const [carryInput, setCarryInput] = useState('');
   const [lateralInput, setLateralInput] = useState('');
+  const [voiceAutoLog, setVoiceAutoLog] = useState(true);
+  const [lastVoiceResult, setLastVoiceResult] = useState<{ value: number; transcript: string } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // We need a ref to the latest carryInput for voice auto-log
+  const pendingVoiceLogRef = useRef<number | null>(null);
 
   // Compute where we are in the plan
   const progress = useMemo(() => {
@@ -155,9 +160,60 @@ function SessionLogger() {
     setTimeout(() => inputRef.current?.focus(), 50);
   }, [carryInput, lateralInput, progress, id, settings, addShot]);
 
+  // Voice-triggered auto-log: submit directly with the spoken number
+  const handleVoiceLog = useCallback(async (carry: number) => {
+    if (!progress || progress.isComplete) return;
+
+    const target = progress.currentTarget ?? 0;
+    const club = progress.currentClub ?? 'PW';
+    const isWedge = isWedgeClub(club);
+    const scored = scoreShot(target, carry, 0, isWedge, settings);
+
+    setLastVoiceResult({ value: carry, transcript: `${carry} yds → ${scored.points} pts` });
+
+    await addShot({
+      practice_session_id: id,
+      timestamp: new Date().toISOString(),
+      club_name: club,
+      club_type: isWedge ? 'wedge' : 'iron',
+      target_distance_yd: target,
+      carry_distance_yd: carry,
+      lateral_yd: null,
+      is_mishit: false,
+      computed: {
+        error: scored.error,
+        leaveDistance: scored.leaveDistance,
+        sg: scored.sg,
+        points: scored.points,
+      },
+      tags: ['voice'],
+    });
+
+    setCarryInput('');
+    // Clear the voice result after a moment
+    setTimeout(() => setLastVoiceResult(null), 2000);
+  }, [progress, id, settings, addShot]);
+
+  // Voice input hook
+  const voice = useVoiceInput({
+    onNumber: useCallback((value: number) => {
+      if (voiceAutoLog) {
+        handleVoiceLog(value);
+      } else {
+        setCarryInput(value.toString());
+        setLastVoiceResult({ value, transcript: `Heard: ${value}` });
+        inputRef.current?.focus();
+      }
+    }, [voiceAutoLog, handleVoiceLog]),
+    onCommand: useCallback((cmd: 'undo' | 'mishit' | 'skip' | 'done' | null) => {
+      if (cmd === 'undo') undoLastShot();
+    }, [undoLastShot]),
+    continuous: true,
+  });
+
   const handleComplete = async () => {
+    voice.stop();
     await completeSession(id);
-    // Stay on page to show recap
   };
 
   const handleUndo = async () => {
@@ -279,39 +335,83 @@ function SessionLogger() {
             </>
           )}
 
-          {/* Fast input */}
-          <div className="mt-6 flex items-end gap-3 justify-center">
-            <div>
-              <label className="block text-xs text-gray-500 mb-1">Carry (yds)</label>
-              <input
-                ref={inputRef}
-                type="number"
-                value={carryInput}
-                onChange={(e) => setCarryInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter') handleLogShot(); }}
-                placeholder="Enter carry..."
-                className="w-28 px-3 py-3 text-lg bg-gray-800 border border-gray-700 rounded text-white text-center placeholder-gray-600 font-mono"
-                autoFocus
-              />
+          {/* Voice input */}
+          {voice.supported && (
+            <div className="mt-4 flex flex-col items-center gap-2">
+              <button
+                onClick={voice.toggle}
+                className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${
+                  voice.listening
+                    ? 'bg-red-600 hover:bg-red-500 animate-pulse shadow-lg shadow-red-600/30'
+                    : 'bg-gray-700 hover:bg-gray-600'
+                }`}
+                title={voice.listening ? 'Stop listening' : 'Start voice input'}
+              >
+                <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+                </svg>
+              </button>
+              <div className="text-center">
+                {voice.listening && !lastVoiceResult && (
+                  <p className="text-xs text-gray-400 animate-pulse">Listening... say a number</p>
+                )}
+                {lastVoiceResult && (
+                  <p className="text-xs text-green-400">{lastVoiceResult.transcript}</p>
+                )}
+                {!voice.listening && !lastVoiceResult && (
+                  <p className="text-xs text-gray-600">Tap mic to speak your yardage</p>
+                )}
+              </div>
+              {voice.listening && (
+                <label className="flex items-center gap-2 text-xs text-gray-500 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={voiceAutoLog}
+                    onChange={(e) => setVoiceAutoLog(e.target.checked)}
+                    className="accent-green-500"
+                  />
+                  Auto-log on voice (say &quot;undo&quot; to take back)
+                </label>
+              )}
             </div>
-            <div>
-              <label className="block text-xs text-gray-500 mb-1">Lateral (opt)</label>
-              <input
-                type="number"
-                value={lateralInput}
-                onChange={(e) => setLateralInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter') handleLogShot(); }}
-                placeholder="±"
-                className="w-20 px-2 py-3 text-lg bg-gray-800 border border-gray-700 rounded text-white text-center placeholder-gray-600 font-mono"
-              />
+          )}
+
+          {/* Manual input */}
+          <div className="mt-4">
+            <p className="text-[10px] text-gray-600 mb-2">{voice.supported ? 'Or type manually:' : 'Enter carry distance:'}</p>
+            <div className="flex items-end gap-3 justify-center">
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">Carry (yds)</label>
+                <input
+                  ref={inputRef}
+                  type="number"
+                  value={carryInput}
+                  onChange={(e) => setCarryInput(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleLogShot(); }}
+                  placeholder="Enter carry..."
+                  className="w-28 px-3 py-3 text-lg bg-gray-800 border border-gray-700 rounded text-white text-center placeholder-gray-600 font-mono"
+                  autoFocus={!voice.supported}
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">Lateral (opt)</label>
+                <input
+                  type="number"
+                  value={lateralInput}
+                  onChange={(e) => setLateralInput(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleLogShot(); }}
+                  placeholder="±"
+                  className="w-20 px-2 py-3 text-lg bg-gray-800 border border-gray-700 rounded text-white text-center placeholder-gray-600 font-mono"
+                />
+              </div>
+              <button
+                onClick={handleLogShot}
+                disabled={!carryInput}
+                className="px-5 py-3 text-sm bg-green-600 text-white rounded hover:bg-green-500 disabled:opacity-50"
+              >
+                Log
+              </button>
             </div>
-            <button
-              onClick={handleLogShot}
-              disabled={!carryInput}
-              className="px-5 py-3 text-sm bg-green-600 text-white rounded hover:bg-green-500 disabled:opacity-50"
-            >
-              Log
-            </button>
           </div>
         </div>
       )}
