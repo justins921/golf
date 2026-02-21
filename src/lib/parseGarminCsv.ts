@@ -154,6 +154,7 @@ export function parseGarminCsv(csvText: string): ParseResult {
       total_distance_yd: totalDistance,
       total_lateral_yd: totalLateral ?? 0,
       is_full_shot: true,
+      excluded_from_card: false,
       target_distance_yd: null,
       tags: [],
       notes: null,

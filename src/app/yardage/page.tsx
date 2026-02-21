@@ -90,6 +90,11 @@ function YardageBuilder() {
     return allShots;
   }, [allShots, sessions, scope, rollingN, selectedSessionIds]);
 
+  const excludedCount = useMemo(
+    () => scopedShots.filter((s) => s.excluded_from_card).length,
+    [scopedShots]
+  );
+
   const config: YardageCardConfig = {
     scope,
     rollingN,
@@ -196,6 +201,16 @@ function YardageBuilder() {
               Full shots only (default)
             </label>
           </div>
+
+          {/* Excluded shots notice */}
+          {excludedCount > 0 && (
+            <div className="bg-red-900/20 border border-red-800/40 rounded-lg p-2">
+              <p className="text-xs text-red-400">
+                {excludedCount} shot{excludedCount > 1 ? 's' : ''} excluded from card calculations.
+                <span className="text-gray-500 ml-1">Manage in Shot Data.</span>
+              </p>
+            </div>
+          )}
 
           {/* Percentile band */}
           <div>

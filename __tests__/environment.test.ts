@@ -23,6 +23,7 @@ function makeShot(overrides: Partial<Shot> = {}): Shot {
     total_distance_yd: 165,
     total_lateral_yd: 0,
     is_full_shot: true,
+    excluded_from_card: false,
     target_distance_yd: null,
     tags: [],
     notes: null,

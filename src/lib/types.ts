@@ -26,6 +26,7 @@ export interface Shot {
   total_distance_yd: number;
   total_lateral_yd: number;
   is_full_shot: boolean;
+  excluded_from_card: boolean;
   target_distance_yd: number | null;
   tags: string[];
   notes: string | null;

@@ -31,8 +31,9 @@ function computeCardClubs(
   sessionEnv?: EnvironmentConditions | null,
   destEnv?: EnvironmentConditions | null
 ): YardageCardClub[] {
-  // Apply full shot filter
-  const filtered = filterShots(shots, {
+  // Remove manually excluded shots first, then apply full shot filter
+  const nonExcluded = shots.filter((s) => !s.excluded_from_card);
+  const filtered = filterShots(nonExcluded, {
     fullShotsOnly: config.fullShotsOnly,
     includePartials: !config.fullShotsOnly,
     onlyWithTargets: false,

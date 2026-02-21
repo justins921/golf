@@ -37,6 +37,16 @@ export default function ShotTable({ shots, onUpdate }: Props) {
     }
   };
 
+  const toggleExcluded = async (shot: Shot) => {
+    setSaving(true);
+    await supabase
+      .from('shots')
+      .update({ excluded_from_card: !shot.excluded_from_card })
+      .eq('id', shot.id);
+    setSaving(false);
+    onUpdate();
+  };
+
   const startEdit = (shot: Shot) => {
     setEditingId(shot.id);
     setEditValues({
@@ -96,6 +106,16 @@ export default function ShotTable({ shots, onUpdate }: Props) {
     setBulkTarget('');
     setBulkTag('');
     setBulkFullShot(null);
+    setSelected(new Set());
+    setSaving(false);
+    onUpdate();
+  };
+
+  const bulkExclude = async (exclude: boolean) => {
+    if (selected.size === 0) return;
+    setSaving(true);
+    const ids = Array.from(selected);
+    await supabase.from('shots').update({ excluded_from_card: exclude }).in('id', ids);
     setSelected(new Set());
     setSaving(false);
     onUpdate();
@@ -170,6 +190,8 @@ export default function ShotTable({ shots, onUpdate }: Props) {
             { label: 'Mark 3/4', action: () => { setBulkFullShot(false); setBulkTag('3/4'); } },
             { label: 'Mark Half', action: () => { setBulkFullShot(false); setBulkTag('Half'); } },
             { label: 'Mark Chip', action: () => { setBulkFullShot(false); setBulkTag('Chip'); } },
+            { label: 'Exclude from Card', action: () => { bulkExclude(true); } },
+            { label: 'Include in Card', action: () => { bulkExclude(false); } },
           ].map((p) => (
             <button
               key={p.label}
@@ -195,6 +217,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                   className="accent-green-500"
                 />
               </th>
+              <th className="p-2 text-center" title="Included in yardage card">Card</th>
               <th className="p-2 text-left">Club</th>
               <th className="p-2 text-right">Carry</th>
               <th className="p-2 text-right">Lateral</th>
@@ -222,15 +245,25 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                     className="accent-green-500"
                   />
                 </td>
-                <td className="p-2 text-gray-200 font-medium">{shot.club_name}</td>
-                <td className="p-2 text-right text-gray-300">{shot.carry_distance_yd.toFixed(1)}</td>
+                <td className="p-2 text-center">
+                  <button
+                    onClick={() => toggleExcluded(shot)}
+                    disabled={saving}
+                    title={shot.excluded_from_card ? 'Excluded from yardage card — click to include' : 'Included in yardage card — click to exclude'}
+                    className={`text-xs ${shot.excluded_from_card ? 'text-red-400 hover:text-red-300' : 'text-green-400 hover:text-green-300'}`}
+                  >
+                    {shot.excluded_from_card ? '✕' : '✓'}
+                  </button>
+                </td>
+                <td className={`p-2 font-medium ${shot.excluded_from_card ? 'text-gray-500 line-through' : 'text-gray-200'}`}>{shot.club_name}</td>
+                <td className={`p-2 text-right ${shot.excluded_from_card ? 'text-gray-600' : 'text-gray-300'}`}>{shot.carry_distance_yd.toFixed(1)}</td>
                 <td className="p-2 text-right">
                   <span className={shot.carry_lateral_yd > 2 ? 'text-yellow-400' : shot.carry_lateral_yd < -2 ? 'text-blue-400' : 'text-gray-400'}>
                     {shot.carry_lateral_yd > 0 ? '+' : ''}{shot.carry_lateral_yd.toFixed(1)}
                     {shot.carry_lateral_yd > 0 ? ' R' : shot.carry_lateral_yd < 0 ? ' L' : ''}
                   </span>
                 </td>
-                <td className="p-2 text-right text-gray-300 hidden sm:table-cell">{shot.total_distance_yd.toFixed(1)}</td>
+                <td className={`p-2 text-right hidden sm:table-cell ${shot.excluded_from_card ? 'text-gray-600' : 'text-gray-300'}`}>{shot.total_distance_yd.toFixed(1)}</td>
                 {editingId === shot.id ? (
                   <>
                     <td className="p-2 text-center hidden md:table-cell">

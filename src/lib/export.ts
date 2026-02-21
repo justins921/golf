@@ -8,7 +8,7 @@ export function shotsToCSV(shots: Shot[]): string {
     'club_name', 'club_type', 'datetime',
     'carry_distance_yd', 'carry_lateral_yd',
     'total_distance_yd', 'total_lateral_yd',
-    'is_full_shot', 'target_distance_yd',
+    'is_full_shot', 'excluded_from_card', 'target_distance_yd',
     'tags', 'notes',
   ];
 
@@ -17,7 +17,7 @@ export function shotsToCSV(shots: Shot[]): string {
       s.club_name, s.club_type, s.datetime ?? '',
       s.carry_distance_yd, s.carry_lateral_yd,
       s.total_distance_yd, s.total_lateral_yd,
-      s.is_full_shot, s.target_distance_yd ?? '',
+      s.is_full_shot, s.excluded_from_card, s.target_distance_yd ?? '',
       s.tags.join(';'), s.notes ?? '',
     ]
       .map((v) => `"${String(v).replace(/"/g, '""')}"`)

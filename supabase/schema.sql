@@ -58,6 +58,7 @@ create table public.shots (
   total_distance_yd float8 not null,
   total_lateral_yd float8 not null,
   is_full_shot boolean not null default true,
+  excluded_from_card boolean not null default false,
   target_distance_yd float8,
   tags text[] not null default '{}',
   notes text,
