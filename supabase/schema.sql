@@ -249,3 +249,167 @@ create policy "Users can update own wedge matrix"
   on public.wedge_matrix for update using (auth.uid() = user_id);
 create policy "Users can delete own wedge matrix"
   on public.wedge_matrix for delete using (auth.uid() = user_id);
+
+-- ============================================================
+-- Speed training sessions
+-- ============================================================
+create table public.speed_sessions (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  session_date date not null default current_date,
+  protocol text not null default 'TheStack',  -- TheStack, SuperSpeed, Rypstick, Other
+  program text,                                -- e.g. "Speed 1", "Distance", custom name
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+create index idx_speed_sessions_user on public.speed_sessions(user_id);
+create index idx_speed_sessions_date on public.speed_sessions(session_date);
+
+alter table public.speed_sessions enable row level security;
+
+create policy "Users can view own speed sessions"
+  on public.speed_sessions for select using (auth.uid() = user_id);
+create policy "Users can insert own speed sessions"
+  on public.speed_sessions for insert with check (auth.uid() = user_id);
+create policy "Users can update own speed sessions"
+  on public.speed_sessions for update using (auth.uid() = user_id);
+create policy "Users can delete own speed sessions"
+  on public.speed_sessions for delete using (auth.uid() = user_id);
+
+-- ============================================================
+-- Speed training readings (individual swings within a session)
+-- ============================================================
+create table public.speed_readings (
+  id uuid primary key default uuid_generate_v4(),
+  session_id uuid not null references public.speed_sessions(id) on delete cascade,
+  set_number int not null default 1,
+  rep_number int not null default 1,
+  club text not null,                  -- Driver, Training Light, Training Heavy, 6 Iron, etc.
+  clubhead_speed_mph float8,
+  ball_speed_mph float8,
+  smash_factor float8,
+  carry_distance_yd float8,
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+create index idx_speed_readings_session on public.speed_readings(session_id);
+
+alter table public.speed_readings enable row level security;
+
+create policy "Users can view own speed readings"
+  on public.speed_readings for select
+  using (exists (select 1 from public.speed_sessions ss where ss.id = speed_readings.session_id and ss.user_id = auth.uid()));
+create policy "Users can insert own speed readings"
+  on public.speed_readings for insert
+  with check (exists (select 1 from public.speed_sessions ss where ss.id = speed_readings.session_id and ss.user_id = auth.uid()));
+create policy "Users can update own speed readings"
+  on public.speed_readings for update
+  using (exists (select 1 from public.speed_sessions ss where ss.id = speed_readings.session_id and ss.user_id = auth.uid()));
+create policy "Users can delete own speed readings"
+  on public.speed_readings for delete
+  using (exists (select 1 from public.speed_sessions ss where ss.id = speed_readings.session_id and ss.user_id = auth.uid()));
+
+-- ============================================================
+-- Fitness workout logs
+-- ============================================================
+create table public.workout_logs (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  workout_date date not null default current_date,
+  workout_type text not null,          -- warmup, mobility, strength, power, full
+  program text,                        -- GolfForever, Fit for Golf, Custom
+  workout_name text not null,          -- "Upper Body Push", "Pre-Round Warmup", etc.
+  duration_min int,
+  exercises jsonb not null default '[]', -- [{name, sets, reps, weight, duration_sec, notes}]
+  rating int,                          -- 1-5 subjective difficulty
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+create index idx_workout_logs_user on public.workout_logs(user_id);
+create index idx_workout_logs_date on public.workout_logs(workout_date);
+
+alter table public.workout_logs enable row level security;
+
+create policy "Users can view own workout logs"
+  on public.workout_logs for select using (auth.uid() = user_id);
+create policy "Users can insert own workout logs"
+  on public.workout_logs for insert with check (auth.uid() = user_id);
+create policy "Users can update own workout logs"
+  on public.workout_logs for update using (auth.uid() = user_id);
+create policy "Users can delete own workout logs"
+  on public.workout_logs for delete using (auth.uid() = user_id);
+
+-- ============================================================
+-- Rounds (on-course scorecards)
+-- ============================================================
+create table public.rounds (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  round_date date not null default current_date,
+  course_name text not null,
+  tees text,                           -- "Blue", "White", etc.
+  holes_played int not null default 18,
+  total_score int,
+  total_putts int,
+  total_fairways_hit int,
+  total_fairways int,                  -- total fairway holes (par 4s + par 5s)
+  total_gir int,
+  total_penalties int not null default 0,
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+create index idx_rounds_user on public.rounds(user_id);
+create index idx_rounds_date on public.rounds(round_date);
+
+alter table public.rounds enable row level security;
+
+create policy "Users can view own rounds"
+  on public.rounds for select using (auth.uid() = user_id);
+create policy "Users can insert own rounds"
+  on public.rounds for insert with check (auth.uid() = user_id);
+create policy "Users can update own rounds"
+  on public.rounds for update using (auth.uid() = user_id);
+create policy "Users can delete own rounds"
+  on public.rounds for delete using (auth.uid() = user_id);
+
+-- ============================================================
+-- Round holes (hole-by-hole detail)
+-- ============================================================
+create table public.round_holes (
+  id uuid primary key default uuid_generate_v4(),
+  round_id uuid not null references public.rounds(id) on delete cascade,
+  hole_number int not null,
+  par int not null default 4,
+  score int,
+  putts int,
+  fairway_hit boolean,                 -- null for par 3s
+  gir boolean,
+  up_and_down boolean,                 -- attempted chip/pitch to save par
+  sand_save boolean,
+  penalty_strokes int not null default 0,
+  club_off_tee text,
+  approach_distance_yd int,
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+create index idx_round_holes_round on public.round_holes(round_id);
+
+alter table public.round_holes enable row level security;
+
+create policy "Users can view own round holes"
+  on public.round_holes for select
+  using (exists (select 1 from public.rounds r where r.id = round_holes.round_id and r.user_id = auth.uid()));
+create policy "Users can insert own round holes"
+  on public.round_holes for insert
+  with check (exists (select 1 from public.rounds r where r.id = round_holes.round_id and r.user_id = auth.uid()));
+create policy "Users can update own round holes"
+  on public.round_holes for update
+  using (exists (select 1 from public.rounds r where r.id = round_holes.round_id and r.user_id = auth.uid()));
+create policy "Users can delete own round holes"
+  on public.round_holes for delete
+  using (exists (select 1 from public.rounds r where r.id = round_holes.round_id and r.user_id = auth.uid()));

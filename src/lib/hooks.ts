@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from './supabase';
-import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem } from './types';
+import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem, SpeedSession, SpeedReading, WorkoutLog, Round, RoundHole } from './types';
 import { filterShots } from './stats';
 
 export function useSessions() {
@@ -338,4 +338,228 @@ export function useWedgeMatrix() {
   };
 
   return { matrix, loading, refetch: fetchMatrix, saveMatrix };
+}
+
+// ============================================================
+// Speed training hooks
+// ============================================================
+
+export function useSpeedSessions() {
+  const [sessions, setSessions] = useState<SpeedSession[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchSessions = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('speed_sessions')
+      .select('*')
+      .order('session_date', { ascending: false });
+    if (!error && data) setSessions(data as SpeedSession[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchSessions(); }, [fetchSessions]);
+
+  const addSession = async (session: Omit<SpeedSession, 'id' | 'user_id' | 'created_at'>) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { error: new Error('Not authenticated'), data: null };
+    const { data, error } = await supabase
+      .from('speed_sessions')
+      .insert({ ...session, user_id: user.id })
+      .select()
+      .single();
+    if (!error) await fetchSessions();
+    return { data: data as SpeedSession | null, error };
+  };
+
+  const deleteSession = async (id: string) => {
+    const { error } = await supabase.from('speed_sessions').delete().eq('id', id);
+    if (!error) await fetchSessions();
+    return error;
+  };
+
+  return { sessions, loading, refetch: fetchSessions, addSession, deleteSession };
+}
+
+export function useSpeedReadings(sessionId: string | null) {
+  const [readings, setReadings] = useState<SpeedReading[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchReadings = useCallback(async () => {
+    if (!sessionId) { setReadings([]); setLoading(false); return; }
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('speed_readings')
+      .select('*')
+      .eq('session_id', sessionId)
+      .order('set_number', { ascending: true })
+      .order('rep_number', { ascending: true });
+    if (!error && data) setReadings(data as SpeedReading[]);
+    setLoading(false);
+  }, [sessionId]);
+
+  useEffect(() => { fetchReadings(); }, [fetchReadings]);
+
+  const addReading = async (reading: Omit<SpeedReading, 'id' | 'created_at'>) => {
+    const { error } = await supabase.from('speed_readings').insert(reading);
+    if (!error) await fetchReadings();
+    return error;
+  };
+
+  const deleteReading = async (id: string) => {
+    const { error } = await supabase.from('speed_readings').delete().eq('id', id);
+    if (!error) await fetchReadings();
+    return error;
+  };
+
+  return { readings, loading, refetch: fetchReadings, addReading, deleteReading };
+}
+
+export function useAllSpeedReadings() {
+  const [readings, setReadings] = useState<(SpeedReading & { session_date: string; protocol: string })[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchReadings = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('speed_readings')
+      .select('*, speed_sessions!inner(session_date, protocol)')
+      .order('created_at', { ascending: true });
+    if (!error && data) {
+      const mapped = data.map((r: Record<string, unknown>) => {
+        const ss = r.speed_sessions as Record<string, unknown>;
+        return {
+          ...r,
+          session_date: ss.session_date as string,
+          protocol: ss.protocol as string,
+          speed_sessions: undefined,
+        };
+      });
+      setReadings(mapped as (SpeedReading & { session_date: string; protocol: string })[]);
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchReadings(); }, [fetchReadings]);
+
+  return { readings, loading, refetch: fetchReadings };
+}
+
+// ============================================================
+// Fitness / workout hooks
+// ============================================================
+
+export function useWorkoutLogs() {
+  const [logs, setLogs] = useState<WorkoutLog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchLogs = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('workout_logs')
+      .select('*')
+      .order('workout_date', { ascending: false });
+    if (!error && data) setLogs(data as WorkoutLog[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchLogs(); }, [fetchLogs]);
+
+  const addLog = async (log: Omit<WorkoutLog, 'id' | 'user_id' | 'created_at'>) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return new Error('Not authenticated');
+    const { error } = await supabase.from('workout_logs').insert({ ...log, user_id: user.id });
+    if (!error) await fetchLogs();
+    return error;
+  };
+
+  const deleteLog = async (id: string) => {
+    const { error } = await supabase.from('workout_logs').delete().eq('id', id);
+    if (!error) await fetchLogs();
+    return error;
+  };
+
+  return { logs, loading, refetch: fetchLogs, addLog, deleteLog };
+}
+
+// ============================================================
+// Round tracking hooks
+// ============================================================
+
+export function useRounds() {
+  const [rounds, setRounds] = useState<Round[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchRounds = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('rounds')
+      .select('*')
+      .order('round_date', { ascending: false });
+    if (!error && data) setRounds(data as Round[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchRounds(); }, [fetchRounds]);
+
+  const addRound = async (round: Omit<Round, 'id' | 'user_id' | 'created_at'>) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { error: new Error('Not authenticated'), data: null };
+    const { data, error } = await supabase
+      .from('rounds')
+      .insert({ ...round, user_id: user.id })
+      .select()
+      .single();
+    if (!error) await fetchRounds();
+    return { data: data as Round | null, error };
+  };
+
+  const updateRound = async (id: string, updates: Partial<Round>) => {
+    const { error } = await supabase.from('rounds').update(updates).eq('id', id);
+    if (!error) await fetchRounds();
+    return error;
+  };
+
+  const deleteRound = async (id: string) => {
+    const { error } = await supabase.from('rounds').delete().eq('id', id);
+    if (!error) await fetchRounds();
+    return error;
+  };
+
+  return { rounds, loading, refetch: fetchRounds, addRound, updateRound, deleteRound };
+}
+
+export function useRoundHoles(roundId: string | null) {
+  const [holes, setHoles] = useState<RoundHole[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchHoles = useCallback(async () => {
+    if (!roundId) { setHoles([]); setLoading(false); return; }
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('round_holes')
+      .select('*')
+      .eq('round_id', roundId)
+      .order('hole_number', { ascending: true });
+    if (!error && data) setHoles(data as RoundHole[]);
+    setLoading(false);
+  }, [roundId]);
+
+  useEffect(() => { fetchHoles(); }, [fetchHoles]);
+
+  const upsertHoles = async (roundId: string, holeData: Omit<RoundHole, 'id' | 'created_at'>[]) => {
+    // Delete existing then insert fresh
+    await supabase.from('round_holes').delete().eq('round_id', roundId);
+    const { error } = await supabase.from('round_holes').insert(holeData);
+    if (!error) await fetchHoles();
+    return error;
+  };
+
+  return { holes, loading, refetch: fetchHoles, upsertHoles };
 }

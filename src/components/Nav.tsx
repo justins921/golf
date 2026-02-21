@@ -7,11 +7,14 @@ import { useAuth } from '@/lib/auth';
 
 const links = [
   { href: '/', label: 'Shot Data' },
+  { href: '/rounds', label: 'Rounds' },
+  { href: '/speed', label: 'Speed' },
+  { href: '/fitness', label: 'Fitness' },
   { href: '/practice', label: 'Practice' },
+  { href: '/yardage', label: 'Yardage Card' },
   { href: '/compare', label: 'Compare' },
   { href: '/putters', label: 'Putter Lab' },
   { href: '/wedges', label: 'Wedge Lab' },
-  { href: '/yardage', label: 'Yardage Card' },
   { href: '/calculator', label: 'Calculator' },
 ];
 

@@ -481,3 +481,199 @@ export interface WedgeMatrix {
   notes: string | null;
   created_at: string;
 }
+
+// ============================================================
+// Speed training types
+// ============================================================
+
+export interface SpeedSession {
+  id: string;
+  user_id: string;
+  session_date: string;
+  protocol: string;    // TheStack, SuperSpeed, Rypstick, Other
+  program: string | null;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface SpeedReading {
+  id: string;
+  session_id: string;
+  set_number: number;
+  rep_number: number;
+  club: string;
+  clubhead_speed_mph: number | null;
+  ball_speed_mph: number | null;
+  smash_factor: number | null;
+  carry_distance_yd: number | null;
+  notes: string | null;
+  created_at: string;
+}
+
+export const SPEED_PROTOCOLS = ['TheStack', 'SuperSpeed', 'Rypstick', 'Other'] as const;
+
+export const SPEED_CLUBS = [
+  'Training Light',
+  'Training Medium',
+  'Training Heavy',
+  'Driver',
+  '6 Iron',
+  '7 Iron',
+  'Wedge',
+  'Other',
+] as const;
+
+// ============================================================
+// Fitness / workout types
+// ============================================================
+
+export interface WorkoutLog {
+  id: string;
+  user_id: string;
+  workout_date: string;
+  workout_type: string;     // warmup, mobility, strength, power, full
+  program: string | null;   // GolfForever, Fit for Golf, Custom
+  workout_name: string;
+  duration_min: number | null;
+  exercises: WorkoutExercise[];
+  rating: number | null;    // 1-5
+  notes: string | null;
+  created_at: string;
+}
+
+export interface WorkoutExercise {
+  name: string;
+  sets?: number;
+  reps?: number;
+  weight?: string;         // "25lb", "bodyweight", "red band"
+  duration_sec?: number;
+  notes?: string;
+}
+
+export const WORKOUT_TYPES = ['warmup', 'mobility', 'strength', 'power', 'full'] as const;
+
+export const WORKOUT_PROGRAMS = ['GolfForever', 'Fit for Golf', 'Custom'] as const;
+
+export const GOLF_EXERCISES: Record<string, string[]> = {
+  'Mobility': [
+    'Hip 90/90 Rotations',
+    'Thoracic Spine Rotations',
+    'Cat-Cow',
+    'World\'s Greatest Stretch',
+    'Open Books',
+    'Shoulder CARs',
+    'Hip CARs',
+    'Ankle CARs',
+    'Deep Squat Hold',
+    'Spiderman Lunge w/ Reach',
+    'Supine Windshield Wipers',
+    'Thread the Needle',
+  ],
+  'Warmup': [
+    'Band Pull-Aparts',
+    'Band Dislocates',
+    'Arm Circles',
+    'Leg Swings (Front-Back)',
+    'Leg Swings (Side-Side)',
+    'Bodyweight Squats',
+    'Walking Lunges',
+    'Torso Rotations w/ Club',
+    'Practice Swings (50%)',
+    'Practice Swings (75%)',
+  ],
+  'Rotational Strength': [
+    'Pallof Press',
+    'Cable/Band Chops (High-Low)',
+    'Cable/Band Chops (Low-High)',
+    'Med Ball Rotational Throw',
+    'Russian Twist',
+    'Landmine Rotation',
+    'Half-Kneeling Cable Rotation',
+    'Side Plank w/ Rotation',
+  ],
+  'Lower Body': [
+    'Goblet Squat',
+    'Romanian Deadlift',
+    'Bulgarian Split Squat',
+    'Lateral Lunge',
+    'Single Leg RDL',
+    'Hip Thrust',
+    'Clamshells',
+    'Monster Walks',
+    'Step Ups',
+    'Calf Raises',
+  ],
+  'Upper Body': [
+    'Push-Ups',
+    'Dumbbell Row',
+    'Overhead Press',
+    'Face Pulls',
+    'External Rotations',
+    'Lat Pulldown',
+    'Chest Fly',
+    'Bicep Curls',
+    'Tricep Pushdown',
+    'Farmer Carries',
+  ],
+  'Core': [
+    'Plank',
+    'Side Plank',
+    'Dead Bug',
+    'Bird Dog',
+    'Ab Wheel Rollout',
+    'Hollow Body Hold',
+    'Suitcase Carry',
+    'Hanging Knee Raises',
+    'Anti-Rotation Press',
+    'Bear Crawl',
+  ],
+  'Power / Speed': [
+    'Med Ball Slam',
+    'Med Ball Rotational Slam',
+    'Box Jump',
+    'Broad Jump',
+    'Kettlebell Swing',
+    'Band-Resisted Rotation',
+    'Explosive Step Up',
+    'Plyo Push-Up',
+  ],
+};
+
+// ============================================================
+// Round tracking types
+// ============================================================
+
+export interface Round {
+  id: string;
+  user_id: string;
+  round_date: string;
+  course_name: string;
+  tees: string | null;
+  holes_played: number;
+  total_score: number | null;
+  total_putts: number | null;
+  total_fairways_hit: number | null;
+  total_fairways: number | null;
+  total_gir: number | null;
+  total_penalties: number;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface RoundHole {
+  id: string;
+  round_id: string;
+  hole_number: number;
+  par: number;
+  score: number | null;
+  putts: number | null;
+  fairway_hit: boolean | null;
+  gir: boolean | null;
+  up_and_down: boolean | null;
+  sand_save: boolean | null;
+  penalty_strokes: number;
+  club_off_tee: string | null;
+  approach_distance_yd: number | null;
+  notes: string | null;
+  created_at: string;
+}
