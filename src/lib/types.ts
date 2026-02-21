@@ -108,10 +108,14 @@ export interface YardageCardClub {
   confidence: 'Low' | 'Med' | 'High';
   n: number;
   gapToNext?: number;
+  // Driver: dispersion arc (lateral spread)
   dispersionArc: number;     // total lateral spread in yards (P10-P90)
   dispersionLeft: number;    // yards left of center (positive number)
   dispersionRight: number;   // yards right of center (positive number)
   dispersionBias: 'L' | 'R' | 'C'; // which direction has more spread
+  // Approach: dispersion circle (scatter radius)
+  dispersionRadius: number;  // P80 radius from centroid in yards
+  isDriver: boolean;
 }
 
 export interface YardageCardConfig {

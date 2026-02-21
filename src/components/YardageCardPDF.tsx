@@ -85,7 +85,7 @@ export default function YardageCardPDFButton({ shots, config, sessionEnv, destEn
             <Text style={[styles.cellCarry, styles.headerText]}>Carry</Text>
             <Text style={[styles.cellTotal, styles.headerText]}>Total</Text>
             {config.showGaps && <Text style={[styles.cellOpt, styles.headerText]}>Gap</Text>}
-            {config.showDispersionArc && <Text style={[styles.cellOpt, styles.headerText]}>Arc</Text>}
+            {config.showDispersionArc && <Text style={[styles.cellOpt, styles.headerText]}>Disp</Text>}
             {config.showTendency && <Text style={[styles.cellOpt, styles.headerText]}>Tend</Text>}
           </View>
 
@@ -105,9 +105,14 @@ export default function YardageCardPDFButton({ shots, config, sessionEnv, destEn
               )}
               {config.showDispersionArc && (
                 <Text style={[styles.cellOpt, {
-                  color: club.dispersionBias === 'R' ? '#facc15' : club.dispersionBias === 'L' ? '#60a5fa' : '#9ca3af'
+                  color: club.isDriver
+                    ? (club.dispersionBias === 'R' ? '#facc15' : club.dispersionBias === 'L' ? '#60a5fa' : '#9ca3af')
+                    : '#9ca3af'
                 }]}>
-                  {`${club.dispersionArc} ${club.dispersionBias === 'C' ? '' : club.dispersionLeft + 'L-' + club.dispersionRight + 'R'}`}
+                  {club.isDriver
+                    ? `${club.dispersionArc} ${club.dispersionLeft}L-${club.dispersionRight}R`
+                    : `${club.dispersionRadius}yd`
+                  }
                 </Text>
               )}
               {config.showTendency && (

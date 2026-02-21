@@ -84,14 +84,28 @@ function computeCardClubs(
     const tendency = mean(laterals);
     const confidence: 'Low' | 'Med' | 'High' = n >= 12 ? 'High' : n >= 8 ? 'Med' : 'Low';
 
-    // Dispersion arc: use P10-P90 of lateral values for realistic spread
+    // Detect driver by name
+    const isDriver = /^(driver|d)$/i.test(name);
+
+    // Dispersion arc (driver): P10-P90 lateral spread
     const sortedLateral = [...laterals].sort((a, b) => a - b);
-    const latP10 = percentile(sortedLateral, 10); // left edge (negative = left)
-    const latP90 = percentile(sortedLateral, 90); // right edge (positive = right)
-    const dispLeft = Math.round(Math.abs(Math.min(latP10, 0)));  // yards left of center
-    const dispRight = Math.round(Math.max(latP90, 0));           // yards right of center
+    const latP10 = percentile(sortedLateral, 10);
+    const latP90 = percentile(sortedLateral, 90);
+    const dispLeft = Math.round(Math.abs(Math.min(latP10, 0)));
+    const dispRight = Math.round(Math.max(latP90, 0));
     const dispArc = dispLeft + dispRight;
     const dispBias: 'L' | 'R' | 'C' = dispRight - dispLeft > 3 ? 'R' : dispLeft - dispRight > 3 ? 'L' : 'C';
+
+    // Dispersion circle (approach): P80 radius from centroid
+    const meanCarry = mean(carryDistances);
+    const meanLat = mean(laterals);
+    const radii = carryDistances.map((d, idx) => {
+      const dErr = d - meanCarry;
+      const lErr = laterals[idx] - meanLat;
+      return Math.sqrt(dErr * dErr + lErr * lErr);
+    });
+    const sortedRadii = [...radii].sort((a, b) => a - b);
+    const dispRadius = Math.round(percentile(sortedRadii, 80));
 
     clubs.push({
       clubName: name,
@@ -112,6 +126,8 @@ function computeCardClubs(
       dispersionLeft: dispLeft,
       dispersionRight: dispRight,
       dispersionBias: dispBias,
+      dispersionRadius: dispRadius,
+      isDriver,
     });
   }
 
@@ -178,7 +194,7 @@ export default function YardageCardPreview({ shots, config, sessionEnv, destEnv,
               <th className="py-0.5 px-0.5 text-center">Carry</th>
               <th className="py-0.5 px-0.5 text-center">Total</th>
               {config.showGaps && <th className="py-0.5 px-0.5 text-center">Gap</th>}
-              {config.showDispersionArc && <th className="py-0.5 px-0.5 text-center">Arc</th>}
+              {config.showDispersionArc && <th className="py-0.5 px-0.5 text-center">Disp</th>}
               {config.showTendency && <th className="py-0.5 px-0.5 text-center">Tend</th>}
             </tr>
           </thead>
@@ -199,12 +215,20 @@ export default function YardageCardPreview({ shots, config, sessionEnv, destEnv,
                 )}
                 {config.showDispersionArc && (
                   <td className="py-0.5 px-0.5 text-center whitespace-nowrap">
-                    <span className={club.dispersionBias === 'R' ? 'text-yellow-400' : club.dispersionBias === 'L' ? 'text-blue-400' : 'text-gray-400'}>
-                      {club.dispersionArc}
-                    </span>
-                    <span className="text-[7px] text-gray-500 ml-0.5">
-                      {club.dispersionBias === 'R' ? `${club.dispersionLeft}L·${club.dispersionRight}R` : club.dispersionBias === 'L' ? `${club.dispersionLeft}L·${club.dispersionRight}R` : ''}
-                    </span>
+                    {club.isDriver ? (
+                      <>
+                        <span className={club.dispersionBias === 'R' ? 'text-yellow-400' : club.dispersionBias === 'L' ? 'text-blue-400' : 'text-gray-400'}>
+                          {club.dispersionArc}
+                        </span>
+                        <span className="text-[7px] text-gray-500 ml-0.5">
+                          {club.dispersionLeft}L·{club.dispersionRight}R
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-gray-400">
+                        {club.dispersionRadius}<span className="text-[7px] text-gray-500">yd</span>
+                      </span>
+                    )}
                   </td>
                 )}
                 {config.showTendency && (
