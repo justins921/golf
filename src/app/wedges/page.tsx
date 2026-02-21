@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import Nav from '@/components/Nav';
 import AuthGuard from '@/components/AuthGuard';
-import { useBagClubs, useWedgeMatrix } from '@/lib/hooks';
+import { useBagClubs, useWedgeMatrix, useWedgeSessions, useWedgeSessionShots, useAllWedgeSessionShots } from '@/lib/hooks';
 import {
   CLUB_ORDER,
   SWING_SYSTEM_LABELS,
@@ -11,7 +11,7 @@ import {
   WEDGE_CLUB_PRESETS,
   sortClubs,
 } from '@/lib/types';
-import type { BagClub, SwingSystem } from '@/lib/types';
+import type { BagClub, SwingSystem, WedgeSession, WedgeSessionShot } from '@/lib/types';
 
 export default function WedgesPage() {
   return (
@@ -28,7 +28,8 @@ export default function WedgesPage() {
 function WedgesLab() {
   const bagHook = useBagClubs();
   const matrixHook = useWedgeMatrix();
-  const [tab, setTab] = useState<'bag' | 'matrix' | 'practice'>('bag');
+  const wedgeSessionsHook = useWedgeSessions();
+  const [tab, setTab] = useState<'bag' | 'matrix' | 'calibrate' | 'practice'>('bag');
 
   const loading = bagHook.loading || matrixHook.loading;
 
@@ -45,6 +46,7 @@ function WedgesLab() {
         {([
           { key: 'bag', label: 'My Bag' },
           { key: 'matrix', label: 'Wedge Matrix' },
+          { key: 'calibrate', label: 'Calibrate' },
           { key: 'practice', label: 'Practice' },
         ] as const).map((t) => (
           <button
@@ -71,6 +73,14 @@ function WedgesLab() {
         <WedgeMatrixConfig
           matrix={matrixHook.matrix}
           saveMatrix={matrixHook.saveMatrix}
+        />
+      )}
+
+      {tab === 'calibrate' && (
+        <WedgeCalibrate
+          matrix={matrixHook.matrix}
+          saveMatrix={matrixHook.saveMatrix}
+          sessionsHook={wedgeSessionsHook}
         />
       )}
 
@@ -701,6 +711,516 @@ function WedgePractice({
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// ============================================================
+// Wedge calibration session
+// ============================================================
+function WedgeCalibrate({
+  matrix,
+  saveMatrix,
+  sessionsHook,
+}: {
+  matrix: ReturnType<typeof useWedgeMatrix>['matrix'];
+  saveMatrix: ReturnType<typeof useWedgeMatrix>['saveMatrix'];
+  sessionsHook: ReturnType<typeof useWedgeSessions>;
+}) {
+  const { sessions, addSession, deleteSession } = sessionsHook;
+  const { shots: allShots, loading: allShotsLoading } = useAllWedgeSessionShots();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showNewSession, setShowNewSession] = useState(false);
+  const [view, setView] = useState<'sessions' | 'averages'>('sessions');
+
+  // New session form — default from matrix config if available
+  const [newDate, setNewDate] = useState(new Date().toISOString().split('T')[0]);
+  const [newClubs, setNewClubs] = useState<string[]>(
+    matrix?.wedge_clubs?.length ? [...matrix.wedge_clubs] : [...WEDGE_CLUB_PRESETS]
+  );
+  const [newLabels, setNewLabels] = useState<string[]>(
+    matrix?.swing_labels?.length ? [...matrix.swing_labels] : ['7:30', '9:00', '10:30']
+  );
+  const [newNotes, setNewNotes] = useState('');
+
+  const createSession = async () => {
+    if (newClubs.length === 0 || newLabels.length === 0) return;
+    const { data } = await addSession({
+      session_date: newDate,
+      clubs: newClubs,
+      swing_labels: newLabels,
+      notes: newNotes || null,
+    });
+    if (data) {
+      setSelectedId(data.id);
+      setShowNewSession(false);
+      setNewNotes('');
+    }
+  };
+
+  // Compute averages across ALL sessions
+  const averages = useMemo(() => {
+    if (allShots.length === 0) return null;
+    const byCombo = new Map<string, number[]>();
+    for (const s of allShots) {
+      if (s.excluded) continue;
+      const key = `${s.club}|${s.swing_label}`;
+      if (!byCombo.has(key)) byCombo.set(key, []);
+      byCombo.get(key)!.push(s.carry_yards);
+    }
+    const result: Record<string, { avg: number; count: number; stdDev: number }> = {};
+    for (const [key, vals] of byCombo) {
+      const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+      const variance = vals.reduce((sum, v) => sum + (v - avg) ** 2, 0) / vals.length;
+      result[key] = { avg: Math.round(avg * 10) / 10, count: vals.length, stdDev: Math.round(Math.sqrt(variance) * 10) / 10 };
+    }
+    return result;
+  }, [allShots]);
+
+  // All unique clubs and labels across all sessions
+  const allClubs = useMemo(() => {
+    const set = new Set<string>();
+    sessions.forEach((s) => s.clubs.forEach((c) => set.add(c)));
+    return Array.from(set);
+  }, [sessions]);
+
+  const allLabels = useMemo(() => {
+    const set = new Set<string>();
+    sessions.forEach((s) => s.swing_labels.forEach((l) => set.add(l)));
+    return Array.from(set);
+  }, [sessions]);
+
+  const applyToMatrix = async () => {
+    if (!averages) return;
+    const distances: Record<string, number> = { ...(matrix?.distances ?? {}) };
+    for (const [key, { avg }] of Object.entries(averages)) {
+      distances[key] = Math.round(avg);
+    }
+    await saveMatrix({
+      swing_system: matrix?.swing_system ?? 'clock',
+      swing_labels: allLabels.length > 0 ? allLabels : (matrix?.swing_labels ?? []),
+      wedge_clubs: allClubs.length > 0 ? allClubs : (matrix?.wedge_clubs ?? []),
+      distances,
+    });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-400">
+          Hit shots with each club/swing combo and record carry distances. Averages auto-update your wedge matrix.
+        </p>
+        <div className="flex gap-2">
+          <button onClick={() => setView('sessions')}
+            className={`px-3 py-1.5 text-sm rounded ${view === 'sessions' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
+            Sessions
+          </button>
+          <button onClick={() => setView('averages')}
+            className={`px-3 py-1.5 text-sm rounded ${view === 'averages' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
+            Averages
+          </button>
+        </div>
+      </div>
+
+      {view === 'averages' && (
+        <AveragesView
+          averages={averages}
+          allClubs={allClubs}
+          allLabels={allLabels}
+          matrix={matrix}
+          onApply={applyToMatrix}
+        />
+      )}
+
+      {view === 'sessions' && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Session list */}
+          <div className="space-y-3">
+            <button onClick={() => setShowNewSession(true)}
+              className="w-full px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm rounded-lg">
+              + New Calibration Session
+            </button>
+
+            {showNewSession && (
+              <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
+                <h3 className="text-sm font-medium text-white">New Calibration Session</h3>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Date</label>
+                  <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)}
+                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Wedge Clubs</label>
+                  <div className="flex flex-wrap gap-1">
+                    {[...WEDGE_CLUB_PRESETS, '48°', '50°', '52°', '54°', '56°', '58°', '60°', '62°'].filter((c, i, arr) => arr.indexOf(c) === i).map((c) => (
+                      <button key={c}
+                        onClick={() => setNewClubs(newClubs.includes(c) ? newClubs.filter((x) => x !== c) : [...newClubs, c])}
+                        className={`px-2 py-1 text-xs rounded ${newClubs.includes(c) ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-400'}`}>
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Swing Lengths</label>
+                  <div className="flex flex-wrap gap-1">
+                    {(matrix?.swing_labels?.length ? matrix.swing_labels : ['7:30', '9:00', '10:30', 'Full']).map((l) => (
+                      <button key={l}
+                        onClick={() => setNewLabels(newLabels.includes(l) ? newLabels.filter((x) => x !== l) : [...newLabels, l])}
+                        className={`px-2 py-1 text-xs rounded ${newLabels.includes(l) ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-400'}`}>
+                        {l}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Notes</label>
+                  <textarea value={newNotes} onChange={(e) => setNewNotes(e.target.value)} rows={2}
+                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={createSession} disabled={newClubs.length === 0 || newLabels.length === 0}
+                    className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white rounded">Create</button>
+                  <button onClick={() => setShowNewSession(false)}
+                    className="px-3 py-1 text-sm bg-gray-700 text-gray-300 rounded">Cancel</button>
+                </div>
+              </div>
+            )}
+
+            {sessions.length === 0 && !showNewSession && (
+              <div className="text-center text-gray-600 py-8 text-sm">
+                No calibration sessions yet. Start one to dial in your wedge distances.
+              </div>
+            )}
+
+            {sessions.map((s) => (
+              <button key={s.id} onClick={() => setSelectedId(s.id)}
+                className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
+                  selectedId === s.id
+                    ? 'bg-gray-800 border-green-600/50 text-white'
+                    : 'bg-gray-900 border-gray-800 text-gray-400 hover:border-gray-700'
+                }`}>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">{s.session_date}</span>
+                  <span className="text-xs text-gray-500">{s.clubs.length} clubs</span>
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {s.clubs.join(', ')} — {s.swing_labels.join(', ')}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Session detail */}
+          <div className="lg:col-span-2">
+            {selectedId ? (
+              <CalibrationDetail
+                session={sessions.find((s) => s.id === selectedId)!}
+                onDelete={async () => {
+                  await deleteSession(selectedId);
+                  setSelectedId(null);
+                }}
+              />
+            ) : (
+              <div className="flex items-center justify-center h-64 text-gray-600 text-sm">
+                Select a session to enter shot data
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================================
+// Calibration session detail — enter shots per combo
+// ============================================================
+function CalibrationDetail({
+  session,
+  onDelete,
+}: {
+  session: WedgeSession;
+  onDelete: () => void;
+}) {
+  const { shots, loading, addShot, deleteShot, toggleExcluded } = useWedgeSessionShots(session.id);
+  const [activeClub, setActiveClub] = useState(session.clubs[0] ?? '');
+  const [activeLabel, setActiveLabel] = useState(session.swing_labels[0] ?? '');
+  const [carryInput, setCarryInput] = useState('');
+  const [lateralInput, setLateralInput] = useState('');
+
+  const handleAdd = async () => {
+    if (!carryInput) return;
+    const comboShots = shots.filter((s) => s.club === activeClub && s.swing_label === activeLabel);
+    await addShot({
+      session_id: session.id,
+      club: activeClub,
+      swing_label: activeLabel,
+      carry_yards: parseFloat(carryInput),
+      lateral_yards: lateralInput ? parseFloat(lateralInput) : null,
+      shot_number: comboShots.length + 1,
+      excluded: false,
+      notes: null,
+    });
+    setCarryInput('');
+    setLateralInput('');
+  };
+
+  // Shots for active combo
+  const comboShots = shots.filter((s) => s.club === activeClub && s.swing_label === activeLabel);
+  const includedShots = comboShots.filter((s) => !s.excluded);
+  const comboAvg = includedShots.length > 0
+    ? Math.round((includedShots.reduce((a, s) => a + s.carry_yards, 0) / includedShots.length) * 10) / 10
+    : null;
+
+  // Shot counts per combo for the grid
+  const shotCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const s of shots) {
+      if (s.excluded) continue;
+      const key = `${s.club}|${s.swing_label}`;
+      counts[key] = (counts[key] ?? 0) + 1;
+    }
+    return counts;
+  }, [shots]);
+
+  // Averages per combo for the grid
+  const comboAverages = useMemo(() => {
+    const map: Record<string, number[]> = {};
+    for (const s of shots) {
+      if (s.excluded) continue;
+      const key = `${s.club}|${s.swing_label}`;
+      if (!map[key]) map[key] = [];
+      map[key].push(s.carry_yards);
+    }
+    const result: Record<string, number> = {};
+    for (const [key, vals] of Object.entries(map)) {
+      result[key] = Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10;
+    }
+    return result;
+  }, [shots]);
+
+  if (loading) return <div className="text-gray-500 text-sm">Loading shots...</div>;
+
+  return (
+    <div className="space-y-4">
+      {/* Combo selector grid */}
+      <div className="overflow-x-auto">
+        <table className="text-sm">
+          <thead>
+            <tr>
+              <th className="p-1.5 text-left text-gray-500 text-xs">Swing</th>
+              {session.clubs.map((club) => (
+                <th key={club} className="p-1.5 text-center text-white text-xs font-medium min-w-[70px]">{club}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {session.swing_labels.map((label) => (
+              <tr key={label} className="border-t border-gray-800/50">
+                <td className="p-1.5 text-gray-400 text-xs font-medium">{label}</td>
+                {session.clubs.map((club) => {
+                  const key = `${club}|${label}`;
+                  const count = shotCounts[key] ?? 0;
+                  const avg = comboAverages[key];
+                  const isActive = activeClub === club && activeLabel === label;
+                  return (
+                    <td key={club} className="p-1.5">
+                      <button
+                        onClick={() => { setActiveClub(club); setActiveLabel(label); }}
+                        className={`w-full px-2 py-1.5 text-xs rounded border transition-colors ${
+                          isActive
+                            ? 'border-green-500 bg-green-600/20 text-white'
+                            : count > 0
+                              ? 'border-gray-700 bg-gray-800 text-green-400'
+                              : 'border-gray-800 bg-gray-900 text-gray-600'
+                        }`}
+                      >
+                        {avg != null ? `${avg}` : '—'}
+                        <span className="block text-[10px] text-gray-500">{count} shots</span>
+                      </button>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Active combo entry */}
+      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="text-sm font-medium text-white">{activeClub}</span>
+          <span className="text-sm text-gray-500">@</span>
+          <span className="text-sm font-medium text-white">{activeLabel}</span>
+          {comboAvg != null && (
+            <span className="ml-auto text-sm text-green-400 font-medium">Avg: {comboAvg} yds</span>
+          )}
+        </div>
+
+        <div className="flex flex-wrap gap-3 items-end">
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Carry (yds)</label>
+            <input
+              type="number"
+              step="0.5"
+              value={carryInput}
+              onChange={(e) => setCarryInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+              placeholder="85"
+              autoFocus
+              className="w-24 px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Offline (yds)</label>
+            <input
+              type="number"
+              step="0.5"
+              value={lateralInput}
+              onChange={(e) => setLateralInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+              placeholder="+R / -L"
+              className="w-24 px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+            />
+          </div>
+          <button onClick={handleAdd} disabled={!carryInput}
+            className="px-4 py-1.5 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white rounded">
+            Add Shot
+          </button>
+        </div>
+
+        {/* Shots for this combo */}
+        {comboShots.length > 0 && (
+          <div className="mt-3 space-y-1">
+            {comboShots.map((s, i) => (
+              <div key={s.id}
+                className={`flex items-center justify-between px-3 py-1 rounded text-xs ${s.excluded ? 'bg-gray-900/50 line-through text-gray-600' : 'bg-gray-900 text-gray-300'}`}>
+                <span>
+                  #{s.shot_number}: <span className="font-medium text-white">{s.carry_yards} yds</span>
+                  {s.lateral_yards != null && (
+                    <span className="ml-2 text-gray-500">
+                      {s.lateral_yards > 0 ? '+' : ''}{s.lateral_yards} offline
+                    </span>
+                  )}
+                </span>
+                <div className="flex gap-2">
+                  <button onClick={() => toggleExcluded(s.id, !s.excluded)}
+                    className={`${s.excluded ? 'text-green-600 hover:text-green-400' : 'text-yellow-600 hover:text-yellow-400'}`}>
+                    {s.excluded ? 'Include' : 'Exclude'}
+                  </button>
+                  <button onClick={() => deleteShot(s.id)} className="text-gray-600 hover:text-red-400">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Progress summary */}
+      <div className="text-xs text-gray-500 flex items-center justify-between">
+        <span>
+          {Object.keys(shotCounts).length} / {session.clubs.length * session.swing_labels.length} combos filled
+          {' · '}
+          {shots.filter((s) => !s.excluded).length} total shots
+        </span>
+        <button onClick={onDelete} className="text-gray-600 hover:text-red-400">Delete Session</button>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// Averages view — cross-session averages + apply to matrix
+// ============================================================
+function AveragesView({
+  averages,
+  allClubs,
+  allLabels,
+  matrix,
+  onApply,
+}: {
+  averages: Record<string, { avg: number; count: number; stdDev: number }> | null;
+  allClubs: string[];
+  allLabels: string[];
+  matrix: ReturnType<typeof useWedgeMatrix>['matrix'];
+  onApply: () => Promise<void>;
+}) {
+  const [applying, setApplying] = useState(false);
+
+  if (!averages || Object.keys(averages).length === 0) {
+    return (
+      <div className="text-center text-gray-600 py-12 text-sm">
+        No calibration data yet. Complete a calibration session to see your averages.
+      </div>
+    );
+  }
+
+  const handleApply = async () => {
+    setApplying(true);
+    await onApply();
+    setApplying(false);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="overflow-x-auto">
+        <table className="text-sm">
+          <thead>
+            <tr>
+              <th className="p-2 text-left text-gray-500 font-medium">Swing</th>
+              {allClubs.map((club) => (
+                <th key={club} className="p-2 text-center text-white font-medium min-w-[100px]">{club}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {allLabels.map((label) => (
+              <tr key={label} className="border-t border-gray-800/50">
+                <td className="p-2 text-gray-400 font-medium">{label}</td>
+                {allClubs.map((club) => {
+                  const key = `${club}|${label}`;
+                  const data = averages[key];
+                  const matrixVal = matrix?.distances?.[key];
+                  const diff = data && matrixVal ? Math.round(data.avg) - matrixVal : null;
+                  return (
+                    <td key={club} className="p-2 text-center">
+                      {data ? (
+                        <div>
+                          <div className="text-green-400 font-medium">{data.avg} yds</div>
+                          <div className="text-[10px] text-gray-500">
+                            {data.count} shots · ±{data.stdDev}
+                          </div>
+                          {diff != null && diff !== 0 && (
+                            <div className={`text-[10px] ${diff > 0 ? 'text-blue-400' : 'text-red-400'}`}>
+                              {diff > 0 ? '+' : ''}{diff} vs matrix
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-gray-700">—</span>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <button onClick={handleApply} disabled={applying}
+          className="px-5 py-2 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white rounded-lg">
+          {applying ? 'Updating...' : 'Apply Averages to Wedge Matrix'}
+        </button>
+        <p className="text-xs text-gray-500">
+          This will update your wedge matrix distances with the calibrated averages. Existing matrix values for combos not tested will be preserved.
+        </p>
+      </div>
     </div>
   );
 }

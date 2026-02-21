@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from './supabase';
-import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem, SpeedSession, SpeedReading, WorkoutLog, Round, RoundHole } from './types';
+import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem, SpeedSession, SpeedReading, WorkoutLog, Round, RoundHole, WedgeSession, WedgeSessionShot } from './types';
 import { filterShots } from './stats';
 
 export function useSessions() {
@@ -562,4 +562,117 @@ export function useRoundHoles(roundId: string | null) {
   };
 
   return { holes, loading, refetch: fetchHoles, upsertHoles };
+}
+
+// ============================================================
+// Wedge calibration session hooks
+// ============================================================
+
+export function useWedgeSessions() {
+  const [sessions, setSessions] = useState<WedgeSession[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchSessions = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('wedge_sessions')
+      .select('*')
+      .order('session_date', { ascending: false });
+    if (!error && data) setSessions(data as WedgeSession[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchSessions(); }, [fetchSessions]);
+
+  const addSession = async (session: Omit<WedgeSession, 'id' | 'user_id' | 'created_at'>) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { error: new Error('Not authenticated'), data: null };
+    const { data, error } = await supabase
+      .from('wedge_sessions')
+      .insert({ ...session, user_id: user.id })
+      .select()
+      .single();
+    if (!error) await fetchSessions();
+    return { data: data as WedgeSession | null, error };
+  };
+
+  const deleteSession = async (id: string) => {
+    const { error } = await supabase.from('wedge_sessions').delete().eq('id', id);
+    if (!error) await fetchSessions();
+    return error;
+  };
+
+  return { sessions, loading, refetch: fetchSessions, addSession, deleteSession };
+}
+
+export function useWedgeSessionShots(sessionId: string | null) {
+  const [shots, setShots] = useState<WedgeSessionShot[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchShots = useCallback(async () => {
+    if (!sessionId) { setShots([]); setLoading(false); return; }
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('wedge_session_shots')
+      .select('*')
+      .eq('session_id', sessionId)
+      .order('created_at', { ascending: true });
+    if (!error && data) setShots(data as WedgeSessionShot[]);
+    setLoading(false);
+  }, [sessionId]);
+
+  useEffect(() => { fetchShots(); }, [fetchShots]);
+
+  const addShot = async (shot: Omit<WedgeSessionShot, 'id' | 'created_at'>) => {
+    const { error } = await supabase.from('wedge_session_shots').insert(shot);
+    if (!error) await fetchShots();
+    return error;
+  };
+
+  const deleteShot = async (id: string) => {
+    const { error } = await supabase.from('wedge_session_shots').delete().eq('id', id);
+    if (!error) await fetchShots();
+    return error;
+  };
+
+  const toggleExcluded = async (id: string, excluded: boolean) => {
+    const { error } = await supabase.from('wedge_session_shots').update({ excluded }).eq('id', id);
+    if (!error) await fetchShots();
+    return error;
+  };
+
+  return { shots, loading, refetch: fetchShots, addShot, deleteShot, toggleExcluded };
+}
+
+export function useAllWedgeSessionShots() {
+  const [shots, setShots] = useState<(WedgeSessionShot & { session_date: string })[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchShots = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('wedge_session_shots')
+      .select('*, wedge_sessions!inner(session_date)')
+      .eq('excluded', false)
+      .order('created_at', { ascending: true });
+    if (!error && data) {
+      const mapped = data.map((r: Record<string, unknown>) => {
+        const ws = r.wedge_sessions as Record<string, unknown>;
+        return {
+          ...r,
+          session_date: ws.session_date as string,
+          wedge_sessions: undefined,
+        };
+      });
+      setShots(mapped as (WedgeSessionShot & { session_date: string })[]);
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchShots(); }, [fetchShots]);
+
+  return { shots, loading, refetch: fetchShots };
 }

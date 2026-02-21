@@ -413,3 +413,63 @@ create policy "Users can update own round holes"
 create policy "Users can delete own round holes"
   on public.round_holes for delete
   using (exists (select 1 from public.rounds r where r.id = round_holes.round_id and r.user_id = auth.uid()));
+
+-- ============================================================
+-- Wedge calibration sessions
+-- ============================================================
+create table public.wedge_sessions (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  session_date date not null default current_date,
+  clubs text[] not null default '{}',       -- wedge clubs tested this session
+  swing_labels text[] not null default '{}', -- swing lengths tested
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+create index idx_wedge_sessions_user on public.wedge_sessions(user_id);
+create index idx_wedge_sessions_date on public.wedge_sessions(session_date);
+
+alter table public.wedge_sessions enable row level security;
+
+create policy "Users can view own wedge sessions"
+  on public.wedge_sessions for select using (auth.uid() = user_id);
+create policy "Users can insert own wedge sessions"
+  on public.wedge_sessions for insert with check (auth.uid() = user_id);
+create policy "Users can update own wedge sessions"
+  on public.wedge_sessions for update using (auth.uid() = user_id);
+create policy "Users can delete own wedge sessions"
+  on public.wedge_sessions for delete using (auth.uid() = user_id);
+
+-- ============================================================
+-- Wedge calibration shots (individual shots within a session)
+-- ============================================================
+create table public.wedge_session_shots (
+  id uuid primary key default uuid_generate_v4(),
+  session_id uuid not null references public.wedge_sessions(id) on delete cascade,
+  club text not null,
+  swing_label text not null,
+  carry_yards float8 not null,
+  lateral_yards float8,           -- offline distance (+ = right, - = left)
+  shot_number int not null default 1,
+  excluded boolean not null default false,
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+create index idx_wedge_session_shots_session on public.wedge_session_shots(session_id);
+
+alter table public.wedge_session_shots enable row level security;
+
+create policy "Users can view own wedge session shots"
+  on public.wedge_session_shots for select
+  using (exists (select 1 from public.wedge_sessions ws where ws.id = wedge_session_shots.session_id and ws.user_id = auth.uid()));
+create policy "Users can insert own wedge session shots"
+  on public.wedge_session_shots for insert
+  with check (exists (select 1 from public.wedge_sessions ws where ws.id = wedge_session_shots.session_id and ws.user_id = auth.uid()));
+create policy "Users can update own wedge session shots"
+  on public.wedge_session_shots for update
+  using (exists (select 1 from public.wedge_sessions ws where ws.id = wedge_session_shots.session_id and ws.user_id = auth.uid()));
+create policy "Users can delete own wedge session shots"
+  on public.wedge_session_shots for delete
+  using (exists (select 1 from public.wedge_sessions ws where ws.id = wedge_session_shots.session_id and ws.user_id = auth.uid()));

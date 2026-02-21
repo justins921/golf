@@ -677,3 +677,30 @@ export interface RoundHole {
   notes: string | null;
   created_at: string;
 }
+
+// ============================================================
+// Wedge calibration session types
+// ============================================================
+
+export interface WedgeSession {
+  id: string;
+  user_id: string;
+  session_date: string;
+  clubs: string[];
+  swing_labels: string[];
+  notes: string | null;
+  created_at: string;
+}
+
+export interface WedgeSessionShot {
+  id: string;
+  session_id: string;
+  club: string;
+  swing_label: string;
+  carry_yards: number;
+  lateral_yards: number | null;
+  shot_number: number;
+  excluded: boolean;
+  notes: string | null;
+  created_at: string;
+}
