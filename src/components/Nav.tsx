@@ -9,26 +9,26 @@ const navGroups = [
   {
     label: 'Train',
     items: [
-      { href: '/speed', label: 'Speed Training', desc: 'Track clubhead speed progress' },
-      { href: '/fitness', label: 'Golf Fitness', desc: 'Workouts & exercise library' },
-      { href: '/practice', label: 'Practice', desc: 'Structured drills & scoring' },
+      { href: '/speed', label: 'Speed Training', desc: 'Track clubhead speed progress', lm: false },
+      { href: '/fitness', label: 'Golf Fitness', desc: 'Workouts & exercise library', lm: false },
+      { href: '/practice', label: 'Practice', desc: 'Structured drills & scoring', lm: false },
     ],
   },
   {
     label: 'Track',
     items: [
-      { href: '/rounds', label: 'Rounds', desc: 'Scorecards & on-course stats' },
-      { href: '/shots', label: 'Shot Data', desc: 'Garmin R50 import & sessions' },
-      { href: '/compare', label: 'Compare', desc: 'Dispersion across sessions' },
+      { href: '/rounds', label: 'Rounds', desc: 'Scorecards & on-course stats', lm: false },
+      { href: '/shots', label: 'Shot Data', desc: 'Garmin R50 import & sessions', lm: true },
+      { href: '/compare', label: 'Compare', desc: 'Dispersion across sessions', lm: true },
     ],
   },
   {
     label: 'Tools',
     items: [
-      { href: '/wedges', label: 'Wedge Lab', desc: 'Matrix, calibration & practice' },
-      { href: '/putters', label: 'Putter Lab', desc: 'Compare putters with drills' },
-      { href: '/yardage', label: 'Yardage Card', desc: 'Data-driven club distances' },
-      { href: '/calculator', label: 'Calculator', desc: 'Plays-like adjustments' },
+      { href: '/wedges', label: 'Wedge Lab', desc: 'Matrix, calibration & practice', lm: false },
+      { href: '/putters', label: 'Putter Lab', desc: 'Compare putters with drills', lm: false },
+      { href: '/yardage', label: 'Yardage Card', desc: 'Data-driven club distances', lm: true },
+      { href: '/calculator', label: 'Calculator', desc: 'Plays-like adjustments', lm: false },
     ],
   },
 ];
@@ -117,7 +117,14 @@ export default function Nav() {
                                 : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                             }`}
                           >
-                            <div className="text-sm font-medium">{item.label}</div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium">{item.label}</span>
+                              {item.lm && (
+                                <span className="text-[9px] font-medium px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 whitespace-nowrap">
+                                  LM
+                                </span>
+                              )}
+                            </div>
                             <div className="text-xs text-gray-500">{item.desc}</div>
                           </Link>
                         ))}
@@ -168,13 +175,18 @@ export default function Nav() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActive(item.href)
                       ? 'bg-gray-800 text-white'
                       : 'text-gray-400 hover:text-white hover:bg-gray-800'
                   }`}
                 >
                   {item.label}
+                  {item.lm && (
+                    <span className="text-[9px] font-medium px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                      LM
+                    </span>
+                  )}
                 </Link>
               ))}
             </div>
