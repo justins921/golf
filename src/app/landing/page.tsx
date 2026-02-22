@@ -64,6 +64,36 @@ const FEATURES = [
       </svg>
     ),
   },
+  {
+    title: 'Speed Training Log',
+    desc: 'Track TheStack, SuperSpeed, Rypstick, or any speed protocol. Log clubhead speed per set and rep, see max and average trends over time.',
+    detail: 'No launch monitor needed — just enter your numbers. Progress charts show your speed gains session over session.',
+    icon: (
+      <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Golf Fitness',
+    desc: 'Log workouts with a built-in library of 70+ golf-specific exercises — mobility, rotational strength, core, and power. Track streaks and weekly volume.',
+    detail: 'Browse by category, build workouts, rate difficulty. Works standalone as your golf fitness tracker.',
+    icon: (
+      <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Round Tracking',
+    desc: 'Enter hole-by-hole scorecards with par, score, putts, fairways hit, and greens in regulation. Color-coded scoring shows your patterns instantly.',
+    detail: 'Scoring average, best round, putting stats, FIR%, GIR%, and scoring trend charts. No other app needed.',
+    icon: (
+      <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+      </svg>
+    ),
+  },
 ];
 
 const FAQ = [
@@ -77,7 +107,7 @@ const FAQ = [
   },
   {
     q: 'Can I use this without a launch monitor?',
-    a: 'The yardage card and dispersion features require shot data from a launch monitor. However, the Putter Lab, Wedge Lab, Practice module, and Calculator work standalone — no launch monitor needed.',
+    a: 'Most of Golf OS works without a launch monitor. Speed Training, Golf Fitness, Round Tracking, Wedge Lab calibration, Putter Lab, Practice drills, and the Calculator are all standalone. Only the Shot Data import, dispersion analysis, and data-driven yardage cards require a Garmin R50 or compatible launch monitor.',
   },
   {
     q: 'Will my data be private?',

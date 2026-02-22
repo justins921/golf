@@ -1,206 +1,188 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Nav from '@/components/Nav';
 import AuthGuard from '@/components/AuthGuard';
-import { useAuth } from '@/lib/auth';
-import { useSessions, useShotCounts } from '@/lib/hooks';
-import { createClient } from '@/lib/supabase';
-import { parseGarminCsv, assignIds } from '@/lib/parseGarminCsv';
-import { v4 as uuidv4 } from 'uuid';
 
-export default function DashboardPage() {
+const modules = [
+  {
+    group: 'Train',
+    items: [
+      {
+        href: '/speed',
+        title: 'Speed Training',
+        desc: 'Log TheStack, SuperSpeed, or any protocol. Track clubhead speed over time and see your gains.',
+        color: 'bg-orange-500/10 border-orange-500/20',
+        accent: 'text-orange-400',
+        icon: (
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        ),
+      },
+      {
+        href: '/fitness',
+        title: 'Golf Fitness',
+        desc: 'Workout logging with 70+ golf-specific exercises. Track streaks, time, and workout types.',
+        color: 'bg-red-500/10 border-red-500/20',
+        accent: 'text-red-400',
+        icon: (
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        ),
+      },
+      {
+        href: '/practice',
+        title: 'Practice',
+        desc: 'Structured programs, random drills, and timed sessions scored with strokes-gained.',
+        color: 'bg-purple-500/10 border-purple-500/20',
+        accent: 'text-purple-400',
+        icon: (
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          </svg>
+        ),
+      },
+    ],
+  },
+  {
+    group: 'Track',
+    items: [
+      {
+        href: '/rounds',
+        title: 'Rounds',
+        desc: 'Hole-by-hole scorecards with FIR, GIR, putts, and penalties. See scoring trends over time.',
+        color: 'bg-green-500/10 border-green-500/20',
+        accent: 'text-green-400',
+        icon: (
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+          </svg>
+        ),
+      },
+      {
+        href: '/shots',
+        title: 'Shot Data',
+        desc: 'Import Garmin R50 CSVs. View sessions, shot patterns, and club-by-club breakdown.',
+        color: 'bg-blue-500/10 border-blue-500/20',
+        accent: 'text-blue-400',
+        icon: (
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+        ),
+      },
+      {
+        href: '/compare',
+        title: 'Compare',
+        desc: 'Overlay sessions with dispersion ellipses. Spot changes in carry and lateral patterns.',
+        color: 'bg-cyan-500/10 border-cyan-500/20',
+        accent: 'text-cyan-400',
+        icon: (
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+          </svg>
+        ),
+      },
+    ],
+  },
+  {
+    group: 'Tools',
+    items: [
+      {
+        href: '/wedges',
+        title: 'Wedge Lab',
+        desc: 'Build your wedge matrix, calibrate with range sessions, and practice random targets.',
+        color: 'bg-yellow-500/10 border-yellow-500/20',
+        accent: 'text-yellow-400',
+        icon: (
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+          </svg>
+        ),
+      },
+      {
+        href: '/putters',
+        title: 'Putter Lab',
+        desc: 'Compare putters head-to-head with standardized drills and make-rate tracking.',
+        color: 'bg-pink-500/10 border-pink-500/20',
+        accent: 'text-pink-400',
+        icon: (
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+          </svg>
+        ),
+      },
+      {
+        href: '/yardage',
+        title: 'Yardage Card',
+        desc: 'Data-driven club distances with percentile ranges. Adjust for elevation, temp, and humidity.',
+        color: 'bg-emerald-500/10 border-emerald-500/20',
+        accent: 'text-emerald-400',
+        icon: (
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        ),
+      },
+      {
+        href: '/calculator',
+        title: 'Calculator',
+        desc: 'Plays-like distance adjustments for elevation, wind, temperature, and altitude.',
+        color: 'bg-indigo-500/10 border-indigo-500/20',
+        accent: 'text-indigo-400',
+        icon: (
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+        ),
+      },
+    ],
+  },
+];
+
+export default function HomePage() {
   return (
     <AuthGuard>
       <Nav />
-      <Dashboard />
-    </AuthGuard>
-  );
-}
-
-function Dashboard() {
-  const { user } = useAuth();
-  const { sessions, loading, refetch } = useSessions();
-  const { counts } = useShotCounts(sessions);
-  const router = useRouter();
-
-  const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
-
-  const supabase = createClient();
-
-  const handleFileUpload = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files;
-      if (!files || files.length === 0 || !user) return;
-
-      setUploading(true);
-      setUploadError(null);
-      setUploadStatus(null);
-
-      try {
-        for (const file of Array.from(files)) {
-          setUploadStatus(`Processing ${file.name}...`);
-          const text = await file.text();
-          const result = parseGarminCsv(text);
-
-          if (result.shots.length === 0) {
-            setUploadError(`No valid shots found in ${file.name}`);
-            continue;
-          }
-
-          const sessionId = uuidv4();
-          const sessionName = file.name.replace(/\.csv$/i, '');
-          const playedAt = result.dateRange.earliest;
-
-          // Create session
-          const { error: sessErr } = await supabase.from('sessions').insert({
-            id: sessionId,
-            user_id: user.id,
-            name: sessionName,
-            played_at: playedAt,
-            notes: result.errors.length > 0 ? `Parse warnings: ${result.errors.join('; ')}` : null,
-          });
-
-          if (sessErr) {
-            setUploadError(`Failed to create session: ${sessErr.message}`);
-            continue;
-          }
-
-          // Insert shots in batches of 100
-          const shotsWithIds = assignIds(result.shots, sessionId);
-          const batchSize = 100;
-          for (let i = 0; i < shotsWithIds.length; i += batchSize) {
-            const batch = shotsWithIds.slice(i, i + batchSize);
-            const { error: shotErr } = await supabase.from('shots').insert(batch);
-            if (shotErr) {
-              setUploadError(`Failed to insert shots: ${shotErr.message}`);
-              break;
-            }
-          }
-
-          setUploadStatus(
-            `Imported ${result.shots.length} shots from ${result.clubs.length} clubs (${file.name})`
-          );
-        }
-
-        await refetch();
-      } catch (err) {
-        setUploadError(`Upload failed: ${(err as Error).message}`);
-      } finally {
-        setUploading(false);
-        e.target.value = '';
-      }
-    },
-    [user, supabase, refetch]
-  );
-
-  const handleDelete = async (sessionId: string) => {
-    if (!confirm('Delete this session and all its shots?')) return;
-    await supabase.from('shots').delete().eq('session_id', sessionId);
-    await supabase.from('sessions').delete().eq('id', sessionId);
-    await refetch();
-  };
-
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Upload section */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white mb-4">Dashboard</h1>
-
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-          <h2 className="text-lg font-medium text-gray-200 mb-2">Import Sessions</h2>
-          <p className="text-sm text-gray-500 mb-4">
-            Upload Garmin Approach R50 &quot;DrivingRange-*.csv&quot; exports. You can select multiple files.
-          </p>
-
-          <label className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-500 text-white font-medium rounded-md cursor-pointer transition-colors">
-            {uploading ? 'Uploading...' : 'Choose CSV Files'}
-            <input
-              type="file"
-              accept=".csv"
-              multiple
-              onChange={handleFileUpload}
-              disabled={uploading}
-              className="hidden"
-            />
-          </label>
-
-          {uploadStatus && (
-            <p className="mt-3 text-sm text-green-400">{uploadStatus}</p>
-          )}
-          {uploadError && (
-            <p className="mt-3 text-sm text-red-400">{uploadError}</p>
-          )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Golf OS</h1>
+          <p className="text-gray-400">Everything you need to improve your game — pick any tool to get started.</p>
         </div>
-      </div>
 
-      {/* Quick shortcuts */}
-      <div className="flex flex-wrap gap-3 mb-6">
-        <button
-          onClick={() => router.push('/compare')}
-          className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-sm text-gray-300 transition-colors"
-        >
-          Compare Sessions
-        </button>
-        <button
-          onClick={() => router.push('/yardage')}
-          className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-sm text-gray-300 transition-colors"
-        >
-          Yardage Card
-        </button>
-      </div>
-
-      {/* Sessions list */}
-      <div>
-        <h2 className="text-lg font-medium text-gray-200 mb-3">Sessions</h2>
-        {loading ? (
-          <div className="text-gray-500">Loading sessions...</div>
-        ) : sessions.length === 0 ? (
-          <div className="text-gray-600 bg-gray-900 border border-gray-800 rounded-lg p-8 text-center">
-            No sessions yet. Upload a CSV to get started.
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {sessions.map((session) => (
-              <div
-                key={session.id}
-                className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-center justify-between hover:border-gray-700 transition-colors cursor-pointer"
-                onClick={() => router.push(`/session/${session.id}`)}
-              >
-                <div>
-                  <h3 className="text-gray-200 font-medium">{session.name}</h3>
-                  <div className="flex gap-4 text-xs text-gray-500 mt-1">
-                    {session.played_at && (
-                      <span>{new Date(session.played_at).toLocaleDateString()}</span>
-                    )}
-                    {counts[session.id] && (
-                      <>
-                        <span>{counts[session.id].total} shots</span>
-                        <span>{counts[session.id].clubs} clubs</span>
-                      </>
-                    )}
-                    {session.location_text && <span>{session.location_text}</span>}
+        {modules.map((section) => (
+          <div key={section.group} className="mb-8">
+            <h2 className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3 px-1">
+              {section.group}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {section.items.map((mod) => (
+                <Link
+                  key={mod.href}
+                  href={mod.href}
+                  className={`group block rounded-lg border p-4 transition-all hover:scale-[1.01] hover:shadow-lg ${mod.color}`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className={`shrink-0 mt-0.5 ${mod.accent}`}>
+                      {mod.icon}
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-white group-hover:text-green-400 transition-colors">
+                        {mod.title}
+                      </h3>
+                      <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                        {mod.desc}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(session.id);
-                    }}
-                    className="px-2 py-1 text-xs text-red-400 hover:text-red-300 hover:bg-gray-800 rounded"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
+                </Link>
+              ))}
+            </div>
           </div>
-        )}
+        ))}
       </div>
-    </div>
+    </AuthGuard>
   );
 }
