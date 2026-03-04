@@ -428,6 +428,7 @@ const ALL_MODULES = [
   { href: '/goals', title: 'Goals', desc: 'Season targets', badge: false },
   { href: '/shots', title: 'Shot Data', desc: 'Garmin R50 import', badge: true },
   { href: '/compare', title: 'Compare', desc: 'Dispersion overlay', badge: true },
+  { href: '/heatmap', title: 'Heatmap', desc: 'Density & miss patterns', badge: true },
   { href: '/wedges', title: 'Wedge Lab', desc: 'Matrix & calibration', badge: false },
   { href: '/putters', title: 'Putter Lab', desc: 'Drill comparison', badge: false },
   { href: '/yardage', title: 'Yardage Card', desc: 'Club distances', badge: true },

@@ -24,6 +24,7 @@ const navGroups = [
       { href: '/goals', label: 'Season Goals', desc: 'Track targets & milestones', lm: false },
       { href: '/shots', label: 'Shot Data', desc: 'Garmin R50 import & sessions', lm: true },
       { href: '/compare', label: 'Compare', desc: 'Dispersion across sessions', lm: true },
+      { href: '/heatmap', label: 'Shot Heatmap', desc: 'Density maps & miss tendencies', lm: true },
     ],
   },
   {
