@@ -173,7 +173,7 @@ function CourseStrategyManager() {
                 {s.scoring_target && (
                   <span className="text-xs text-green-400">Target: {s.scoring_target}</span>
                 )}
-                <span className="text-[10px] text-gray-600">
+                <span className="text-xs text-gray-500">
                   {s.hole_strategies.filter((h) => h.strategy).length}/18 holes planned
                 </span>
               </div>
@@ -336,7 +336,7 @@ function HoleRow({
         <span className="text-xs text-gray-400 w-16">{hole.club_off_tee || '—'}</span>
         <span className="text-xs text-gray-300 flex-1 truncate">{hole.strategy || 'No strategy set'}</span>
         {hole.miss_zone && hole.miss_zone !== 'Center' && (
-          <span className="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
+          <span className="text-xs px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
             Miss {hole.miss_zone}
           </span>
         )}
@@ -350,7 +350,7 @@ function HoleRow({
         <div className="px-4 pb-4 pt-1 border-t border-gray-800 space-y-3">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div>
-              <label className="block text-[10px] text-gray-500 mb-1">Par</label>
+              <label className="block text-xs text-gray-400 mb-1">Par</label>
               <select
                 value={hole.par}
                 onChange={(e) => onChange({ par: parseInt(e.target.value) })}
@@ -360,7 +360,7 @@ function HoleRow({
               </select>
             </div>
             <div>
-              <label className="block text-[10px] text-gray-500 mb-1">Yardage</label>
+              <label className="block text-xs text-gray-400 mb-1">Yardage</label>
               <input
                 type="number"
                 value={hole.yardage ?? ''}
@@ -369,7 +369,7 @@ function HoleRow({
               />
             </div>
             <div>
-              <label className="block text-[10px] text-gray-500 mb-1">Club Off Tee</label>
+              <label className="block text-xs text-gray-400 mb-1">Club Off Tee</label>
               <select
                 value={hole.club_off_tee}
                 onChange={(e) => onChange({ club_off_tee: e.target.value })}
@@ -380,7 +380,7 @@ function HoleRow({
               </select>
             </div>
             <div>
-              <label className="block text-[10px] text-gray-500 mb-1">Preferred Miss</label>
+              <label className="block text-xs text-gray-400 mb-1">Preferred Miss</label>
               <select
                 value={hole.miss_zone}
                 onChange={(e) => onChange({ miss_zone: e.target.value })}
@@ -391,7 +391,7 @@ function HoleRow({
             </div>
           </div>
           <div>
-            <label className="block text-[10px] text-gray-500 mb-1">Strategy</label>
+            <label className="block text-xs text-gray-400 mb-1">Strategy</label>
             <input
               type="text"
               value={hole.strategy}
@@ -401,7 +401,7 @@ function HoleRow({
             />
           </div>
           <div>
-            <label className="block text-[10px] text-gray-500 mb-1">Target</label>
+            <label className="block text-xs text-gray-400 mb-1">Target</label>
             <input
               type="text"
               value={hole.target}
@@ -411,7 +411,7 @@ function HoleRow({
             />
           </div>
           <div>
-            <label className="block text-[10px] text-gray-500 mb-1">Notes</label>
+            <label className="block text-xs text-gray-400 mb-1">Notes</label>
             <input
               type="text"
               value={hole.notes}

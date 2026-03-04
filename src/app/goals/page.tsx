@@ -274,7 +274,7 @@ function SeasonGoals() {
 
           {/* Preset suggestions */}
           <div>
-            <div className="text-[10px] text-gray-600 uppercase tracking-wider mb-2">Quick presets</div>
+            <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Quick presets</div>
             <div className="flex flex-wrap gap-1">
               {PRESETS.map((p) => (
                 <button
@@ -286,7 +286,7 @@ function SeasonGoals() {
                     const cv = currentValues[p.metric];
                     if (cv != null) setNewStartValue(cv.toFixed(1));
                   }}
-                  className="text-[10px] px-2 py-1 rounded bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
+                  className="text-xs px-2 py-1 rounded bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
                 >
                   {p.title}
                 </button>
@@ -431,10 +431,10 @@ function GoalCard({
             </div>
 
             <div className="flex items-center justify-between mt-1">
-              <span className="text-[10px] text-gray-600">
+              <span className="text-xs text-gray-500">
                 {GOAL_METRIC_LABELS[goal.metric as GoalMetric] ?? goal.metric}
               </span>
-              <span className="text-[10px] text-gray-500">
+              <span className="text-xs text-gray-500">
                 {Math.round(progress)}%
               </span>
             </div>
@@ -447,19 +447,19 @@ function GoalCard({
         <div className="border-t border-gray-800 p-4 space-y-2">
           <div className="grid grid-cols-3 gap-3 text-center">
             <div>
-              <div className="text-[10px] text-gray-600 uppercase">Start</div>
+              <div className="text-xs text-gray-500 uppercase">Start</div>
               <div className="text-sm font-mono text-gray-400">
                 {goal.start_value != null ? formatValue(goal.metric as GoalMetric, goal.start_value) : '—'}
               </div>
             </div>
             <div>
-              <div className="text-[10px] text-gray-600 uppercase">Current</div>
+              <div className="text-xs text-gray-500 uppercase">Current</div>
               <div className={`text-sm font-mono ${statusColor}`}>
                 {currentValue != null ? formatValue(goal.metric as GoalMetric, currentValue) : '—'}
               </div>
             </div>
             <div>
-              <div className="text-[10px] text-gray-600 uppercase">Target</div>
+              <div className="text-xs text-gray-500 uppercase">Target</div>
               <div className="text-sm font-mono text-gray-50">
                 {formatValue(goal.metric as GoalMetric, goal.target_value)}
               </div>
@@ -479,7 +479,7 @@ function GoalCard({
           {/* Related lessons */}
           {relatedLessons.length > 0 && (
             <div className="border-t border-gray-800 pt-2 mt-2">
-              <div className="text-[10px] uppercase tracking-wider text-gray-600 font-semibold mb-1.5">
+              <div className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-1.5">
                 Related Lessons
               </div>
               <div className="space-y-1">
@@ -492,7 +492,7 @@ function GoalCard({
                     {l.coach_name && <span className="text-gray-600">w/ {l.coach_name}</span>}
                     <div className="flex gap-1 ml-auto">
                       {l.focus_areas.filter(f => relevantFocusAreas.includes(f)).map(f => (
-                        <span key={f} className="text-[9px] px-1 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">
+                        <span key={f} className="text-xs px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">
                           {f}
                         </span>
                       ))}
@@ -506,12 +506,12 @@ function GoalCard({
           {/* Suggested focus areas for next lesson */}
           {!achieved && relevantFocusAreas.length > 0 && (
             <div className="border-t border-gray-800 pt-2 mt-2">
-              <div className="text-[10px] uppercase tracking-wider text-gray-600 font-semibold mb-1">
+              <div className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-1">
                 Suggested lesson focus
               </div>
               <div className="flex flex-wrap gap-1">
                 {relevantFocusAreas.map(f => (
-                  <span key={f} className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                  <span key={f} className="text-xs px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
                     {f}
                   </span>
                 ))}

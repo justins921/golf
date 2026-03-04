@@ -325,7 +325,7 @@ function MentalGameTracker() {
                   const val = e.confidence_rating ?? 3;
                   return (
                     <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
-                      <span className="text-[9px] text-gray-500">{val}</span>
+                      <span className="text-xs text-gray-500">{val}</span>
                       <div
                         className="w-full bg-green-500/40 rounded-t"
                         style={{ height: `${(val / 5) * 100}%` }}
@@ -346,8 +346,8 @@ function MentalGameTracker() {
                   <div className="space-y-1.5">
                     {trends.topTriggers.map(([name, count]) => (
                       <div key={name} className="flex items-center justify-between">
-                        <span className="text-xs text-red-400">{name}</span>
-                        <span className="text-xs text-gray-500">{count}x</span>
+                        <span className="text-sm text-red-400">{name}</span>
+                        <span className="text-sm text-gray-500">{count}x</span>
                       </div>
                     ))}
                   </div>
@@ -363,8 +363,8 @@ function MentalGameTracker() {
                   <div className="space-y-1.5">
                     {trends.topPositives.map(([name, count]) => (
                       <div key={name} className="flex items-center justify-between">
-                        <span className="text-xs text-green-400">{name}</span>
-                        <span className="text-xs text-gray-500">{count}x</span>
+                        <span className="text-sm text-green-400">{name}</span>
+                        <span className="text-sm text-gray-500">{count}x</span>
                       </div>
                     ))}
                   </div>
@@ -381,7 +381,7 @@ function MentalGameTracker() {
             {latestRoutine ? (
               <div className="bg-gray-800 rounded-lg p-4">
                 <p className="text-sm text-gray-50 whitespace-pre-wrap">{latestRoutine}</p>
-                <p className="text-[10px] text-gray-500 mt-2">From your most recent entry with a routine</p>
+                <p className="text-xs text-gray-500 mt-2">From your most recent entry with a routine</p>
               </div>
             ) : (
               <p className="text-xs text-gray-500">No pre-shot routine recorded yet. Add one in your next journal entry.</p>
@@ -401,7 +401,7 @@ function MentalGameTracker() {
                 'Play to your strengths, not hero shots',
                 'Enjoy the walk between shots',
               ].map((item, i) => (
-                <div key={i} className="flex items-start gap-2 text-xs">
+                <div key={i} className="flex items-start gap-3 text-sm">
                   <span className="text-green-400 mt-0.5">&#10003;</span>
                   <span className="text-gray-300">{item}</span>
                 </div>
@@ -439,7 +439,7 @@ function LogCard({ log, onDelete }: { log: MentalGameLog; onDelete: () => void }
       {log.mental_triggers.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-2">
           {log.mental_triggers.map((t) => (
-            <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20">{t}</span>
+            <span key={t} className="text-xs px-2 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20">{t}</span>
           ))}
         </div>
       )}
@@ -448,7 +448,7 @@ function LogCard({ log, onDelete }: { log: MentalGameLog; onDelete: () => void }
       {log.positive_moments.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-2">
           {log.positive_moments.map((p) => (
-            <span key={p} className="text-[10px] px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">{p}</span>
+            <span key={p} className="text-xs px-2 py-1 rounded bg-green-500/10 text-green-400 border border-green-500/20">{p}</span>
           ))}
         </div>
       )}
@@ -460,9 +460,9 @@ function LogCard({ log, onDelete }: { log: MentalGameLog; onDelete: () => void }
 
 function RatingBadge({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <div className="text-center">
-      <div className={`text-sm font-bold ${color}`}>{value}/5</div>
-      <div className="text-[9px] text-gray-500">{label}</div>
+    <div className="text-center min-w-[48px]">
+      <div className={`text-base font-bold ${color}`}>{value}/5</div>
+      <div className="text-xs text-gray-500">{label}</div>
     </div>
   );
 }
@@ -470,7 +470,7 @@ function RatingBadge({ label, value, color }: { label: string; value: number; co
 function TrendCard({ label, value, color }: { label: string; value: number; color: string }) {
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-      <div className="text-[11px] text-gray-500 uppercase tracking-wider">{label}</div>
+      <div className="text-xs text-gray-500 uppercase tracking-wider">{label}</div>
       <div className={`text-2xl font-bold ${color} mt-1`}>{value.toFixed(1)}<span className="text-sm font-normal text-gray-500">/5</span></div>
     </div>
   );

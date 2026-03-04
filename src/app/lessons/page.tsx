@@ -242,7 +242,7 @@ function LessonsTracker() {
           {/* Goal-suggested focus areas */}
           {activeGoals.length > 0 && (
             <div className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-3">
-              <div className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-2">
+              <div className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">
                 Based on your goals
               </div>
               <div className="space-y-1.5">
@@ -257,7 +257,7 @@ function LessonsTracker() {
                           <button
                             key={area}
                             onClick={() => { if (!focusAreas.includes(area)) setFocusAreas([...focusAreas, area]); }}
-                            className={`text-[10px] px-1.5 py-0.5 rounded transition-colors ${
+                            className={`text-xs px-2 py-1 rounded transition-colors ${
                               focusAreas.includes(area)
                                 ? 'bg-green-600/20 text-green-400 border border-green-500/20'
                                 : 'bg-gray-700 text-gray-400 hover:text-gray-50 cursor-pointer'
@@ -447,7 +447,7 @@ function LessonsTracker() {
                 {l.focus_areas.length > 0 && (
                   <div className="flex flex-wrap gap-1 mb-2">
                     {l.focus_areas.map((a) => (
-                      <span key={a} className="text-[10px] px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">
+                      <span key={a} className="text-xs px-2 py-1 rounded bg-green-500/10 text-green-400 border border-green-500/20">
                         {a}
                       </span>
                     ))}
@@ -457,7 +457,7 @@ function LessonsTracker() {
                 {/* Swing feels */}
                 {l.swing_feels.length > 0 && (
                   <div className="mb-2">
-                    <span className="text-[10px] uppercase tracking-wider text-gray-600 font-semibold">Feels: </span>
+                    <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Feels</span>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {l.swing_feels.map((f, i) => (
                         <span key={i} className="text-xs px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
@@ -471,7 +471,7 @@ function LessonsTracker() {
                 {/* Drills */}
                 {l.drills_assigned.length > 0 && (
                   <div className="mb-2">
-                    <span className="text-[10px] uppercase tracking-wider text-gray-600 font-semibold">Drills: </span>
+                    <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Drills</span>
                     <div className="space-y-0.5 mt-1">
                       {l.drills_assigned.map((d, i) => (
                         <div key={i} className="text-xs text-gray-400">
@@ -507,7 +507,7 @@ function LessonsTracker() {
                 <span className="text-yellow-400 mt-0.5 text-lg leading-none">&bull;</span>
                 <div className="flex-1">
                   <span className="text-sm text-gray-50">{f.feel}</span>
-                  <div className="text-[11px] text-gray-500 mt-0.5">
+                  <div className="text-xs text-gray-500 mt-0.5">
                     {f.date}{f.coach ? ` with ${f.coach}` : ''} &middot; {LESSON_TYPE_LABELS[f.type] || f.type}
                   </div>
                 </div>
@@ -522,21 +522,21 @@ function LessonsTracker() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-              <div className="text-[11px] text-gray-500 uppercase tracking-wider">Total Lessons</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wider">Total Lessons</div>
               <div className="text-2xl font-bold text-green-400 mt-1">{stats.totalLessons}</div>
             </div>
             <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-              <div className="text-[11px] text-gray-500 uppercase tracking-wider">Avg Rating</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wider">Avg Rating</div>
               <div className="text-2xl font-bold text-yellow-400 mt-1">{stats.avgRating.toFixed(1)}/5</div>
             </div>
             <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-              <div className="text-[11px] text-gray-500 uppercase tracking-wider">Coaches</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wider">Coaches</div>
               <div className="text-sm text-gray-50 mt-2">
                 {stats.coaches.length > 0 ? stats.coaches.join(', ') : 'None recorded'}
               </div>
             </div>
             <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 sm:col-span-2 lg:col-span-3">
-              <div className="text-[11px] text-gray-500 uppercase tracking-wider mb-2">Top Focus Areas</div>
+              <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Top Focus Areas</div>
               <div className="space-y-1.5">
                 {stats.topFocus.map(([area, count]) => (
                   <div key={area} className="flex items-center gap-2">
