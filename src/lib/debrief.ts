@@ -1,20 +1,25 @@
 import type { Round, RoundHole } from './types';
-import { analyzeRound, type RoundSGAnalysis, type HoleSG } from './strokesGained';
+import { analyzeRound, type RoundSGAnalysis } from './strokesGained';
 
 // ── Types ───────────────────────────────────────────────────
 
 export interface DebriefInsight {
   category: 'positive' | 'negative' | 'neutral';
-  area: string; // SG category or stat area
+  area: string;
   title: string;
   detail: string;
+  /** Plain-English version for casual golfers */
+  casualDetail: string;
   impact: 'high' | 'medium' | 'low';
 }
 
 export interface DebriefActionItem {
-  priority: number; // 1 = highest
+  priority: number;
   area: string;
   action: string;
+  /** Route to practice feature, if applicable */
+  practiceLink?: string;
+  practiceLinkLabel?: string;
   drillSuggestion?: string;
 }
 
@@ -33,6 +38,21 @@ export interface ScoringPattern {
   trend: 'good' | 'bad' | 'neutral';
 }
 
+export interface WhatIf {
+  label: string;
+  savedStrokes: number;
+  hypotheticalScore: number;
+}
+
+export interface CourseHistory {
+  courseName: string;
+  roundCount: number;
+  avgScore: number;
+  bestScore: number;
+  thisScore: number;
+  vsAvg: number; // negative = better than average
+}
+
 export interface RoundDebrief {
   round: Round;
   analysis: RoundSGAnalysis;
@@ -44,7 +64,58 @@ export interface RoundDebrief {
   scoringPatterns: ScoringPattern[];
   strengths: string[];
   improvementAreas: string[];
+  whatIfs: WhatIf[];
+  courseHistory: CourseHistory | null;
 }
+
+// ── Reflection persistence (localStorage) ───────────────────
+
+const REFLECTION_KEY_PREFIX = 'debrief_reflection_';
+const NOTES_KEY_PREFIX = 'debrief_notes_';
+const TAG_KEY_PREFIX = 'debrief_tags_';
+
+export function getReflection(roundId: string): Record<string, string> {
+  try {
+    const raw = localStorage.getItem(REFLECTION_KEY_PREFIX + roundId);
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+
+export function saveReflection(roundId: string, answers: Record<string, string>) {
+  try {
+    localStorage.setItem(REFLECTION_KEY_PREFIX + roundId, JSON.stringify(answers));
+  } catch { /* quota exceeded */ }
+}
+
+export function getCoachNotes(roundId: string): string {
+  try {
+    return localStorage.getItem(NOTES_KEY_PREFIX + roundId) ?? '';
+  } catch { return ''; }
+}
+
+export function saveCoachNotes(roundId: string, notes: string) {
+  try {
+    localStorage.setItem(NOTES_KEY_PREFIX + roundId, notes);
+  } catch { /* quota exceeded */ }
+}
+
+export function getRoundTags(roundId: string): string[] {
+  try {
+    const raw = localStorage.getItem(TAG_KEY_PREFIX + roundId);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+export function saveRoundTags(roundId: string, tags: string[]) {
+  try {
+    localStorage.setItem(TAG_KEY_PREFIX + roundId, JSON.stringify(tags));
+  } catch { /* quota exceeded */ }
+}
+
+export const AVAILABLE_TAGS = [
+  'Tournament', 'Casual', 'Practice Round', 'Lesson', 'Playing Lesson',
+  'Best Ball', 'Match Play', 'Scramble', 'Windy', 'Rain', 'Walking', 'Riding',
+] as const;
 
 // ── Generator ───────────────────────────────────────────────
 
@@ -52,9 +123,10 @@ export function generateDebrief(
   round: Round,
   holes: RoundHole[],
   recentRounds: Round[],
-  handicap: number = 15,
+  handicap: number | null,
 ): RoundDebrief {
-  const analysis = analyzeRound(round, holes, handicap);
+  const hcap = handicap ?? 15;
+  const analysis = analyzeRound(round, holes, hcap);
   const insights: DebriefInsight[] = [];
   const actionItems: DebriefActionItem[] = [];
   const strengths: string[] = [];
@@ -75,21 +147,67 @@ export function generateDebrief(
   else if (toPar <= 18) { overallVerdict = 'Tough round — focus on the positives.'; overallEmoji = 'chart'; }
   else { overallVerdict = 'Learning round. Every round teaches something.'; overallEmoji = 'book'; }
 
-  // Compare to recent average
+  // ── Course History ──────────────────────────────────────
+  let courseHistory: CourseHistory | null = null;
+  const courseRounds = recentRounds.filter(
+    r => r.course_name === round.course_name && r.total_score != null && r.id !== round.id,
+  );
+  if (courseRounds.length >= 1) {
+    const scores = courseRounds.map(r => r.total_score!);
+    const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
+    const bestScore = Math.min(...scores);
+    courseHistory = {
+      courseName: round.course_name,
+      roundCount: courseRounds.length,
+      avgScore: Math.round(avgScore * 10) / 10,
+      bestScore,
+      thisScore: score,
+      vsAvg: Math.round((score - avgScore) * 10) / 10,
+    };
+    if (score < bestScore) {
+      insights.push({
+        category: 'positive', area: 'Course History',
+        title: 'New Personal Best Here!',
+        detail: `Beat your previous best of ${bestScore} at ${round.course_name}.`,
+        casualDetail: `This is your best score ever at ${round.course_name}! You beat your old best of ${bestScore}.`,
+        impact: 'high',
+      });
+    } else if (courseHistory.vsAvg <= -3) {
+      insights.push({
+        category: 'positive', area: 'Course History',
+        title: 'Well Below Your Course Average',
+        detail: `Shot ${Math.abs(courseHistory.vsAvg)} strokes below your average of ${courseHistory.avgScore} here.`,
+        casualDetail: `You usually shoot around ${courseHistory.avgScore} here — today was ${Math.abs(courseHistory.vsAvg)} shots better!`,
+        impact: 'high',
+      });
+    } else if (courseHistory.vsAvg >= 5) {
+      insights.push({
+        category: 'negative', area: 'Course History',
+        title: 'Above Your Course Average',
+        detail: `Shot ${courseHistory.vsAvg} strokes above your average of ${courseHistory.avgScore} here.`,
+        casualDetail: `You normally shoot about ${courseHistory.avgScore} here — today was a tougher day.`,
+        impact: 'medium',
+      });
+    }
+  }
+
+  // Compare to recent average (all courses)
   const recentScores = recentRounds.filter(r => r.total_score != null).map(r => r.total_score!);
   if (recentScores.length >= 3) {
     const recentAvg = recentScores.reduce((a, b) => a + b, 0) / recentScores.length;
     const diff = score - recentAvg;
     if (diff <= -3) {
       insights.push({
-        category: 'positive', area: 'scoring', title: 'Well Below Your Average',
+        category: 'positive', area: 'Scoring', title: 'Well Below Your Average',
         detail: `Shot ${Math.abs(diff).toFixed(1)} strokes better than your recent average of ${recentAvg.toFixed(1)}.`,
+        casualDetail: `You usually shoot around ${recentAvg.toFixed(0)} — today was ${Math.abs(diff).toFixed(0)} shots better!`,
         impact: 'high',
       });
     } else if (diff >= 5) {
       insights.push({
-        category: 'negative', area: 'scoring', title: 'Above Your Average',
+        category: 'negative', area: 'Scoring', title: 'Above Your Average',
         detail: `Shot ${diff.toFixed(1)} strokes above your recent average of ${recentAvg.toFixed(1)}.`,
+        casualDetail: `A bit off your usual game — you normally shoot around ${recentAvg.toFixed(0)}.`,
         impact: 'medium',
       });
     }
@@ -103,42 +221,54 @@ export function generateDebrief(
     { key: 'sgOtt', label: 'Off the Tee', val: analysis.sgOtt },
   ];
 
-  // Sort by SG value — best first
   const sorted = [...sgCategories].sort((a, b) => b.val - a.val);
 
-  // Best category
   if (sorted[0].val > 0.5) {
     insights.push({
-      category: 'positive', area: sorted[0].label, title: `${sorted[0].label} Was Your Strength`,
+      category: 'positive', area: sorted[0].label,
+      title: `${sorted[0].label} Was Your Strength`,
       detail: `Gained ${sorted[0].val.toFixed(1)} strokes in ${sorted[0].label.toLowerCase()}.`,
+      casualDetail: `Your ${sorted[0].label.toLowerCase()} was really working today — one of your best areas.`,
       impact: 'high',
     });
     strengths.push(sorted[0].label);
   }
-  if (sorted[1].val > 0) {
-    strengths.push(sorted[1].label);
-  }
+  if (sorted[1].val > 0) strengths.push(sorted[1].label);
 
-  // Worst category
   if (sorted[sorted.length - 1].val < -0.5) {
     const worst = sorted[sorted.length - 1];
     insights.push({
-      category: 'negative', area: worst.label, title: `${worst.label} Held You Back`,
+      category: 'negative', area: worst.label,
+      title: `${worst.label} Held You Back`,
       detail: `Lost ${Math.abs(worst.val).toFixed(1)} strokes in ${worst.label.toLowerCase()}.`,
+      casualDetail: `${worst.label} was the toughest part of your game today. A little improvement here makes a big difference.`,
       impact: 'high',
     });
     improvementAreas.push(worst.label);
 
-    // Action item for worst area
-    const drillMap: Record<string, string> = {
-      'Putting': 'Focus on lag putting drills and 3-6ft makes',
-      'Approach': 'Work on scoring zone wedges (50-120yd) and iron accuracy',
-      'Short Game': 'Practice up-and-downs from various lies around the green',
-      'Off the Tee': 'Focus on driver accuracy — pick smaller targets on the range',
+    const drillMap: Record<string, { action: string; link: string; linkLabel: string }> = {
+      'Putting': {
+        action: 'Focus on lag putting drills and 3-6ft makes',
+        link: '/putters', linkLabel: 'Open Putter Lab',
+      },
+      'Approach': {
+        action: 'Work on scoring zone wedges (50-120yd) and iron accuracy',
+        link: '/wedges', linkLabel: 'Open Wedge Lab',
+      },
+      'Short Game': {
+        action: 'Practice up-and-downs from various lies around the green',
+        link: '/practice/timed?category=short_game', linkLabel: 'Start Short Game Drill',
+      },
+      'Off the Tee': {
+        action: 'Focus on driver accuracy — pick smaller targets on the range',
+        link: '/practice/timed?category=full_swing', linkLabel: 'Start Full Swing Drill',
+      },
     };
+    const drill = drillMap[worst.label];
     actionItems.push({
       priority: 1, area: worst.label,
-      action: drillMap[worst.label] ?? `Dedicate extra practice time to ${worst.label.toLowerCase()}`,
+      action: drill?.action ?? `Dedicate extra practice time to ${worst.label.toLowerCase()}`,
+      practiceLink: drill?.link, practiceLinkLabel: drill?.linkLabel,
     });
   }
   if (sorted[sorted.length - 2]?.val < 0) {
@@ -147,94 +277,109 @@ export function generateDebrief(
 
   // ── Specific Stat Insights ──────────────────────────────
 
-  // Putting
   if (analysis.threePuttCount >= 3) {
     insights.push({
-      category: 'negative', area: 'Putting', title: `${analysis.threePuttCount} Three-Putts`,
+      category: 'negative', area: 'Putting',
+      title: `${analysis.threePuttCount} Three-Putts`,
       detail: `Three-putts cost ~${(analysis.threePuttCount * 0.8).toFixed(1)} strokes. Focus on lag distance control.`,
+      casualDetail: `${analysis.threePuttCount} three-putts today — that's a lot of extra strokes. Getting your first putt closer would help a lot.`,
       impact: 'high',
     });
     actionItems.push({
       priority: 2, area: 'Putting',
       action: 'Lag putting drill: putt to 20/30/40ft, all within 3ft circle',
-      drillSuggestion: 'drill-lag-putting',
+      practiceLink: '/putters', practiceLinkLabel: 'Open Putter Lab',
     });
   } else if (analysis.threePuttCount === 0 && analysis.totalPutts > 0) {
     insights.push({
-      category: 'positive', area: 'Putting', title: 'Zero Three-Putts',
+      category: 'positive', area: 'Putting',
+      title: 'Zero Three-Putts',
       detail: 'Great speed control — no three-putts today.',
+      casualDetail: 'No three-putts! Your distance control on the greens was solid.',
       impact: 'medium',
     });
   }
 
   if (analysis.onePuttCount >= 6) {
     insights.push({
-      category: 'positive', area: 'Putting', title: `${analysis.onePuttCount} One-Putts`,
+      category: 'positive', area: 'Putting',
+      title: `${analysis.onePuttCount} One-Putts`,
       detail: 'Excellent on the greens with many one-putts.',
+      casualDetail: `${analysis.onePuttCount} one-putts — you were draining everything today!`,
       impact: 'medium',
     });
   }
 
-  // GIR
   if (analysis.girPct >= 50) {
     insights.push({
-      category: 'positive', area: 'Approach', title: `${analysis.girPct}% Greens in Regulation`,
+      category: 'positive', area: 'Approach',
+      title: `${analysis.girPct}% Greens in Regulation`,
       detail: `Hit ${analysis.girCount} greens — giving yourself birdie looks.`,
+      casualDetail: `You reached the green in the expected number of shots on ${analysis.girCount} holes. That gives you more birdie chances.`,
       impact: 'medium',
     });
   } else if (analysis.girPct < 20) {
     insights.push({
-      category: 'negative', area: 'Approach', title: `Only ${analysis.girPct}% GIR`,
+      category: 'negative', area: 'Approach',
+      title: `Only ${analysis.girPct}% GIR`,
       detail: `Only ${analysis.girCount} greens hit. Iron accuracy is the biggest scoring lever.`,
+      casualDetail: `You only reached the green "on time" ${analysis.girCount} times. Better iron shots = easier pars.`,
       impact: 'high',
     });
     actionItems.push({
       priority: 2, area: 'Approach',
       action: 'Stock shot drill with mid-irons — build consistent contact',
-      drillSuggestion: 'drill-stock-shot',
+      practiceLink: '/practice/timed?category=full_swing', practiceLinkLabel: 'Start Iron Drill',
     });
   }
 
-  // FIR
   if (analysis.firPct >= 65) {
     insights.push({
-      category: 'positive', area: 'Off the Tee', title: `${analysis.firPct}% Fairways`,
+      category: 'positive', area: 'Off the Tee',
+      title: `${analysis.firPct}% Fairways`,
       detail: `Hit ${analysis.firCount}/${analysis.firHoles} fairways — keeping it in play.`,
+      casualDetail: `You found the fairway ${analysis.firCount} out of ${analysis.firHoles} times — nice driving!`,
       impact: 'medium',
     });
   } else if (analysis.firPct < 30 && analysis.firHoles > 0) {
     insights.push({
-      category: 'negative', area: 'Off the Tee', title: `Only ${analysis.firPct}% Fairways`,
-      detail: `Missing fairways makes approach shots much harder.`,
+      category: 'negative', area: 'Off the Tee',
+      title: `Only ${analysis.firPct}% Fairways`,
+      detail: 'Missing fairways makes approach shots much harder.',
+      casualDetail: `Only ${analysis.firCount} out of ${analysis.firHoles} fairways hit. Being in the rough or trees makes the next shot much harder.`,
       impact: 'medium',
     });
   }
 
-  // Up & Down
   if (analysis.upAndDownPct >= 50 && analysis.upAndDownAttempts >= 3) {
     insights.push({
-      category: 'positive', area: 'Short Game', title: `${analysis.upAndDownPct}% Up & Down`,
+      category: 'positive', area: 'Short Game',
+      title: `${analysis.upAndDownPct}% Up & Down`,
       detail: `Saved par ${analysis.upAndDownMade} of ${analysis.upAndDownAttempts} times — great scrambling.`,
+      casualDetail: `When you missed the green, you still saved par ${analysis.upAndDownMade} times. That's great scrambling!`,
       impact: 'medium',
     });
   } else if (analysis.upAndDownPct < 20 && analysis.upAndDownAttempts >= 3) {
     insights.push({
-      category: 'negative', area: 'Short Game', title: `Only ${analysis.upAndDownPct}% Up & Down`,
+      category: 'negative', area: 'Short Game',
+      title: `Only ${analysis.upAndDownPct}% Up & Down`,
       detail: `Converted only ${analysis.upAndDownMade} of ${analysis.upAndDownAttempts} scramble chances.`,
+      casualDetail: `When you missed the green, you only saved par ${analysis.upAndDownMade} out of ${analysis.upAndDownAttempts} times. Chipping closer would help.`,
       impact: 'medium',
     });
     actionItems.push({
       priority: 3, area: 'Short Game',
       action: 'Practice chip-and-pitch proximity from 10-30 yards',
-      drillSuggestion: 'drill-pitch-chip',
+      practiceLink: '/practice/timed?category=short_game', practiceLinkLabel: 'Start Short Game Drill',
     });
   }
 
-  // Penalties
   if (analysis.totalPenalties >= 3) {
     insights.push({
-      category: 'negative', area: 'Course Management', title: `${analysis.totalPenalties} Penalty Strokes`,
+      category: 'negative', area: 'Course Management',
+      title: `${analysis.totalPenalties} Penalty Strokes`,
       detail: `Penalties cost ${analysis.totalPenalties} strokes. Consider more conservative targets.`,
+      casualDetail: `${analysis.totalPenalties} penalty strokes today — that's like giving away ${analysis.totalPenalties} free shots. Playing safer off the tee can help.`,
       impact: 'high',
     });
     actionItems.push({
@@ -276,7 +421,6 @@ export function generateDebrief(
     }
   }
 
-  // Best and worst holes by SG
   if (holeSGs.length > 0) {
     const bestHole = [...holeSGs].sort((a, b) => b.sgTotal - a.sgTotal)[0];
     const worstHole = [...holeSGs].sort((a, b) => a.sgTotal - b.sgTotal)[0];
@@ -302,7 +446,6 @@ export function generateDebrief(
   // ── Scoring Patterns ────────────────────────────────────
   const scoringPatterns: ScoringPattern[] = [];
 
-  // Par 3/4/5 breakdown
   for (const parVal of [3, 4, 5]) {
     const parHoles = holes.filter(h => h.par === parVal && h.score != null);
     if (parHoles.length === 0) continue;
@@ -315,7 +458,6 @@ export function generateDebrief(
     });
   }
 
-  // Front/back split
   const front = holes.filter(h => h.hole_number <= 9 && h.score != null);
   const back = holes.filter(h => h.hole_number > 9 && h.score != null);
   if (front.length > 0 && back.length > 0) {
@@ -337,7 +479,6 @@ export function generateDebrief(
     });
   }
 
-  // Bounce-back rate
   const doubleOrWorse = holes.filter(h => h.score != null && h.score - h.par >= 2);
   if (doubleOrWorse.length > 0) {
     const bounceBackCount = doubleOrWorse.filter(h => {
@@ -352,12 +493,57 @@ export function generateDebrief(
     });
   }
 
-  // Sort action items by priority
+  // ── What-If Analysis ──────────────────────────────────
+  const whatIfs: WhatIf[] = [];
+
+  // What if no three-putts?
+  if (analysis.threePuttCount > 0) {
+    const saved = analysis.threePuttCount; // Each three-putt = ~1 extra stroke
+    whatIfs.push({
+      label: 'Eliminate three-putts',
+      savedStrokes: saved,
+      hypotheticalScore: score - saved,
+    });
+  }
+
+  // What if no penalties?
+  if (analysis.totalPenalties > 0) {
+    whatIfs.push({
+      label: 'Eliminate penalties',
+      savedStrokes: analysis.totalPenalties,
+      hypotheticalScore: score - analysis.totalPenalties,
+    });
+  }
+
+  // What if doubles became bogeys?
+  const doublesOrWorse = holes.filter(h => h.score != null && h.score - h.par >= 2);
+  if (doublesOrWorse.length > 0) {
+    const extraStrokes = doublesOrWorse.reduce((s, h) => s + (h.score! - h.par - 1), 0);
+    whatIfs.push({
+      label: 'Cap doubles at bogey',
+      savedStrokes: extraStrokes,
+      hypotheticalScore: score - extraStrokes,
+    });
+  }
+
+  // What if 50% up-and-down?
+  if (analysis.upAndDownAttempts > 0 && analysis.upAndDownPct < 50) {
+    const targetMakes = Math.ceil(analysis.upAndDownAttempts * 0.5);
+    const extraSaves = targetMakes - analysis.upAndDownMade;
+    if (extraSaves > 0) {
+      whatIfs.push({
+        label: 'Scramble at 50%',
+        savedStrokes: extraSaves,
+        hypotheticalScore: score - extraSaves,
+      });
+    }
+  }
+
   actionItems.sort((a, b) => a.priority - b.priority);
 
   return {
     round, analysis, overallVerdict, overallEmoji,
     insights, actionItems, holeHighlights, scoringPatterns,
-    strengths, improvementAreas,
+    strengths, improvementAreas, whatIfs, courseHistory,
   };
 }
