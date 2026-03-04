@@ -14,6 +14,7 @@ const navGroups = [
       { href: '/fitness', label: 'Golf Fitness', desc: 'Workouts & exercise library', lm: false },
       { href: '/practice', label: 'Practice', desc: 'Structured drills & scoring', lm: false },
       { href: '/warmup', label: 'Pre-Round Warmup', desc: 'Personalized warmup routines', lm: false },
+      { href: '/practice/plans', label: 'Practice Plans', desc: 'SG-based weekly practice plans', lm: false },
     ],
   },
   {

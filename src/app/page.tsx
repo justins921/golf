@@ -425,6 +425,7 @@ const ALL_MODULES = [
   { href: '/fitness', title: 'Fitness', desc: 'Workouts & exercises', badge: false },
   { href: '/practice', title: 'Practice', desc: 'Drills & scoring', badge: false },
   { href: '/warmup', title: 'Warmup', desc: 'Pre-round routines', badge: false },
+  { href: '/practice/plans', title: 'Plans', desc: 'Weekly practice plans', badge: false },
   { href: '/goals', title: 'Goals', desc: 'Season targets', badge: false },
   { href: '/shots', title: 'Shot Data', desc: 'Garmin R50 import', badge: true },
   { href: '/compare', title: 'Compare', desc: 'Dispersion overlay', badge: true },
