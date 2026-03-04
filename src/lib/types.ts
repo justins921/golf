@@ -809,3 +809,126 @@ export interface SeasonGoal {
   achieved_at: string | null;
   created_at: string;
 }
+
+// ============================================================
+// Instruction / Lesson types
+// ============================================================
+
+export interface Lesson {
+  id: string;
+  user_id: string;
+  lesson_date: string;
+  coach_name: string | null;
+  lesson_type: string;
+  duration_min: number | null;
+  focus_areas: string[];
+  drills_assigned: DrillAssignment[];
+  swing_feels: string[];
+  notes: string | null;
+  rating: number | null;
+  next_lesson_goals: string | null;
+  created_at: string;
+}
+
+export interface DrillAssignment {
+  name: string;
+  description: string;
+  reps: string;
+}
+
+export const LESSON_TYPES = ['full_swing', 'short_game', 'putting', 'playing', 'other'] as const;
+
+export const LESSON_TYPE_LABELS: Record<string, string> = {
+  full_swing: 'Full Swing',
+  short_game: 'Short Game',
+  putting: 'Putting',
+  playing: 'Playing Lesson',
+  other: 'Other',
+};
+
+export const LESSON_FOCUS_AREAS = [
+  'Grip', 'Stance', 'Alignment', 'Takeaway', 'Backswing',
+  'Transition', 'Downswing', 'Impact', 'Follow Through', 'Tempo',
+  'Ball Position', 'Weight Transfer', 'Hip Rotation', 'Shoulder Turn',
+  'Chipping', 'Pitching', 'Bunker Play', 'Putting Stroke',
+  'Green Reading', 'Course Management', 'Shot Shaping', 'Trajectory Control',
+] as const;
+
+// ============================================================
+// Mental game types
+// ============================================================
+
+export interface MentalGameLog {
+  id: string;
+  user_id: string;
+  log_date: string;
+  log_type: string;
+  mood_rating: number | null;
+  confidence_rating: number | null;
+  focus_rating: number | null;
+  pre_shot_routine: string | null;
+  commitment_level: number | null;
+  mental_triggers: string[];
+  positive_moments: string[];
+  round_id: string | null;
+  notes: string | null;
+  created_at: string;
+}
+
+export const MENTAL_LOG_TYPES = ['journal', 'pre_round', 'post_round', 'visualization'] as const;
+
+export const MENTAL_LOG_TYPE_LABELS: Record<string, string> = {
+  journal: 'Journal Entry',
+  pre_round: 'Pre-Round Check-In',
+  post_round: 'Post-Round Reflection',
+  visualization: 'Visualization Session',
+};
+
+export const COMMON_MENTAL_TRIGGERS = [
+  'Bad tee shot', 'Three-putt', 'Missed short putt', 'Bad break',
+  'Slow play', 'Score anxiety', 'Swing thoughts', 'Playing partners',
+  'Weather conditions', 'Result of previous hole', 'Trying too hard',
+  'Lost focus between shots', 'Rushing', 'Overthinking',
+] as const;
+
+export const COMMON_POSITIVE_MOMENTS = [
+  'Stuck to routine', 'Bounced back after bad hole', 'Stayed patient',
+  'Committed to every shot', 'Good course management', 'Controlled emotions',
+  'Enjoyed the round', 'Accepted bad shots', 'Focused on process',
+  'Good visualization', 'Trusted my swing', 'Played one shot at a time',
+] as const;
+
+// ============================================================
+// Course strategy types
+// ============================================================
+
+export interface CourseStrategy {
+  id: string;
+  user_id: string;
+  course_id: string | null;
+  course_name: string;
+  tee_set: string | null;
+  hole_strategies: HoleStrategy[];
+  general_notes: string | null;
+  weather_adjustments: string | null;
+  scoring_target: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface HoleStrategy {
+  hole: number;
+  par: number;
+  yardage: number | null;
+  strategy: string;
+  club_off_tee: string;
+  target: string;
+  miss_zone: string;
+  notes: string;
+}
+
+export const MISS_ZONES = [
+  'Short', 'Long', 'Left', 'Right',
+  'Short-Left', 'Short-Right', 'Long-Left', 'Long-Right',
+  'Center', 'Anywhere',
+] as const;

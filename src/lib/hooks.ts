@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from './supabase';
-import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem, SpeedSession, SpeedReading, WorkoutLog, Round, RoundHole, WedgeSession, WedgeSessionShot, SeasonGoal, Course, DebriefShare, DebriefCoachNote } from './types';
+import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem, SpeedSession, SpeedReading, WorkoutLog, Round, RoundHole, WedgeSession, WedgeSessionShot, SeasonGoal, Course, DebriefShare, DebriefCoachNote, Lesson, MentalGameLog, CourseStrategy } from './types';
 import { filterShots } from './stats';
 
 export function useSessions() {
@@ -882,4 +882,136 @@ export function useDebriefByToken(token: string | null) {
   };
 
   return { share, round, holes, coachNotes, loading, addCoachNote, refetch: fetch };
+}
+
+// ============================================================
+// Lesson / Instruction hooks
+// ============================================================
+
+export function useLessons() {
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchLessons = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('lessons')
+      .select('*')
+      .order('lesson_date', { ascending: false });
+    if (!error && data) setLessons(data as Lesson[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchLessons(); }, [fetchLessons]);
+
+  const addLesson = async (lesson: Omit<Lesson, 'id' | 'user_id' | 'created_at'>) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return new Error('Not authenticated');
+    const { error } = await supabase.from('lessons').insert({ ...lesson, user_id: user.id });
+    if (!error) await fetchLessons();
+    return error;
+  };
+
+  const updateLesson = async (id: string, updates: Partial<Lesson>) => {
+    const { error } = await supabase.from('lessons').update(updates).eq('id', id);
+    if (!error) await fetchLessons();
+    return error;
+  };
+
+  const deleteLesson = async (id: string) => {
+    const { error } = await supabase.from('lessons').delete().eq('id', id);
+    if (!error) await fetchLessons();
+    return error;
+  };
+
+  return { lessons, loading, refetch: fetchLessons, addLesson, updateLesson, deleteLesson };
+}
+
+// ============================================================
+// Mental game hooks
+// ============================================================
+
+export function useMentalGameLogs() {
+  const [logs, setLogs] = useState<MentalGameLog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchLogs = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('mental_game_logs')
+      .select('*')
+      .order('log_date', { ascending: false });
+    if (!error && data) setLogs(data as MentalGameLog[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchLogs(); }, [fetchLogs]);
+
+  const addLog = async (log: Omit<MentalGameLog, 'id' | 'user_id' | 'created_at'>) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return new Error('Not authenticated');
+    const { error } = await supabase.from('mental_game_logs').insert({ ...log, user_id: user.id });
+    if (!error) await fetchLogs();
+    return error;
+  };
+
+  const updateLog = async (id: string, updates: Partial<MentalGameLog>) => {
+    const { error } = await supabase.from('mental_game_logs').update(updates).eq('id', id);
+    if (!error) await fetchLogs();
+    return error;
+  };
+
+  const deleteLog = async (id: string) => {
+    const { error } = await supabase.from('mental_game_logs').delete().eq('id', id);
+    if (!error) await fetchLogs();
+    return error;
+  };
+
+  return { logs, loading, refetch: fetchLogs, addLog, updateLog, deleteLog };
+}
+
+// ============================================================
+// Course strategy hooks
+// ============================================================
+
+export function useCourseStrategies() {
+  const [strategies, setStrategies] = useState<CourseStrategy[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchStrategies = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('course_strategies')
+      .select('*')
+      .order('updated_at', { ascending: false });
+    if (!error && data) setStrategies(data as CourseStrategy[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchStrategies(); }, [fetchStrategies]);
+
+  const addStrategy = async (strategy: Omit<CourseStrategy, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return new Error('Not authenticated');
+    const { error } = await supabase.from('course_strategies').insert({ ...strategy, user_id: user.id });
+    if (!error) await fetchStrategies();
+    return error;
+  };
+
+  const updateStrategy = async (id: string, updates: Partial<CourseStrategy>) => {
+    const { error } = await supabase.from('course_strategies').update({ ...updates, updated_at: new Date().toISOString() }).eq('id', id);
+    if (!error) await fetchStrategies();
+    return error;
+  };
+
+  const deleteStrategy = async (id: string) => {
+    const { error } = await supabase.from('course_strategies').delete().eq('id', id);
+    if (!error) await fetchStrategies();
+    return error;
+  };
+
+  return { strategies, loading, refetch: fetchStrategies, addStrategy, updateStrategy, deleteStrategy };
 }

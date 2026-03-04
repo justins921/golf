@@ -15,6 +15,7 @@ const navGroups = [
       { href: '/practice', label: 'Practice', desc: 'Structured drills & scoring', lm: false },
       { href: '/warmup', label: 'Pre-Round Warmup', desc: 'Personalized warmup routines', lm: false },
       { href: '/practice/plans', label: 'Practice Plans', desc: 'SG-based weekly practice plans', lm: false },
+      { href: '/lessons', label: 'Lessons', desc: 'Coaching sessions & swing feels', lm: false },
     ],
   },
   {
@@ -24,6 +25,8 @@ const navGroups = [
       { href: '/rounds', label: 'Rounds', desc: 'Scorecards & on-course stats', lm: false },
       { href: '/goals', label: 'Season Goals', desc: 'Track targets & milestones', lm: false },
       { href: '/debrief', label: 'Post-Round Debrief', desc: 'Insights & action items', lm: false },
+      { href: '/mental', label: 'Mental Game', desc: 'Journal, routines & mindset', lm: false },
+      { href: '/strategy', label: 'Course Strategy', desc: 'Hole-by-hole game plans', lm: false },
       { href: '/shots', label: 'Shot Data', desc: 'Garmin R50 import & sessions', lm: true },
       { href: '/compare', label: 'Compare', desc: 'Dispersion across sessions', lm: true },
       { href: '/heatmap', label: 'Shot Heatmap', desc: 'Density maps & miss tendencies', lm: true },
