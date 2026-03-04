@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from './supabase';
-import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem, SpeedSession, SpeedReading, WorkoutLog, Round, RoundHole, WedgeSession, WedgeSessionShot, SeasonGoal } from './types';
+import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem, SpeedSession, SpeedReading, WorkoutLog, Round, RoundHole, WedgeSession, WedgeSessionShot, SeasonGoal, Course } from './types';
 import { filterShots } from './stats';
 
 export function useSessions() {
@@ -719,4 +719,52 @@ export function useSeasonGoals() {
   };
 
   return { goals, loading, refetch: fetchGoals, addGoal, updateGoal, deleteGoal };
+}
+
+// ============================================================
+// Course database hooks
+// ============================================================
+
+export function useCourses() {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchCourses = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('courses')
+      .select('*')
+      .order('name', { ascending: true });
+    if (!error && data) setCourses(data as Course[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchCourses(); }, [fetchCourses]);
+
+  const addCourse = async (course: Omit<Course, 'id' | 'user_id' | 'created_at'>) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { error: new Error('Not authenticated'), data: null };
+    const { data, error } = await supabase
+      .from('courses')
+      .insert({ ...course, user_id: user.id })
+      .select()
+      .single();
+    if (!error) await fetchCourses();
+    return { data: data as Course | null, error };
+  };
+
+  const updateCourse = async (id: string, updates: Partial<Course>) => {
+    const { error } = await supabase.from('courses').update(updates).eq('id', id);
+    if (!error) await fetchCourses();
+    return error;
+  };
+
+  const deleteCourse = async (id: string) => {
+    const { error } = await supabase.from('courses').delete().eq('id', id);
+    if (!error) await fetchCourses();
+    return error;
+  };
+
+  return { courses, loading, refetch: fetchCourses, addCourse, updateCourse, deleteCourse };
 }

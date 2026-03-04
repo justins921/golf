@@ -749,6 +749,28 @@ export const GOAL_METRIC_DIRECTION: Record<GoalMetric, 'lower' | 'higher'> = {
   custom: 'higher',
 };
 
+// ============================================================
+// Course database types
+// ============================================================
+
+export interface Course {
+  id: string;
+  user_id: string;
+  name: string;
+  city: string | null;
+  state: string | null;
+  tee_sets: TeeSet[];
+  created_at: string;
+}
+
+export interface TeeSet {
+  name: string;        // "Blue", "White", etc.
+  course_rating: number;
+  slope_rating: number;
+  par: number;
+  yardage: number | null;
+}
+
 export interface SeasonGoal {
   id: string;
   user_id: string;

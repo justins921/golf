@@ -7,6 +7,7 @@ import { useRounds, useRoundHoles } from '@/lib/hooks';
 import type { Round, RoundHole } from '@/lib/types';
 import { CLUB_ORDER, sortClubs } from '@/lib/types';
 import RoundAnalysis from '@/components/RoundAnalysis';
+import CourseSelector from '@/components/CourseSelector';
 import { calculateHandicap } from '@/lib/handicap';
 import type { ScoreDifferential } from '@/lib/handicap';
 
@@ -141,45 +142,26 @@ function RoundTracker() {
                   <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)}
                     className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
                 </div>
+                <CourseSelector
+                  compact
+                  initialCourse={newCourse}
+                  initialTees={newTees}
+                  onSelect={({ courseName, tees, courseRating, slopeRating }) => {
+                    setNewCourse(courseName);
+                    setNewTees(tees);
+                    setNewCourseRating(courseRating != null ? String(courseRating) : '');
+                    setNewSlopeRating(slopeRating != null ? String(slopeRating) : '');
+                  }}
+                />
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Course</label>
-                  <input type="text" value={newCourse} onChange={(e) => setNewCourse(e.target.value)}
-                    placeholder="Course name"
-                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">Tees</label>
-                    <input type="text" value={newTees} onChange={(e) => setNewTees(e.target.value)}
-                      placeholder="Blue, White..."
-                      className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">Holes</label>
-                    <div className="flex gap-1">
-                      {[9, 18].map((n) => (
-                        <button key={n} onClick={() => setNewHoles(n)}
-                          className={`px-3 py-1 text-xs rounded ${newHoles === n ? 'bg-green-600 text-gray-50' : 'bg-gray-700 text-gray-400'}`}>
-                          {n}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">Course Rating</label>
-                    <input type="number" step="0.1" min="55" max="85" value={newCourseRating}
-                      onChange={(e) => setNewCourseRating(e.target.value)}
-                      placeholder="72.3"
-                      className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-gray-500 mb-1">Slope Rating</label>
-                    <input type="number" min="55" max="155" value={newSlopeRating}
-                      onChange={(e) => setNewSlopeRating(e.target.value)}
-                      placeholder="131"
-                      className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
+                  <label className="block text-xs text-gray-500 mb-1">Holes</label>
+                  <div className="flex gap-1">
+                    {[9, 18].map((n) => (
+                      <button key={n} onClick={() => setNewHoles(n)}
+                        className={`px-3 py-1 text-xs rounded ${newHoles === n ? 'bg-green-600 text-gray-50' : 'bg-gray-700 text-gray-400'}`}>
+                        {n}
+                      </button>
+                    ))}
                   </div>
                 </div>
                 <div>

@@ -6,6 +6,7 @@ import Nav from '@/components/Nav';
 import AuthGuard from '@/components/AuthGuard';
 import { useRounds, useRoundHoles } from '@/lib/hooks';
 import type { Round, RoundHole } from '@/lib/types';
+import CourseSelector from '@/components/CourseSelector';
 
 export default function PlayPage() {
   return (
@@ -220,87 +221,58 @@ function PlayMode() {
           )}
 
           <div className="bg-gray-900 border border-gray-800 rounded-lg p-5 space-y-4">
+            <CourseSelector
+              onSelect={(info) => {
+                setCourse(info.courseName);
+                setTees(info.tees);
+                if (info.courseRating != null) setCourseRating(String(info.courseRating));
+                if (info.slopeRating != null) setSlopeRating(String(info.slopeRating));
+              }}
+            />
+
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Course</label>
-              <input
-                type="text"
-                value={course}
-                onChange={(e) => setCourse(e.target.value)}
-                placeholder="Course name"
-                className="w-full px-3 py-2.5 text-base bg-gray-800 border border-gray-700 rounded-lg text-gray-50"
-              />
-              {recentCourses.length > 0 && !course && (
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {recentCourses.map((r) => (
-                    <button
-                      key={r.id}
-                      onClick={() => {
-                        setCourse(r.course_name);
-                        if (r.tees) setTees(r.tees);
-                        if (r.course_rating) setCourseRating(String(r.course_rating));
-                        if (r.slope_rating) setSlopeRating(String(r.slope_rating));
-                      }}
-                      className="text-xs px-2 py-1 rounded bg-gray-800 text-gray-400 hover:bg-gray-700"
-                    >
-                      {r.course_name}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs text-gray-500 mb-1">Tees</label>
-                <input
-                  type="text"
-                  value={tees}
-                  onChange={(e) => setTees(e.target.value)}
-                  placeholder="Blue"
-                  className="w-full px-3 py-2.5 text-base bg-gray-800 border border-gray-700 rounded-lg text-gray-50"
-                />
-              </div>
-              <div>
-                <label className="block text-xs text-gray-500 mb-1">Holes</label>
-                <div className="flex gap-2">
-                  {[9, 18].map((n) => (
-                    <button
-                      key={n}
-                      onClick={() => setHolesCount(n)}
-                      className={`flex-1 py-2.5 text-base rounded-lg ${
-                        holesCount === n ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'
-                      }`}
-                    >
-                      {n}
-                    </button>
-                  ))}
-                </div>
+              <label className="block text-xs text-gray-500 mb-1">Holes</label>
+              <div className="flex gap-2">
+                {[9, 18].map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => setHolesCount(n)}
+                    className={`flex-1 py-2.5 text-base rounded-lg ${
+                      holesCount === n ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs text-gray-500 mb-1">Course Rating</label>
-                <input
-                  type="number"
-                  step="0.1"
-                  value={courseRating}
-                  onChange={(e) => setCourseRating(e.target.value)}
-                  placeholder="72.3"
-                  className="w-full px-3 py-2.5 text-base bg-gray-800 border border-gray-700 rounded-lg text-gray-50"
-                />
+            {/* Manual rating/slope override if not auto-filled */}
+            {!courseRating && !slopeRating && (
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Course Rating</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={courseRating}
+                    onChange={(e) => setCourseRating(e.target.value)}
+                    placeholder="72.3"
+                    className="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded-lg text-gray-50"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Slope</label>
+                  <input
+                    type="number"
+                    value={slopeRating}
+                    onChange={(e) => setSlopeRating(e.target.value)}
+                    placeholder="131"
+                    className="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded-lg text-gray-50"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-xs text-gray-500 mb-1">Slope</label>
-                <input
-                  type="number"
-                  value={slopeRating}
-                  onChange={(e) => setSlopeRating(e.target.value)}
-                  placeholder="131"
-                  className="w-full px-3 py-2.5 text-base bg-gray-800 border border-gray-700 rounded-lg text-gray-50"
-                />
-              </div>
-            </div>
+            )}
 
             <button
               onClick={handleStart}
