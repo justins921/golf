@@ -189,7 +189,7 @@ function Dashboard() {
           <div className="mb-6">
             <h2 className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">Quick Actions</h2>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-              <QuickAction href="/rounds" label="Log Round" icon="flag" color="text-green-400" />
+              <QuickAction href="/play" label="Play" icon="flag" color="text-green-400" />
               <QuickAction href="/warmup" label="Warmup" icon="sun" color="text-yellow-400" />
               <QuickAction href="/practice" label="Practice" icon="target" color="text-purple-400" />
               <QuickAction href="/fitness" label="Workout" icon="heart" color="text-red-400" />
@@ -419,6 +419,7 @@ function QuickAction({ href, label, icon, color }: { href: string; label: string
 // ============================================================
 
 const ALL_MODULES = [
+  { href: '/play', title: 'Play', desc: 'On-course scorer', badge: false },
   { href: '/rounds', title: 'Rounds', desc: 'Scorecards & analysis', badge: false },
   { href: '/speed', title: 'Speed', desc: 'CHS tracking', badge: false },
   { href: '/fitness', title: 'Fitness', desc: 'Workouts & exercises', badge: false },

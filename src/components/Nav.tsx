@@ -19,6 +19,7 @@ const navGroups = [
   {
     label: 'Track',
     items: [
+      { href: '/play', label: 'Play', desc: 'On-course quick scorer', lm: false },
       { href: '/rounds', label: 'Rounds', desc: 'Scorecards & on-course stats', lm: false },
       { href: '/goals', label: 'Season Goals', desc: 'Track targets & milestones', lm: false },
       { href: '/shots', label: 'Shot Data', desc: 'Garmin R50 import & sessions', lm: true },
