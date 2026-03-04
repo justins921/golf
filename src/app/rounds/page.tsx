@@ -7,6 +7,8 @@ import { useRounds, useRoundHoles } from '@/lib/hooks';
 import type { Round, RoundHole } from '@/lib/types';
 import { CLUB_ORDER, sortClubs } from '@/lib/types';
 import RoundAnalysis from '@/components/RoundAnalysis';
+import { calculateHandicap } from '@/lib/handicap';
+import type { ScoreDifferential } from '@/lib/handicap';
 
 export default function RoundsPage() {
   return (
@@ -21,7 +23,7 @@ function RoundTracker() {
   const { rounds, loading, addRound, updateRound, deleteRound } = useRounds();
   const [selectedRoundId, setSelectedRoundId] = useState<string | null>(null);
   const [showNewRound, setShowNewRound] = useState(false);
-  const [view, setView] = useState<'rounds' | 'stats' | 'analysis'>('rounds');
+  const [view, setView] = useState<'rounds' | 'stats' | 'analysis' | 'handicap'>('rounds');
 
   // New round form
   const [newDate, setNewDate] = useState(new Date().toISOString().split('T')[0]);
@@ -29,6 +31,8 @@ function RoundTracker() {
   const [newTees, setNewTees] = useState('');
   const [newHoles, setNewHoles] = useState(18);
   const [newNotes, setNewNotes] = useState('');
+  const [newCourseRating, setNewCourseRating] = useState('');
+  const [newSlopeRating, setNewSlopeRating] = useState('');
 
   const createRound = async () => {
     if (!newCourse) return;
@@ -43,6 +47,8 @@ function RoundTracker() {
       total_fairways: null,
       total_gir: null,
       total_penalties: 0,
+      course_rating: newCourseRating ? parseFloat(newCourseRating) : null,
+      slope_rating: newSlopeRating ? parseInt(newSlopeRating) : null,
       notes: newNotes || null,
     });
     if (data) {
@@ -50,6 +56,8 @@ function RoundTracker() {
       setShowNewRound(false);
       setNewCourse('');
       setNewTees('');
+      setNewCourseRating('');
+      setNewSlopeRating('');
       setNewNotes('');
     }
   };
@@ -95,10 +103,10 @@ function RoundTracker() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-50">Rounds</h1>
         <div className="flex gap-2">
-          {(['rounds', 'stats', 'analysis'] as const).map((v) => (
+          {(['rounds', 'stats', 'analysis', 'handicap'] as const).map((v) => (
             <button key={v} onClick={() => setView(v)}
               className={`px-3 py-1.5 text-sm rounded ${view === v ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}>
-              {v === 'rounds' ? 'Scorecards' : v === 'stats' ? 'Stats' : 'Analysis'}
+              {v === 'rounds' ? 'Scorecards' : v === 'stats' ? 'Stats' : v === 'analysis' ? 'Analysis' : 'Handicap'}
             </button>
           ))}
         </div>
@@ -113,6 +121,8 @@ function RoundTracker() {
           setSelectedRoundId={setSelectedRoundId}
         />
       )}
+
+      {view === 'handicap' && <HandicapView rounds={rounds} />}
 
       {view === 'rounds' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -156,6 +166,22 @@ function RoundTracker() {
                     </div>
                   </div>
                 </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Course Rating</label>
+                    <input type="number" step="0.1" min="55" max="85" value={newCourseRating}
+                      onChange={(e) => setNewCourseRating(e.target.value)}
+                      placeholder="72.3"
+                      className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Slope Rating</label>
+                    <input type="number" min="55" max="155" value={newSlopeRating}
+                      onChange={(e) => setNewSlopeRating(e.target.value)}
+                      placeholder="131"
+                      className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
+                  </div>
+                </div>
                 <div>
                   <label className="block text-xs text-gray-500 mb-1">Notes</label>
                   <textarea value={newNotes} onChange={(e) => setNewNotes(e.target.value)} rows={2}
@@ -196,6 +222,9 @@ function RoundTracker() {
                   {r.tees && <span>{r.tees}</span>}
                   <span>{r.holes_played}H</span>
                   {r.total_putts != null && <span>{r.total_putts} putts</span>}
+                  {r.course_rating != null && r.slope_rating != null && (
+                    <span className="text-blue-400">{r.course_rating}/{r.slope_rating}</span>
+                  )}
                 </div>
               </button>
             ))}
@@ -565,6 +594,223 @@ function RoundStats({ stats, rounds }: {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// ============================================================
+// Handicap View
+// ============================================================
+
+function HandicapView({ rounds }: { rounds: Round[] }) {
+  const result = useMemo(() => calculateHandicap(rounds), [rounds]);
+
+  const trendData = useMemo(() => {
+    // Build rolling handicap over time using all rounds with ratings
+    const scored = rounds
+      .filter((r) => r.total_score != null && r.holes_played >= 18)
+      .sort((a, b) => a.round_date.localeCompare(b.round_date));
+
+    const points: { date: string; index: number; course: string }[] = [];
+    for (let i = 2; i < scored.length; i++) {
+      const subset = scored.slice(0, i + 1);
+      const hi = calculateHandicap(subset);
+      if (hi.index != null) {
+        points.push({
+          date: scored[i].round_date,
+          index: hi.index,
+          course: scored[i].course_name,
+        });
+      }
+    }
+    return points;
+  }, [rounds]);
+
+  return (
+    <div className="space-y-6">
+      {/* Handicap Index card */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 text-center">
+          <div className="text-xs text-gray-500 uppercase tracking-wider">Handicap Index</div>
+          <div className="text-4xl font-bold text-green-400 mt-2">
+            {result.index != null ? result.index.toFixed(1) : '—'}
+          </div>
+          <div className="text-xs text-gray-500 mt-2">
+            {result.roundsWithRating >= 3
+              ? `Best ${result.numUsed} of ${result.differentials.length} differentials`
+              : result.roundsWithRating > 0
+              ? `Need ${3 - result.roundsWithRating} more rated rounds for WHS`
+              : 'Estimated from scores (add course ratings for WHS)'}
+          </div>
+          {result.adjustment > 0 && (
+            <div className="text-[10px] text-gray-600 mt-1">
+              WHS adjustment: -{result.adjustment.toFixed(1)}
+            </div>
+          )}
+        </div>
+
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 text-center">
+          <div className="text-xs text-gray-500 uppercase tracking-wider">Scored Rounds</div>
+          <div className="text-4xl font-bold text-gray-50 mt-2">{result.totalScoredRounds}</div>
+          <div className="text-xs text-gray-500 mt-2">
+            {result.roundsWithRating} with course rating
+          </div>
+        </div>
+
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 text-center">
+          <div className="text-xs text-gray-500 uppercase tracking-wider">Low Differential</div>
+          <div className="text-4xl font-bold text-gray-50 mt-2">
+            {result.differentials.length > 0
+              ? Math.min(...result.differentials.map((d) => d.differential)).toFixed(1)
+              : '—'}
+          </div>
+          <div className="text-xs text-gray-500 mt-2">
+            {result.differentials.length > 0
+              ? result.differentials.reduce((best, d) => d.differential < best.differential ? d : best).courseName
+              : 'No differentials yet'}
+          </div>
+        </div>
+      </div>
+
+      {/* Trend chart */}
+      {trendData.length > 1 && (
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+          <h2 className="text-sm font-medium text-gray-50 mb-4">Handicap Trend</h2>
+          <HandicapTrendChart data={trendData} />
+        </div>
+      )}
+
+      {/* Differentials table */}
+      {result.differentials.length > 0 && (
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+          <h2 className="text-sm font-medium text-gray-50 mb-3">Score Differentials (Last 20)</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-800 text-gray-500 text-xs uppercase">
+                  <th className="p-2 text-left">Date</th>
+                  <th className="p-2 text-left">Course</th>
+                  <th className="p-2 text-center">Score</th>
+                  <th className="p-2 text-center">Rating</th>
+                  <th className="p-2 text-center">Slope</th>
+                  <th className="p-2 text-center">Differential</th>
+                  <th className="p-2 text-center">Used</th>
+                </tr>
+              </thead>
+              <tbody>
+                {result.differentials.map((d) => (
+                  <tr key={d.roundId} className={`border-b border-gray-800/50 ${d.used ? 'bg-green-500/5' : ''}`}>
+                    <td className="p-2 text-gray-400 text-xs">{d.roundDate}</td>
+                    <td className="p-2 text-gray-50 font-medium">{d.courseName}</td>
+                    <td className="p-2 text-center text-gray-50 font-mono">{d.score}</td>
+                    <td className="p-2 text-center text-gray-400">{d.courseRating.toFixed(1)}</td>
+                    <td className="p-2 text-center text-gray-400">{d.slopeRating}</td>
+                    <td className={`p-2 text-center font-mono ${d.used ? 'text-green-400 font-medium' : 'text-gray-400'}`}>
+                      {d.differential.toFixed(1)}
+                    </td>
+                    <td className="p-2 text-center">
+                      {d.used && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">
+                          Used
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* How it works */}
+      <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 text-xs text-gray-500">
+        <h3 className="text-sm font-medium text-gray-400 mb-2">How WHS Handicap Works</h3>
+        <ul className="space-y-1">
+          <li><span className="text-gray-300 font-medium">Score Differential</span> = (113 / Slope) x (Score - Course Rating)</li>
+          <li><span className="text-gray-300 font-medium">Handicap Index</span> = Average of best differentials from your last 20 rounds</li>
+          <li>With 3-5 rounds: best 1 differential is used. With 20 rounds: best 8 are averaged.</li>
+          <li>Add <span className="text-green-400">Course Rating</span> and <span className="text-green-400">Slope Rating</span> when creating rounds for accurate WHS calculation.</li>
+          <li>Without course ratings, an estimated handicap is calculated using score - 72.</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// Handicap Trend Chart
+// ============================================================
+
+function HandicapTrendChart({ data }: { data: { date: string; index: number; course: string }[] }) {
+  const maxHI = Math.max(...data.map((d) => d.index));
+  const minHI = Math.min(...data.map((d) => d.index));
+  const padding = Math.max(1, (maxHI - minHI) * 0.15);
+  const yMax = maxHI + padding;
+  const yMin = Math.max(0, minHI - padding);
+  const yRange = yMax - yMin || 1;
+
+  return (
+    <div>
+      <div className="flex items-end gap-1 h-40 relative">
+        {/* Y-axis labels */}
+        <div className="absolute left-0 top-0 bottom-0 w-8 flex flex-col justify-between text-[10px] text-gray-600">
+          <span>{yMax.toFixed(0)}</span>
+          <span>{((yMax + yMin) / 2).toFixed(0)}</span>
+          <span>{yMin.toFixed(0)}</span>
+        </div>
+        {/* Chart area */}
+        <div className="ml-10 flex-1 relative h-full">
+          {/* Grid lines */}
+          <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+            <div className="border-b border-gray-800" />
+            <div className="border-b border-gray-800" />
+            <div className="border-b border-gray-800" />
+          </div>
+          {/* Line chart using SVG */}
+          <svg className="w-full h-full" preserveAspectRatio="none" viewBox={`0 0 ${data.length - 1} 100`}>
+            {/* Line */}
+            <polyline
+              fill="none"
+              stroke="var(--color-green-400)"
+              strokeWidth="2"
+              vectorEffect="non-scaling-stroke"
+              points={data
+                .map((d, i) => `${i},${100 - ((d.index - yMin) / yRange) * 100}`)
+                .join(' ')}
+            />
+            {/* Points */}
+            {data.map((d, i) => (
+              <circle
+                key={i}
+                cx={i}
+                cy={100 - ((d.index - yMin) / yRange) * 100}
+                r="3"
+                vectorEffect="non-scaling-stroke"
+                fill="var(--color-green-400)"
+                className="opacity-60"
+              />
+            ))}
+          </svg>
+          {/* Hover tooltips */}
+          <div className="absolute inset-0 flex">
+            {data.map((d, i) => (
+              <div key={i} className="flex-1 group relative">
+                <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs whitespace-nowrap z-10">
+                  <div className="text-gray-50 font-medium">{d.index.toFixed(1)} HI</div>
+                  <div className="text-gray-400">{d.date}</div>
+                  <div className="text-gray-500">{d.course}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      {/* X-axis */}
+      <div className="ml-10 flex justify-between mt-2 text-[10px] text-gray-600">
+        <span>{data[0]?.date}</span>
+        <span>{data[data.length - 1]?.date}</span>
+      </div>
     </div>
   );
 }

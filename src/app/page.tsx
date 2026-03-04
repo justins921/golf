@@ -9,6 +9,7 @@ import { useSpeedSessions, useAllSpeedReadings, useWorkoutLogs } from '@/lib/hoo
 import { usePracticeSessions } from '@/lib/practice/hooks';
 import { analyzeRound } from '@/lib/strokesGained';
 import { generatePracticeReport } from '@/lib/practicePrioritizer';
+import { calculateHandicap } from '@/lib/handicap';
 
 export default function HomePage() {
   return (
@@ -37,18 +38,9 @@ function Dashboard() {
     [rounds],
   );
 
-  // Estimated handicap from last 20 rounds (simplified differential)
-  const handicapEstimate = useMemo(() => {
-    const scored = rounds.filter((r) => r.total_score != null && r.holes_played >= 18);
-    if (scored.length === 0) return null;
-    const recent = scored.slice(0, 20);
-    // Simplified: (score - 72) * 0.96, average best 8 of 20
-    const diffs = recent.map((r) => ((r.total_score! - 72) * 0.96));
-    diffs.sort((a, b) => a - b);
-    const bestN = diffs.slice(0, Math.max(1, Math.min(8, Math.floor(diffs.length * 0.4))));
-    const avg = bestN.reduce((s, d) => s + d, 0) / bestN.length;
-    return Math.max(0, Math.round(avg * 10) / 10);
-  }, [rounds]);
+  // Handicap Index (WHS when course ratings available, estimated otherwise)
+  const handicapResult = useMemo(() => calculateHandicap(rounds), [rounds]);
+  const handicapEstimate = handicapResult.index;
 
   // Speed training progress
   const speedStats = useMemo(() => {
@@ -128,9 +120,11 @@ function Dashboard() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
             {/* Handicap */}
             <StatCard
-              label="Est. Handicap"
+              label={handicapResult.roundsWithRating >= 3 ? 'Handicap Index' : 'Est. Handicap'}
               value={handicapEstimate != null ? handicapEstimate.toFixed(1) : '—'}
-              sub={rounds.filter((r) => r.total_score != null).length > 0
+              sub={handicapResult.roundsWithRating >= 3
+                ? `WHS · ${handicapResult.roundsWithRating} rated rounds`
+                : rounds.filter((r) => r.total_score != null).length > 0
                 ? `${rounds.filter((r) => r.total_score != null).length} rounds`
                 : 'No rounds yet'}
               color="text-green-400"

@@ -656,6 +656,8 @@ export interface Round {
   total_fairways: number | null;
   total_gir: number | null;
   total_penalties: number;
+  course_rating: number | null;
+  slope_rating: number | null;
   notes: string | null;
   created_at: string;
 }
