@@ -706,3 +706,58 @@ export interface WedgeSessionShot {
   notes: string | null;
   created_at: string;
 }
+
+// ============================================================
+// Season goals types
+// ============================================================
+
+export type GoalMetric =
+  | 'scoring_avg'
+  | 'best_score'
+  | 'handicap_index'
+  | 'gir_pct'
+  | 'fir_pct'
+  | 'putts_per_round'
+  | 'rounds_played'
+  | 'practice_sessions'
+  | 'speed_max'
+  | 'custom';
+
+export const GOAL_METRIC_LABELS: Record<GoalMetric, string> = {
+  scoring_avg: 'Scoring Average',
+  best_score: 'Best Score',
+  handicap_index: 'Handicap Index',
+  gir_pct: 'GIR %',
+  fir_pct: 'Fairway %',
+  putts_per_round: 'Putts / Round',
+  rounds_played: 'Rounds Played',
+  practice_sessions: 'Practice Sessions',
+  speed_max: 'Max CHS (mph)',
+  custom: 'Custom Goal',
+};
+
+export const GOAL_METRIC_DIRECTION: Record<GoalMetric, 'lower' | 'higher'> = {
+  scoring_avg: 'lower',
+  best_score: 'lower',
+  handicap_index: 'lower',
+  gir_pct: 'higher',
+  fir_pct: 'higher',
+  putts_per_round: 'lower',
+  rounds_played: 'higher',
+  practice_sessions: 'higher',
+  speed_max: 'higher',
+  custom: 'higher',
+};
+
+export interface SeasonGoal {
+  id: string;
+  user_id: string;
+  title: string;
+  metric: GoalMetric;
+  target_value: number;
+  start_value: number | null;
+  season: string; // "2026", "2025", etc.
+  notes: string | null;
+  achieved_at: string | null;
+  created_at: string;
+}

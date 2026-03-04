@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from './supabase';
-import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem, SpeedSession, SpeedReading, WorkoutLog, Round, RoundHole, WedgeSession, WedgeSessionShot } from './types';
+import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem, SpeedSession, SpeedReading, WorkoutLog, Round, RoundHole, WedgeSession, WedgeSessionShot, SeasonGoal } from './types';
 import { filterShots } from './stats';
 
 export function useSessions() {
@@ -675,4 +675,48 @@ export function useAllWedgeSessionShots() {
   useEffect(() => { fetchShots(); }, [fetchShots]);
 
   return { shots, loading, refetch: fetchShots };
+}
+
+// ============================================================
+// Season goals hooks
+// ============================================================
+
+export function useSeasonGoals() {
+  const [goals, setGoals] = useState<SeasonGoal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchGoals = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('season_goals')
+      .select('*')
+      .order('created_at', { ascending: true });
+    if (!error && data) setGoals(data as SeasonGoal[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchGoals(); }, [fetchGoals]);
+
+  const addGoal = async (goal: Omit<SeasonGoal, 'id' | 'user_id' | 'created_at' | 'achieved_at'>) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return new Error('Not authenticated');
+    const { error } = await supabase.from('season_goals').insert({ ...goal, user_id: user.id });
+    if (!error) await fetchGoals();
+    return error;
+  };
+
+  const updateGoal = async (id: string, updates: Partial<SeasonGoal>) => {
+    const { error } = await supabase.from('season_goals').update(updates).eq('id', id);
+    if (!error) await fetchGoals();
+    return error;
+  };
+
+  const deleteGoal = async (id: string) => {
+    const { error } = await supabase.from('season_goals').delete().eq('id', id);
+    if (!error) await fetchGoals();
+    return error;
+  };
+
+  return { goals, loading, refetch: fetchGoals, addGoal, updateGoal, deleteGoal };
 }
