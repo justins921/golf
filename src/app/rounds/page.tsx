@@ -93,11 +93,11 @@ function RoundTracker() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-white">Rounds</h1>
+        <h1 className="text-2xl font-bold text-gray-50">Rounds</h1>
         <div className="flex gap-2">
           {(['rounds', 'stats', 'analysis'] as const).map((v) => (
             <button key={v} onClick={() => setView(v)}
-              className={`px-3 py-1.5 text-sm rounded ${view === v ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
+              className={`px-3 py-1.5 text-sm rounded ${view === v ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}>
               {v === 'rounds' ? 'Scorecards' : v === 'stats' ? 'Stats' : 'Analysis'}
             </button>
           ))}
@@ -119,37 +119,37 @@ function RoundTracker() {
           {/* Round list */}
           <div className="space-y-3">
             <button onClick={() => setShowNewRound(true)}
-              className="w-full px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm rounded-lg">
+              className="w-full px-4 py-2 bg-green-600 hover:bg-green-500 text-gray-50 text-sm rounded-lg">
               + New Round
             </button>
 
             {showNewRound && (
               <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
-                <h3 className="text-sm font-medium text-white">New Round</h3>
+                <h3 className="text-sm font-medium text-gray-50">New Round</h3>
                 <div>
                   <label className="block text-xs text-gray-500 mb-1">Date</label>
                   <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)}
-                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
                 </div>
                 <div>
                   <label className="block text-xs text-gray-500 mb-1">Course</label>
                   <input type="text" value={newCourse} onChange={(e) => setNewCourse(e.target.value)}
                     placeholder="Course name"
-                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">Tees</label>
                     <input type="text" value={newTees} onChange={(e) => setNewTees(e.target.value)}
                       placeholder="Blue, White..."
-                      className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+                      className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
                   </div>
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">Holes</label>
                     <div className="flex gap-1">
                       {[9, 18].map((n) => (
                         <button key={n} onClick={() => setNewHoles(n)}
-                          className={`px-3 py-1 text-xs rounded ${newHoles === n ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-400'}`}>
+                          className={`px-3 py-1 text-xs rounded ${newHoles === n ? 'bg-green-600 text-gray-50' : 'bg-gray-700 text-gray-400'}`}>
                           {n}
                         </button>
                       ))}
@@ -159,11 +159,11 @@ function RoundTracker() {
                 <div>
                   <label className="block text-xs text-gray-500 mb-1">Notes</label>
                   <textarea value={newNotes} onChange={(e) => setNewNotes(e.target.value)} rows={2}
-                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
                 </div>
                 <div className="flex gap-2">
                   <button onClick={createRound} disabled={!newCourse}
-                    className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white rounded">
+                    className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded">
                     Create
                   </button>
                   <button onClick={() => setShowNewRound(false)}
@@ -182,7 +182,7 @@ function RoundTracker() {
               <button key={r.id} onClick={() => setSelectedRoundId(r.id)}
                 className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
                   selectedRoundId === r.id
-                    ? 'bg-gray-800 border-green-600/50 text-white'
+                    ? 'bg-gray-800 border-green-600/50 text-gray-50'
                     : 'bg-gray-900 border-gray-800 text-gray-400 hover:border-gray-700'
                 }`}>
                 <div className="flex items-center justify-between">
@@ -340,7 +340,7 @@ function Scorecard({
       <div className="grid grid-cols-4 gap-3">
         <div className="bg-gray-800 rounded-lg p-3 text-center">
           <div className="text-xs text-gray-500">Score</div>
-          <div className="text-xl font-bold text-white">{totalScore || '—'}</div>
+          <div className="text-xl font-bold text-gray-50">{totalScore || '—'}</div>
         </div>
         <div className="bg-gray-800 rounded-lg p-3 text-center">
           <div className="text-xs text-gray-500">To Par</div>
@@ -350,7 +350,7 @@ function Scorecard({
         </div>
         <div className="bg-gray-800 rounded-lg p-3 text-center">
           <div className="text-xs text-gray-500">Putts</div>
-          <div className="text-xl font-bold text-white">{totalPutts || '—'}</div>
+          <div className="text-xl font-bold text-gray-50">{totalPutts || '—'}</div>
         </div>
         <div className="bg-gray-800 rounded-lg p-3 text-center">
           <div className="text-xs text-gray-500">Par</div>
@@ -413,7 +413,7 @@ function Scorecard({
                     {par >= 4 ? (
                       <button onClick={() => updateHole(idx, 'fairway_hit', hole.fairway_hit === true ? false : hole.fairway_hit === false ? null : true)}
                         className={`w-8 h-6 text-xs rounded ${
-                          hole.fairway_hit === true ? 'bg-green-600 text-white' :
+                          hole.fairway_hit === true ? 'bg-green-600 text-gray-50' :
                           hole.fairway_hit === false ? 'bg-red-600/50 text-red-300' :
                           'bg-gray-800 text-gray-600'
                         }`}>
@@ -424,7 +424,7 @@ function Scorecard({
                   <td className="p-1.5 text-center">
                     <button onClick={() => updateHole(idx, 'gir', hole.gir === true ? false : hole.gir === false ? null : true)}
                       className={`w-8 h-6 text-xs rounded ${
-                        hole.gir === true ? 'bg-green-600 text-white' :
+                        hole.gir === true ? 'bg-green-600 text-gray-50' :
                         hole.gir === false ? 'bg-red-600/50 text-red-300' :
                         'bg-gray-800 text-gray-600'
                       }`}>
@@ -446,14 +446,14 @@ function Scorecard({
                 <tr className="border-t-2 border-gray-700 bg-gray-800/50">
                   <td className="p-1.5 text-center text-xs text-gray-500 font-medium">OUT</td>
                   <td className="p-1.5 text-center text-xs text-gray-400">{localHoles.slice(0, 9).reduce((a, h) => a + (h.par as number ?? 4), 0)}</td>
-                  <td className="p-1.5 text-center text-xs text-white font-medium">{localHoles.slice(0, 9).reduce((a, h) => a + ((h.score as number) ?? 0), 0) || '—'}</td>
+                  <td className="p-1.5 text-center text-xs text-gray-50 font-medium">{localHoles.slice(0, 9).reduce((a, h) => a + ((h.score as number) ?? 0), 0) || '—'}</td>
                   <td className="p-1.5 text-center text-xs text-gray-400">{localHoles.slice(0, 9).reduce((a, h) => a + ((h.putts as number) ?? 0), 0) || '—'}</td>
                   <td colSpan={3} />
                 </tr>
                 <tr className="bg-gray-800/50">
                   <td className="p-1.5 text-center text-xs text-gray-500 font-medium">IN</td>
                   <td className="p-1.5 text-center text-xs text-gray-400">{localHoles.slice(9, 18).reduce((a, h) => a + (h.par as number ?? 4), 0)}</td>
-                  <td className="p-1.5 text-center text-xs text-white font-medium">{localHoles.slice(9, 18).reduce((a, h) => a + ((h.score as number) ?? 0), 0) || '—'}</td>
+                  <td className="p-1.5 text-center text-xs text-gray-50 font-medium">{localHoles.slice(9, 18).reduce((a, h) => a + ((h.score as number) ?? 0), 0) || '—'}</td>
                   <td className="p-1.5 text-center text-xs text-gray-400">{localHoles.slice(9, 18).reduce((a, h) => a + ((h.putts as number) ?? 0), 0) || '—'}</td>
                   <td colSpan={3} />
                 </tr>
@@ -465,7 +465,7 @@ function Scorecard({
 
       <div className="flex items-center justify-between">
         <button onClick={saveScorecard} disabled={saving}
-          className="px-4 py-2 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white rounded-lg">
+          className="px-4 py-2 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded-lg">
           {saving ? 'Saving...' : 'Save Scorecard'}
         </button>
         <button onClick={onDelete} className="text-xs text-gray-600 hover:text-red-400">
@@ -505,7 +505,7 @@ function RoundStats({ stats, rounds }: {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="bg-gray-800 rounded-lg p-4">
           <div className="text-xs text-gray-500">Scoring Avg</div>
-          <div className="text-2xl font-bold text-white">{stats.avg.toFixed(1)}</div>
+          <div className="text-2xl font-bold text-gray-50">{stats.avg.toFixed(1)}</div>
           <div className="text-xs text-gray-500">{stats.scored} rounds</div>
         </div>
         <div className="bg-gray-800 rounded-lg p-4">
@@ -514,29 +514,29 @@ function RoundStats({ stats, rounds }: {
         </div>
         <div className="bg-gray-800 rounded-lg p-4">
           <div className="text-xs text-gray-500">Last 5 Avg</div>
-          <div className="text-2xl font-bold text-white">{stats.last5Avg.toFixed(1)}</div>
+          <div className="text-2xl font-bold text-gray-50">{stats.last5Avg.toFixed(1)}</div>
         </div>
         <div className="bg-gray-800 rounded-lg p-4">
           <div className="text-xs text-gray-500">Avg Putts</div>
-          <div className="text-2xl font-bold text-white">{stats.avgPutts?.toFixed(1) ?? '—'}</div>
+          <div className="text-2xl font-bold text-gray-50">{stats.avgPutts?.toFixed(1) ?? '—'}</div>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-gray-800 rounded-lg p-4">
           <div className="text-xs text-gray-500">Avg Fairways Hit</div>
-          <div className="text-2xl font-bold text-white">{stats.avgFir != null ? `${stats.avgFir.toFixed(0)}%` : '—'}</div>
+          <div className="text-2xl font-bold text-gray-50">{stats.avgFir != null ? `${stats.avgFir.toFixed(0)}%` : '—'}</div>
         </div>
         <div className="bg-gray-800 rounded-lg p-4">
           <div className="text-xs text-gray-500">Avg GIR</div>
-          <div className="text-2xl font-bold text-white">{stats.avgGir != null ? `${((stats.avgGir / 18) * 100).toFixed(0)}%` : '—'}</div>
+          <div className="text-2xl font-bold text-gray-50">{stats.avgGir != null ? `${((stats.avgGir / 18) * 100).toFixed(0)}%` : '—'}</div>
         </div>
       </div>
 
       {/* Scoring trend */}
       {scored.length > 1 && (
         <div className="bg-gray-800 rounded-lg p-4">
-          <h3 className="text-sm font-medium text-white mb-4">Scoring Trend</h3>
+          <h3 className="text-sm font-medium text-gray-50 mb-4">Scoring Trend</h3>
           <div className="flex items-end gap-1 h-32">
             {[...scored].reverse().map((r, i) => {
               const score = r.total_score!;
@@ -552,7 +552,7 @@ function RoundStats({ stats, rounds }: {
                     style={{ height: `${pct}%`, minHeight: '4px' }}
                   />
                   <div className="hidden group-hover:block absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs whitespace-nowrap z-10">
-                    <div className="text-white">{r.round_date}</div>
+                    <div className="text-gray-50">{r.round_date}</div>
                     <div className="text-green-400">{score} ({r.course_name})</div>
                   </div>
                 </div>
@@ -595,7 +595,7 @@ function RoundAnalysisView({
           <button key={r.id} onClick={() => setSelectedRoundId(r.id)}
             className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
               selectedRoundId === r.id
-                ? 'bg-gray-800 border-green-600/50 text-white'
+                ? 'bg-gray-800 border-green-600/50 text-gray-50'
                 : 'bg-gray-900 border-gray-800 text-gray-400 hover:border-gray-700'
             }`}>
             <div className="flex items-center justify-between">

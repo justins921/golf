@@ -140,13 +140,13 @@ export default function DispersionChart({
     // Axis labels (static)
     g.append('text')
       .attr('x', w / 2).attr('y', h + 40)
-      .attr('text-anchor', 'middle').attr('fill', '#9ca3af').attr('font-size', 12)
+      .attr('text-anchor', 'middle').attr('fill', 'var(--color-gray-500)').attr('font-size', 12)
       .text('Lateral Deviation (yards)');
 
     g.append('text')
       .attr('transform', 'rotate(-90)')
       .attr('x', -h / 2).attr('y', -45)
-      .attr('text-anchor', 'middle').attr('fill', '#9ca3af').attr('font-size', 12)
+      .attr('text-anchor', 'middle').attr('fill', 'var(--color-gray-500)').attr('font-size', 12)
       .text(`${mode === 'carry' ? 'Carry' : 'Total'} Distance (yards)`);
 
     // Legend (outside clip, always visible)
@@ -168,13 +168,13 @@ export default function DispersionChart({
         .join('line')
         .attr('x1', 0).attr('x2', w)
         .attr('y1', (d) => yS(d)).attr('y2', (d) => yS(d))
-        .attr('stroke', '#1f2937').attr('stroke-width', 0.5);
+        .attr('stroke', 'var(--color-gray-800)').attr('stroke-width', 0.5);
       gridG.selectAll('line.v')
         .data(xS.ticks(8))
         .join('line')
         .attr('x1', (d) => xS(d)).attr('x2', (d) => xS(d))
         .attr('y1', 0).attr('y2', h)
-        .attr('stroke', '#1f2937').attr('stroke-width', 0.5);
+        .attr('stroke', 'var(--color-gray-800)').attr('stroke-width', 0.5);
 
       // Center line
       const xDom = xS.domain();
@@ -182,14 +182,14 @@ export default function DispersionChart({
         gridG.append('line')
           .attr('x1', xS(0)).attr('x2', xS(0))
           .attr('y1', 0).attr('y2', h)
-          .attr('stroke', '#374151').attr('stroke-width', 1).attr('stroke-dasharray', '4,4');
+          .attr('stroke', 'var(--color-gray-700)').attr('stroke-width', 1).attr('stroke-dasharray', '4,4');
       }
 
       // Redraw axes
       xAxisG.call(d3.axisBottom(xS).ticks(8))
-        .selectAll('text').attr('fill', '#9ca3af');
+        .selectAll('text').attr('fill', 'var(--color-gray-500)');
       yAxisG.call(d3.axisLeft(yS).ticks(8))
-        .selectAll('text').attr('fill', '#9ca3af');
+        .selectAll('text').attr('fill', 'var(--color-gray-500)');
 
       // Redraw data
       dataG.selectAll('*').remove();
@@ -274,8 +274,8 @@ export default function DispersionChart({
       });
 
       // Style axis lines
-      svg.selectAll('.domain').attr('stroke', '#374151');
-      svg.selectAll('.tick line').attr('stroke', '#374151');
+      svg.selectAll('.domain').attr('stroke', 'var(--color-gray-700)');
+      svg.selectAll('.tick line').attr('stroke', 'var(--color-gray-700)');
     }
 
     // Initial draw
@@ -318,7 +318,7 @@ export default function DispersionChart({
           <button
             onClick={() => setSelectedClub(null)}
             className={`px-2 py-1 text-xs rounded ${
-              !selectedClub ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+              !selectedClub ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
             }`}
           >
             All Clubs
@@ -328,7 +328,7 @@ export default function DispersionChart({
               key={c}
               onClick={() => setSelectedClub(c)}
               className={`px-2 py-1 text-xs rounded ${
-                selectedClub === c ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                selectedClub === c ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
               }`}
             >
               {c}

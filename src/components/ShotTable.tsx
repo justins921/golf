@@ -137,7 +137,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                 value={bulkTarget}
                 onChange={(e) => setBulkTarget(e.target.value)}
                 placeholder="e.g., 150"
-                className="w-24 px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+                className="w-24 px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
               />
             </div>
             <div>
@@ -145,13 +145,13 @@ export default function ShotTable({ shots, onUpdate }: Props) {
               <div className="flex gap-1">
                 <button
                   onClick={() => setBulkFullShot(true)}
-                  className={`px-2 py-1 text-xs rounded ${bulkFullShot === true ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-400'}`}
+                  className={`px-2 py-1 text-xs rounded ${bulkFullShot === true ? 'bg-green-600 text-gray-50' : 'bg-gray-700 text-gray-400'}`}
                 >
                   Full
                 </button>
                 <button
                   onClick={() => setBulkFullShot(false)}
-                  className={`px-2 py-1 text-xs rounded ${bulkFullShot === false ? 'bg-yellow-600 text-white' : 'bg-gray-700 text-gray-400'}`}
+                  className={`px-2 py-1 text-xs rounded ${bulkFullShot === false ? 'bg-yellow-600 text-gray-50' : 'bg-gray-700 text-gray-400'}`}
                 >
                   Partial
                 </button>
@@ -162,7 +162,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
               <select
                 value={bulkTag}
                 onChange={(e) => setBulkTag(e.target.value)}
-                className="px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+                className="px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
               >
                 <option value="">—</option>
                 {TAG_PRESETS.map((t) => (
@@ -173,7 +173,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
             <button
               onClick={bulkApply}
               disabled={saving}
-              className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white rounded"
+              className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded"
             >
               Apply
             </button>
@@ -284,7 +284,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                             target_distance_yd: e.target.value ? parseFloat(e.target.value) : null,
                           })
                         }
-                        className="w-16 px-1 py-0.5 text-sm bg-gray-900 border border-gray-600 rounded text-white text-right"
+                        className="w-16 px-1 py-0.5 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50 text-right"
                       />
                     </td>
                     <td className="p-2 hidden lg:table-cell">
@@ -297,7 +297,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                             tags: e.target.value.split(',').map((t) => t.trim()).filter(Boolean),
                           })
                         }
-                        className="w-24 px-1 py-0.5 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+                        className="w-24 px-1 py-0.5 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
                         placeholder="tag1, tag2"
                       />
                     </td>
@@ -306,7 +306,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                         type="text"
                         value={editValues.notes ?? ''}
                         onChange={(e) => setEditValues({ ...editValues, notes: e.target.value || null })}
-                        className="w-24 px-1 py-0.5 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+                        className="w-24 px-1 py-0.5 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
                       />
                     </td>
                     <td className="p-2 text-center">
@@ -339,7 +339,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                     <td className="p-2 text-center">
                       <button
                         onClick={() => startEdit(shot)}
-                        className="text-gray-500 hover:text-white text-xs"
+                        className="text-gray-500 hover:text-gray-50 text-xs"
                       >
                         Edit
                       </button>

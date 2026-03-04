@@ -54,7 +54,7 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
               type="number"
               value={values.elevationFt}
               onChange={(e) => setValues({ ...values, elevationFt: parseFloat(e.target.value) || 0 })}
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
             />
           </div>
           <div>
@@ -63,7 +63,7 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
               type="number"
               value={values.temperatureF}
               onChange={(e) => setValues({ ...values, temperatureF: parseFloat(e.target.value) || 59 })}
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
             />
           </div>
           <div>
@@ -74,7 +74,7 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
               max="100"
               value={values.relativeHumidityPct}
               onChange={(e) => setValues({ ...values, relativeHumidityPct: parseFloat(e.target.value) || 50 })}
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
             />
           </div>
           <div>
@@ -87,12 +87,12 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
                 setValues({ ...values, pressureInHg: e.target.value ? parseFloat(e.target.value) : undefined })
               }
               placeholder="auto from elevation"
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
             />
           </div>
         </div>
         <div className="flex gap-2">
-          <button onClick={handleSave} className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 text-white rounded">
+          <button onClick={handleSave} className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 text-gray-50 rounded">
             Save
           </button>
           <button onClick={() => setEditing(false)} className="px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 text-gray-300 rounded">

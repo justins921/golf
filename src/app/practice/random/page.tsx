@@ -94,7 +94,7 @@ function RandomPracticeGenerator() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-white mb-2">Random Practice</h1>
+      <h1 className="text-2xl font-bold text-gray-50 mb-2">Random Practice</h1>
       <p className="text-sm text-gray-500 mb-6">Tell us your time and location — we&apos;ll build a plan using your data.</p>
 
       {/* Step 1: Time */}
@@ -107,7 +107,7 @@ function RandomPracticeGenerator() {
               onClick={() => { setMinutes(m); setGeneratedPlan(null); }}
               className={`px-4 py-2 text-sm rounded-md border ${
                 minutes === m
-                  ? 'border-purple-500 bg-purple-600/20 text-white'
+                  ? 'border-purple-500 bg-purple-600/20 text-gray-50'
                   : 'border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700'
               }`}
             >
@@ -132,7 +132,7 @@ function RandomPracticeGenerator() {
               onClick={() => { setLocation(loc.value); setGeneratedPlan(null); }}
               className={`px-4 py-2 text-sm rounded-md border ${
                 location === loc.value
-                  ? 'border-purple-500 bg-purple-600/20 text-white'
+                  ? 'border-purple-500 bg-purple-600/20 text-gray-50'
                   : 'border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700'
               }`}
             >
@@ -146,7 +146,7 @@ function RandomPracticeGenerator() {
       {minutes && location && !generatedPlan && (
         <button
           onClick={handleGenerate}
-          className="px-5 py-2 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-500 mb-6"
+          className="px-5 py-2 text-sm bg-purple-600 text-gray-50 rounded-md hover:bg-purple-500 mb-6"
         >
           Generate Plan
         </button>
@@ -180,7 +180,7 @@ function RandomPracticeGenerator() {
           {generatedPlan.blocks.map((block, i) => (
             <div key={i} className="bg-gray-800/50 rounded-lg p-3">
               <div className="flex items-center justify-between mb-1">
-                <h4 className="text-sm font-medium text-white">{block.name}</h4>
+                <h4 className="text-sm font-medium text-gray-50">{block.name}</h4>
                 <span className="text-xs text-gray-500">{block.minutes} min</span>
               </div>
               <p className="text-xs text-gray-400">{block.description}</p>
@@ -194,7 +194,7 @@ function RandomPracticeGenerator() {
             <button
               onClick={handleStart}
               disabled={starting}
-              className="px-5 py-2 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
+              className="px-5 py-2 text-sm bg-green-600 text-gray-50 rounded-md hover:bg-green-700 disabled:opacity-50"
             >
               {starting ? 'Starting...' : 'Start This Plan'}
             </button>

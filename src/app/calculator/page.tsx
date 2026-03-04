@@ -36,7 +36,7 @@ function PlaysLikeCalculator() {
 
   return (
     <div className="max-w-lg mx-auto px-4 sm:px-6 py-8">
-      <h1 className="text-2xl font-bold text-white mb-2">Plays-Like Calculator</h1>
+      <h1 className="text-2xl font-bold text-gray-50 mb-2">Plays-Like Calculator</h1>
       <p className="text-sm text-gray-500 mb-6">
         Estimate how a yardage plays based on conditions. Separate from dispersion stats — for on-course planning.
       </p>
@@ -50,7 +50,7 @@ function PlaysLikeCalculator() {
               type="number"
               value={yardage}
               onChange={(e) => setYardage(parseFloat(e.target.value) || 0)}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-white text-lg font-medium"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-gray-50 text-lg font-medium"
             />
           </div>
           <div>
@@ -59,7 +59,7 @@ function PlaysLikeCalculator() {
               type="number"
               value={elevationChange}
               onChange={(e) => setElevationChange(parseFloat(e.target.value) || 0)}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-white"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-gray-50"
               placeholder="+ uphill, - downhill"
             />
             <p className="text-[10px] text-gray-600 mt-0.5">Positive = uphill, negative = downhill</p>
@@ -70,7 +70,7 @@ function PlaysLikeCalculator() {
               type="number"
               value={wind}
               onChange={(e) => setWind(parseFloat(e.target.value) || 0)}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-white"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-gray-50"
               placeholder="+ headwind, - tailwind"
             />
             <p className="text-[10px] text-gray-600 mt-0.5">Positive = headwind, negative = tailwind</p>
@@ -81,7 +81,7 @@ function PlaysLikeCalculator() {
               type="number"
               value={temperature}
               onChange={(e) => setTemperature(parseFloat(e.target.value) || 72)}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-white"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-gray-50"
             />
           </div>
           <div>
@@ -92,7 +92,7 @@ function PlaysLikeCalculator() {
               max="100"
               value={humidity}
               onChange={(e) => setHumidity(parseFloat(e.target.value) || 50)}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-white"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-gray-50"
             />
           </div>
           <div>
@@ -101,7 +101,7 @@ function PlaysLikeCalculator() {
               type="number"
               value={elevation}
               onChange={(e) => setElevation(parseFloat(e.target.value) || 0)}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-white"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded text-gray-50"
             />
           </div>
         </div>

@@ -28,7 +28,7 @@ function PracticeHome() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-white mb-8">Practice</h1>
+      <h1 className="text-2xl font-bold text-gray-50 mb-8">Practice</h1>
 
       {/* Continue incomplete session */}
       {incomplete && (
@@ -75,13 +75,13 @@ function PracticeHome() {
       <div className="flex flex-wrap gap-2 mb-8">
         <Link
           href="/practice/insights"
-          className="px-4 py-2 text-sm bg-gray-800 text-gray-400 rounded-md hover:bg-gray-700 hover:text-white"
+          className="px-4 py-2 text-sm bg-gray-800 text-gray-400 rounded-md hover:bg-gray-700 hover:text-gray-50"
         >
           Insights
         </Link>
         <Link
           href="/practice/settings"
-          className="px-4 py-2 text-sm bg-gray-800 text-gray-400 rounded-md hover:bg-gray-700 hover:text-white"
+          className="px-4 py-2 text-sm bg-gray-800 text-gray-400 rounded-md hover:bg-gray-700 hover:text-gray-50"
         >
           Scoring Settings
         </Link>
@@ -150,7 +150,7 @@ function SessionRow({ session, onDelete }: { session: PracticeSession; onDelete:
         <div>
           <Link
             href={`/practice/session/${session.id}`}
-            className="text-sm text-white hover:text-green-400"
+            className="text-sm text-gray-50 hover:text-green-400"
           >
             {title}
           </Link>

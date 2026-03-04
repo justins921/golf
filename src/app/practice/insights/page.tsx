@@ -100,7 +100,7 @@ function PracticeInsights() {
   if (!stats) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-2xl font-bold text-white mb-4">Practice Insights</h1>
+        <h1 className="text-2xl font-bold text-gray-50 mb-4">Practice Insights</h1>
         <p className="text-gray-500">No practice data yet. Complete some sessions to see your insights here.</p>
       </div>
     );
@@ -108,16 +108,16 @@ function PracticeInsights() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-white mb-6">Practice Insights</h1>
+      <h1 className="text-2xl font-bold text-gray-50 mb-6">Practice Insights</h1>
 
       {/* Overview cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-white">{stats.totalSessions}</div>
+          <div className="text-2xl font-bold text-gray-50">{stats.totalSessions}</div>
           <div className="text-[10px] text-gray-500">Sessions</div>
         </div>
         <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-white">{stats.totalShots}</div>
+          <div className="text-2xl font-bold text-gray-50">{stats.totalShots}</div>
           <div className="text-[10px] text-gray-500">Total Shots</div>
         </div>
         <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 text-center">
@@ -125,7 +125,7 @@ function PracticeInsights() {
           <div className="text-[10px] text-gray-500">Avg Points</div>
         </div>
         <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-white">{stats.avgError} yds</div>
+          <div className="text-2xl font-bold text-gray-50">{stats.avgError} yds</div>
           <div className="text-[10px] text-gray-500">Avg Error</div>
         </div>
       </div>
@@ -158,7 +158,7 @@ function PracticeInsights() {
             <tbody>
               {stats.clubBreakdown.map((c) => (
                 <tr key={c.club} className="border-b border-gray-800/50">
-                  <td className="py-1.5 px-2 text-white font-medium">{c.club}</td>
+                  <td className="py-1.5 px-2 text-gray-50 font-medium">{c.club}</td>
                   <td className="py-1.5 px-2 text-center text-gray-400">{c.shots}</td>
                   <td className="py-1.5 px-2 text-center">
                     <span className={c.avgPoints >= 150 ? 'text-green-400' : c.avgPoints >= 100 ? 'text-yellow-400' : 'text-red-400'}>
@@ -187,7 +187,7 @@ function PracticeInsights() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {stats.byCategory.map(([cat, data]) => (
             <div key={cat} className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-center">
-              <div className="text-lg font-bold text-white">{data.shots}</div>
+              <div className="text-lg font-bold text-gray-50">{data.shots}</div>
               <div className="text-[10px] text-gray-500 capitalize">{cat.replace('_', ' ')} shots</div>
               <div className="text-[10px] text-gray-600">{data.sessions} sessions</div>
             </div>

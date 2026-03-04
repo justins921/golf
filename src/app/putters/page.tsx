@@ -48,10 +48,10 @@ function PutterLab() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-white">Putter Lab</h1>
+        <h1 className="text-2xl font-bold text-gray-50">Putter Lab</h1>
         <button
           onClick={() => { setEditingPutter(null); setShowForm(true); }}
-          className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-md"
+          className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-gray-50 rounded-md"
         >
           + Add Putter
         </button>
@@ -64,7 +64,7 @@ function PutterLab() {
             key={t}
             onClick={() => setTab(t)}
             className={`px-3 sm:px-4 py-2 text-sm rounded-md font-medium ${
-              tab === t ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+              tab === t ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
             }`}
           >
             {t === 'specs' ? 'Specs' : t === 'test' ? 'Log Drills' : 'Results'}
@@ -147,12 +147,12 @@ function PutterForm({
     setSaving(false);
   };
 
-  const inputCls = 'w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500';
+  const inputCls = 'w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50 placeholder-gray-500 focus:outline-none focus:border-green-500';
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
       <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-700 rounded-t-lg sm:rounded-lg p-5 sm:p-6 w-full sm:max-w-md space-y-3 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-lg font-semibold text-white mb-2">{putter ? 'Edit Putter' : 'Add Putter'}</h2>
+        <h2 className="text-lg font-semibold text-gray-50 mb-2">{putter ? 'Edit Putter' : 'Add Putter'}</h2>
         <input className={inputCls} placeholder="Putter name *" value={name} onChange={(e) => setName(e.target.value)} required />
         <div className="grid grid-cols-2 gap-3">
           <input className={inputCls} placeholder='Length (in)' type="number" step="0.25" value={lengthIn} onChange={(e) => setLengthIn(e.target.value)} />
@@ -165,7 +165,7 @@ function PutterForm({
         <textarea className={inputCls + ' h-20'} placeholder='Notes' value={notes} onChange={(e) => setNotes(e.target.value)} />
         <div className="flex justify-end gap-2 pt-2">
           <button type="button" onClick={onCancel} className="px-4 py-2 text-sm bg-gray-800 text-gray-400 rounded hover:bg-gray-700">Cancel</button>
-          <button type="submit" disabled={saving} className="px-4 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50">
+          <button type="submit" disabled={saving} className="px-4 py-2 text-sm bg-green-600 text-gray-50 rounded hover:bg-green-700 disabled:opacity-50">
             {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
@@ -210,7 +210,7 @@ function SpecsComparison({
               <th key={p.id} className="text-left py-2 px-3 min-w-[140px]">
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: colorFor(i) }} />
-                  <span className="text-white font-medium">{p.name}</span>
+                  <span className="text-gray-50 font-medium">{p.name}</span>
                 </div>
               </th>
             ))}
@@ -352,7 +352,7 @@ function DrillLogger({
               onClick={() => setShowTestForm(showTestForm === p.id ? null : p.id)}
               className={`px-3 py-1.5 text-sm rounded-md border ${
                 showTestForm === p.id
-                  ? 'border-green-500 bg-green-600/20 text-white'
+                  ? 'border-green-500 bg-green-600/20 text-gray-50'
                   : 'border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700'
               }`}
             >
@@ -366,11 +366,11 @@ function DrillLogger({
       {/* Random drill generator */}
       <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
-          <h3 className="text-sm font-medium text-white">Random Drill</h3>
+          <h3 className="text-sm font-medium text-gray-50">Random Drill</h3>
           <div className="flex gap-2">
             <button
               onClick={() => generateRandomDrill()}
-              className="px-3 py-1.5 text-sm bg-purple-600 hover:bg-purple-500 text-white rounded-md"
+              className="px-3 py-1.5 text-sm bg-purple-600 hover:bg-purple-500 text-gray-50 rounded-md"
             >
               Generate
             </button>
@@ -422,7 +422,7 @@ function DrillLogger({
             ) : (
               <button
                 onClick={useRandomDrill}
-                className="px-3 py-1.5 text-sm bg-green-600 hover:bg-green-500 text-white rounded-md"
+                className="px-3 py-1.5 text-sm bg-green-600 hover:bg-green-500 text-gray-50 rounded-md"
               >
                 Use this drill {!showTestForm && putters.length > 0 ? `with ${putters[0].name}` : ''}
               </button>
@@ -436,7 +436,7 @@ function DrillLogger({
       {/* Log form */}
       {showTestForm && (
         <form ref={formRef} onSubmit={handleAdd} className="bg-gray-900 border border-gray-700 rounded-lg p-4 space-y-3">
-          <h3 className="text-sm font-medium text-white">
+          <h3 className="text-sm font-medium text-gray-50">
             Log drill for {putters.find((p) => p.id === showTestForm)?.name}
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -445,7 +445,7 @@ function DrillLogger({
               <select
                 value={drill}
                 onChange={(e) => setDrill(e.target.value)}
-                className="w-full px-2 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-white"
+                className="w-full px-2 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
               >
                 {PUTTER_DRILLS.map((d) => <option key={d} value={d}>{d}</option>)}
               </select>
@@ -457,7 +457,7 @@ function DrillLogger({
                 value={distanceFt}
                 onChange={(e) => setDistanceFt(e.target.value)}
                 placeholder="opt."
-                className="w-full px-2 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-white placeholder-gray-600"
+                className="w-full px-2 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50 placeholder-gray-600"
               />
             </div>
             <div>
@@ -468,7 +468,7 @@ function DrillLogger({
                 value={made}
                 onChange={(e) => setMade(e.target.value)}
                 required
-                className="w-full px-2 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-white"
+                className="w-full px-2 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
               />
             </div>
             <div>
@@ -479,7 +479,7 @@ function DrillLogger({
                 value={attempted}
                 onChange={(e) => setAttempted(e.target.value)}
                 required
-                className="w-full px-2 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-white"
+                className="w-full px-2 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
               />
             </div>
           </div>
@@ -490,12 +490,12 @@ function DrillLogger({
             value={testNotes}
             onChange={(e) => setTestNotes(e.target.value)}
             placeholder="Notes (optional)"
-            className="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-white placeholder-gray-600"
+            className="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50 placeholder-gray-600"
           />
           <button
             type="submit"
             disabled={saving}
-            className="px-4 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+            className="px-4 py-2 text-sm bg-green-600 text-gray-50 rounded hover:bg-green-700 disabled:opacity-50"
           >
             {saving ? 'Saving...' : 'Log Result'}
           </button>
@@ -630,7 +630,7 @@ function ResultsDashboard({ putters, tests }: { putters: Putter[]; tests: Putter
         <select
           value={drillFilter}
           onChange={(e) => setDrillFilter(e.target.value)}
-          className="px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-white"
+          className="px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
         >
           <option value="all">All Drills</option>
           {drillsUsed.map((d) => <option key={d} value={d}>{d}</option>)}
@@ -643,19 +643,19 @@ function ResultsDashboard({ putters, tests }: { putters: Putter[]; tests: Putter
           <div key={s.putter.id} className="bg-gray-900 border border-gray-700 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-3">
               <span className="w-3 h-3 rounded-full" style={{ backgroundColor: colorFor(s.colorIdx) }} />
-              <h3 className="text-white font-medium">{s.putter.name}</h3>
+              <h3 className="text-gray-50 font-medium">{s.putter.name}</h3>
             </div>
             <div className="grid grid-cols-3 gap-2 text-center">
               <div>
-                <div className="text-2xl font-bold text-white">{s.pct != null ? `${s.pct.toFixed(0)}%` : '—'}</div>
+                <div className="text-2xl font-bold text-gray-50">{s.pct != null ? `${s.pct.toFixed(0)}%` : '—'}</div>
                 <div className="text-[10px] text-gray-500">Make Rate</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-white">{s.totalMade}/{s.totalAtt}</div>
+                <div className="text-2xl font-bold text-gray-50">{s.totalMade}/{s.totalAtt}</div>
                 <div className="text-[10px] text-gray-500">Made/Att</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-white">{s.sessions}</div>
+                <div className="text-2xl font-bold text-gray-50">{s.sessions}</div>
                 <div className="text-[10px] text-gray-500">Drills</div>
               </div>
             </div>
@@ -726,7 +726,7 @@ function ResultsDashboard({ putters, tests }: { putters: Putter[]; tests: Putter
                       className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${s.pct ?? 0}%`, backgroundColor: colorFor(s.colorIdx) }}
                     />
-                    <span className="absolute inset-0 flex items-center justify-center text-xs text-white font-mono">
+                    <span className="absolute inset-0 flex items-center justify-center text-xs text-gray-50 font-mono">
                       {s.pct!.toFixed(1)}%
                     </span>
                   </div>

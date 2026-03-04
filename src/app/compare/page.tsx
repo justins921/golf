@@ -164,7 +164,7 @@ function Compare() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-white mb-6">Compare Sessions</h1>
+      <h1 className="text-2xl font-bold text-gray-50 mb-6">Compare Sessions</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar controls */}
@@ -182,7 +182,7 @@ function Compare() {
                   key={m.value}
                   onClick={() => setMode(m.value)}
                   className={`px-3 py-1.5 text-sm rounded text-left ${
-                    mode === m.value ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                    mode === m.value ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                   }`}
                 >
                   {m.label}
@@ -200,7 +200,7 @@ function Compare() {
                 max={50}
                 value={rollingN}
                 onChange={(e) => setRollingN(parseInt(e.target.value) || 5)}
-                className="w-20 px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-white"
+                className="w-20 px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
               />
               {rollingInfo && (
                 <p className="text-[10px] text-gray-600 mt-1">
@@ -254,13 +254,13 @@ function Compare() {
             <div className="flex gap-1">
               <button
                 onClick={() => setDistanceMode('observed')}
-                className={`px-2 py-1 text-xs rounded ${distanceMode === 'observed' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+                className={`px-2 py-1 text-xs rounded ${distanceMode === 'observed' ? 'bg-blue-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
               >
                 Observed
               </button>
               <button
                 onClick={() => setDistanceMode('normalized')}
-                className={`px-2 py-1 text-xs rounded ${distanceMode === 'normalized' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+                className={`px-2 py-1 text-xs rounded ${distanceMode === 'normalized' ? 'bg-blue-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
               >
                 Normalized
               </button>
@@ -275,13 +275,13 @@ function Compare() {
           <div className="flex gap-1 mb-4">
             <button
               onClick={() => setChartMode('carry')}
-              className={`px-2 py-1 text-xs rounded ${chartMode === 'carry' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+              className={`px-2 py-1 text-xs rounded ${chartMode === 'carry' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
             >
               Carry
             </button>
             <button
               onClick={() => setChartMode('total')}
-              className={`px-2 py-1 text-xs rounded ${chartMode === 'total' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+              className={`px-2 py-1 text-xs rounded ${chartMode === 'total' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
             >
               Total
             </button>

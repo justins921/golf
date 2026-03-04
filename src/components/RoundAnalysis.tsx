@@ -76,7 +76,7 @@ export default function RoundAnalysis({
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-3 py-1.5 text-sm rounded-t ${
-              activeTab === tab ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-gray-300'
+              activeTab === tab ? 'bg-gray-800 text-gray-50' : 'text-gray-500 hover:text-gray-300'
             }`}
           >
             {tab === 'overview' ? 'SG Overview' : tab === 'holes' ? 'By Hole' : 'Practice Plan'}
@@ -129,7 +129,7 @@ function SGOverview({ analysis }: { analysis: RoundSGAnalysis }) {
 
       {/* SG bar chart */}
       <div className="bg-gray-800 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-white mb-3">Strokes Gained Breakdown</h3>
+        <h3 className="text-sm font-medium text-gray-50 mb-3">Strokes Gained Breakdown</h3>
         <div className="space-y-2">
           {categories.map((cat) => (
             <SGBar key={cat.label} label={cat.label} sg={cat.sg} />
@@ -139,7 +139,7 @@ function SGOverview({ analysis }: { analysis: RoundSGAnalysis }) {
 
       {/* Key stats */}
       <div className="bg-gray-800 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-white mb-3">Key Stats vs Benchmark</h3>
+        <h3 className="text-sm font-medium text-gray-50 mb-3">Key Stats vs Benchmark</h3>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <StatRow label="Fairways Hit" value={`${analysis.firCount}/${analysis.firHoles} (${analysis.firPct.toFixed(0)}%)`} benchmark={`${b.firPct}%`} better={analysis.firPct >= b.firPct} />
           <StatRow label="Greens in Reg" value={`${analysis.girCount}/${analysis.holes.length} (${analysis.girPct.toFixed(0)}%)`} benchmark={`${b.girPct}%`} better={analysis.girPct >= b.girPct} />
@@ -241,7 +241,7 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
           <button
             key={v}
             onClick={() => setSgView(v)}
-            className={`px-2 py-1 text-xs rounded ${sgView === v ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-500'}`}
+            className={`px-2 py-1 text-xs rounded ${sgView === v ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-500'}`}
           >
             {v === 'total' ? 'Total' : v === 'putting' ? 'Putting' : 'Tee-to-Green'}
           </button>
@@ -279,7 +279,7 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
                 {/* Tooltip */}
                 <div className="hidden group-hover:block absolute -top-16 left-1/2 -translate-x-1/2 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs whitespace-nowrap z-10">
                   <div className="text-gray-400">Hole {hole.holeNumber} (Par {hole.par})</div>
-                  <div className="text-white">Score: {hole.score} | Putts: {hole.putts}</div>
+                  <div className="text-gray-50">Score: {hole.score} | Putts: {hole.putts}</div>
                   <div className={sg >= 0 ? 'text-green-400' : 'text-red-400'}>
                     SG: {sg >= 0 ? '+' : ''}{sg.toFixed(2)}
                   </div>
@@ -319,7 +319,7 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
               <tr key={hole.holeNumber} className="border-b border-gray-800/50">
                 <td className="p-1.5 text-gray-400">{hole.holeNumber}</td>
                 <td className="p-1.5 text-center text-gray-500">{hole.par}</td>
-                <td className="p-1.5 text-center text-white">{hole.score}</td>
+                <td className="p-1.5 text-center text-gray-50">{hole.score}</td>
                 <td className="p-1.5 text-center text-gray-400">{hole.putts}</td>
                 <td className={`p-1.5 text-center font-mono ${hole.sgTotal >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                   {formatSG(hole.sgTotal)}
@@ -341,7 +341,7 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
             {/* Totals row */}
             <tr className="border-t-2 border-gray-700 bg-gray-800/50 font-medium">
               <td className="p-1.5 text-gray-400" colSpan={2}>Total</td>
-              <td className="p-1.5 text-center text-white">{analysis.holes.reduce((s, h) => s + h.score, 0)}</td>
+              <td className="p-1.5 text-center text-gray-50">{analysis.holes.reduce((s, h) => s + h.score, 0)}</td>
               <td className="p-1.5 text-center text-gray-400">{analysis.totalPutts}</td>
               <td className={`p-1.5 text-center font-mono ${analysis.totalSG >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                 {formatSG(analysis.totalSG)}
@@ -383,7 +383,7 @@ function PracticePlan({ report }: { report: PracticePriorityReport }) {
     <div className="space-y-4">
       {/* Summary */}
       <div className="bg-gray-800 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-white mb-2">Biggest Opportunity</h3>
+        <h3 className="text-sm font-medium text-gray-50 mb-2">Biggest Opportunity</h3>
         <div className="text-lg font-bold text-red-400">{report.biggestOpportunity}</div>
         <div className="text-xs text-gray-500 mt-1">{report.summary}</div>
       </div>
@@ -428,7 +428,7 @@ function RecommendationCard({ rec }: { rec: PracticeRecommendation }) {
               {rec.sgImpact >= 0 ? '+' : ''}{rec.sgImpact.toFixed(1)} SG
             </span>
           </div>
-          <h4 className="text-sm font-medium text-white">{rec.title}</h4>
+          <h4 className="text-sm font-medium text-gray-50">{rec.title}</h4>
           <p className="text-xs text-gray-400 mt-1">{rec.reason}</p>
         </div>
         <button

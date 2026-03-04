@@ -50,13 +50,13 @@ function FitnessTracker() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-white">Golf Fitness</h1>
+        <h1 className="text-2xl font-bold text-gray-50">Golf Fitness</h1>
         <div className="flex gap-2">
           {(['log', 'library', 'stats'] as const).map((v) => (
             <button
               key={v}
               onClick={() => setView(v)}
-              className={`px-3 py-1.5 text-sm rounded capitalize ${view === v ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+              className={`px-3 py-1.5 text-sm rounded capitalize ${view === v ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
             >
               {v === 'log' ? 'Workout Log' : v === 'library' ? 'Exercises' : 'Stats'}
             </button>
@@ -70,7 +70,7 @@ function FitnessTracker() {
         <div className="space-y-4">
           <button
             onClick={() => setShowNewWorkout(true)}
-            className="px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm rounded-lg"
+            className="px-4 py-2 bg-green-600 hover:bg-green-500 text-gray-50 text-sm rounded-lg"
           >
             + Log Workout
           </button>
@@ -97,7 +97,7 @@ function FitnessTracker() {
               <div key={log.id} className="bg-gray-800 border border-gray-700 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
                   <div>
-                    <span className="text-sm font-medium text-white">{log.workout_name}</span>
+                    <span className="text-sm font-medium text-gray-50">{log.workout_name}</span>
                     <span className="ml-2 px-2 py-0.5 text-xs rounded bg-gray-700 text-gray-400 capitalize">{log.workout_type}</span>
                     {log.program && <span className="ml-2 text-xs text-gray-500">{log.program}</span>}
                   </div>
@@ -200,18 +200,18 @@ function WorkoutForm({
 
   return (
     <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
-      <h3 className="text-sm font-medium text-white">Log Workout</h3>
+      <h3 className="text-sm font-medium text-gray-50">Log Workout</h3>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div>
           <label className="block text-xs text-gray-500 mb-1">Date</label>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
-            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
         </div>
         <div>
           <label className="block text-xs text-gray-500 mb-1">Type</label>
           <select value={type} onChange={(e) => setType(e.target.value)}
-            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white">
+            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50">
             {WORKOUT_TYPES.map((t) => (
               <option key={t} value={t} className="capitalize">{t}</option>
             ))}
@@ -220,7 +220,7 @@ function WorkoutForm({
         <div>
           <label className="block text-xs text-gray-500 mb-1">Program</label>
           <select value={program} onChange={(e) => setProgram(e.target.value)}
-            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white">
+            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50">
             <option value="">—</option>
             {WORKOUT_PROGRAMS.map((p) => (
               <option key={p} value={p}>{p}</option>
@@ -230,7 +230,7 @@ function WorkoutForm({
         <div>
           <label className="block text-xs text-gray-500 mb-1">Duration (min)</label>
           <input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="45"
-            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
         </div>
       </div>
 
@@ -238,7 +238,7 @@ function WorkoutForm({
         <label className="block text-xs text-gray-500 mb-1">Workout Name</label>
         <input type="text" value={name} onChange={(e) => setName(e.target.value)}
           placeholder="e.g., Upper Body Push, Pre-Round Warmup, Mobility Flow"
-          className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+          className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
       </div>
 
       {/* Exercise builder */}
@@ -273,25 +273,25 @@ function WorkoutForm({
           <div className="col-span-2">
             <input type="text" value={exName} onChange={(e) => setExName(e.target.value)}
               placeholder="Exercise name"
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
           </div>
           <div>
             <label className="block text-[10px] text-gray-600">Sets</label>
             <input type="number" value={exSets} onChange={(e) => setExSets(e.target.value)}
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
           </div>
           <div>
             <label className="block text-[10px] text-gray-600">Reps</label>
             <input type="number" value={exReps} onChange={(e) => setExReps(e.target.value)}
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
           </div>
           <div>
             <label className="block text-[10px] text-gray-600">Weight</label>
             <input type="text" value={exWeight} onChange={(e) => setExWeight(e.target.value)} placeholder="25lb"
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
           </div>
           <button onClick={addExercise} disabled={!exName}
-            className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white rounded">
+            className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded">
             Add
           </button>
         </div>
@@ -330,13 +330,13 @@ function WorkoutForm({
           <label className="block text-xs text-gray-500 mb-1">Notes</label>
           <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)}
             placeholder="How did it feel?"
-            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white" />
+            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
         </div>
       </div>
 
       <div className="flex gap-2">
         <button onClick={handleSave} disabled={!name}
-          className="px-4 py-1.5 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white rounded">
+          className="px-4 py-1.5 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded">
           Save Workout
         </button>
         <button onClick={onCancel}
@@ -368,7 +368,7 @@ function ExerciseLibrary() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search exercises..."
-        className="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded-lg text-white"
+        className="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded-lg text-gray-50"
       />
       {Object.entries(filtered).map(([category, exs]) => (
         <div key={category}>
@@ -405,12 +405,12 @@ function StatsView({ stats }: { stats: { last30: number; last7: number; totalMin
         </div>
         <div className="bg-gray-800 rounded-lg p-4">
           <div className="text-xs text-gray-500">Last 30 Days</div>
-          <div className="text-2xl font-bold text-white">{stats.last30}</div>
+          <div className="text-2xl font-bold text-gray-50">{stats.last30}</div>
           <div className="text-xs text-gray-500">workouts</div>
         </div>
         <div className="bg-gray-800 rounded-lg p-4">
           <div className="text-xs text-gray-500">Time (30d)</div>
-          <div className="text-2xl font-bold text-white">{Math.round(stats.totalMin / 60)}h {stats.totalMin % 60}m</div>
+          <div className="text-2xl font-bold text-gray-50">{Math.round(stats.totalMin / 60)}h {stats.totalMin % 60}m</div>
           <div className="text-xs text-gray-500">total</div>
         </div>
         <div className="bg-gray-800 rounded-lg p-4">
@@ -422,7 +422,7 @@ function StatsView({ stats }: { stats: { last30: number; last7: number; totalMin
 
       {/* Type breakdown */}
       <div className="bg-gray-800 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-white mb-3">Workout Type Breakdown (30 days)</h3>
+        <h3 className="text-sm font-medium text-gray-50 mb-3">Workout Type Breakdown (30 days)</h3>
         <div className="space-y-2">
           {Object.entries(stats.byType)
             .sort((a, b) => b[1] - a[1])

@@ -81,17 +81,17 @@ function SpeedTraining() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-white">Speed Training</h1>
+        <h1 className="text-2xl font-bold text-gray-50">Speed Training</h1>
         <div className="flex gap-2">
           <button
             onClick={() => setView('log')}
-            className={`px-3 py-1.5 text-sm rounded ${view === 'log' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+            className={`px-3 py-1.5 text-sm rounded ${view === 'log' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
           >
             Training Log
           </button>
           <button
             onClick={() => setView('progress')}
-            className={`px-3 py-1.5 text-sm rounded ${view === 'progress' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+            className={`px-3 py-1.5 text-sm rounded ${view === 'progress' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
           >
             Progress
           </button>
@@ -108,21 +108,21 @@ function SpeedTraining() {
           <div className="space-y-3">
             <button
               onClick={() => setShowNewSession(true)}
-              className="w-full px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm rounded-lg"
+              className="w-full px-4 py-2 bg-green-600 hover:bg-green-500 text-gray-50 text-sm rounded-lg"
             >
               + New Speed Session
             </button>
 
             {showNewSession && (
               <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
-                <h3 className="text-sm font-medium text-white">New Session</h3>
+                <h3 className="text-sm font-medium text-gray-50">New Session</h3>
                 <div>
                   <label className="block text-xs text-gray-500 mb-1">Date</label>
                   <input
                     type="date"
                     value={newDate}
                     onChange={(e) => setNewDate(e.target.value)}
-                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
                   />
                 </div>
                 <div>
@@ -132,7 +132,7 @@ function SpeedTraining() {
                       <button
                         key={p}
                         onClick={() => setNewProtocol(p)}
-                        className={`px-2 py-1 text-xs rounded ${newProtocol === p ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-400'}`}
+                        className={`px-2 py-1 text-xs rounded ${newProtocol === p ? 'bg-green-600 text-gray-50' : 'bg-gray-700 text-gray-400'}`}
                       >
                         {p}
                       </button>
@@ -146,7 +146,7 @@ function SpeedTraining() {
                     value={newProgram}
                     onChange={(e) => setNewProgram(e.target.value)}
                     placeholder="e.g., Speed 1, Distance"
-                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
                   />
                 </div>
                 <div>
@@ -155,11 +155,11 @@ function SpeedTraining() {
                     value={newNotes}
                     onChange={(e) => setNewNotes(e.target.value)}
                     rows={2}
-                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
                   />
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={createSession} className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 text-white rounded">
+                  <button onClick={createSession} className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 text-gray-50 rounded">
                     Create
                   </button>
                   <button onClick={() => setShowNewSession(false)} className="px-3 py-1 text-sm bg-gray-700 text-gray-300 rounded">
@@ -181,7 +181,7 @@ function SpeedTraining() {
                 onClick={() => setSelectedSessionId(s.id)}
                 className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
                   selectedSessionId === s.id
-                    ? 'bg-gray-800 border-green-600/50 text-white'
+                    ? 'bg-gray-800 border-green-600/50 text-gray-50'
                     : 'bg-gray-900 border-gray-800 text-gray-400 hover:border-gray-700'
                 }`}
               >
@@ -264,25 +264,25 @@ function SessionDetail({ sessionId, onDelete }: { sessionId: string; onDelete: (
           </div>
           <div className="bg-gray-800 rounded-lg p-3">
             <div className="text-xs text-gray-500">Avg CHS</div>
-            <div className="text-xl font-bold text-white">{avgSpeed} mph</div>
+            <div className="text-xl font-bold text-gray-50">{avgSpeed} mph</div>
           </div>
           <div className="bg-gray-800 rounded-lg p-3">
             <div className="text-xs text-gray-500">Swings</div>
-            <div className="text-xl font-bold text-white">{readings.length}</div>
+            <div className="text-xl font-bold text-gray-50">{readings.length}</div>
           </div>
         </div>
       )}
 
       {/* Quick add */}
       <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-white mb-3">Add Reading</h3>
+        <h3 className="text-sm font-medium text-gray-50 mb-3">Add Reading</h3>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 items-end">
           <div>
             <label className="block text-xs text-gray-500 mb-1">Club</label>
             <select
               value={club}
               onChange={(e) => setClub(e.target.value)}
-              className="w-full px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+              className="w-full px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
             >
               {SPEED_CLUBS.map((c) => (
                 <option key={c} value={c}>{c}</option>
@@ -298,7 +298,7 @@ function SessionDetail({ sessionId, onDelete }: { sessionId: string; onDelete: (
               onChange={(e) => setSpeed(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
               placeholder="115.2"
-              className="w-full px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+              className="w-full px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
             />
           </div>
           <div>
@@ -310,7 +310,7 @@ function SessionDetail({ sessionId, onDelete }: { sessionId: string; onDelete: (
               onChange={(e) => setBallSpeed(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
               placeholder="optional"
-              className="w-full px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+              className="w-full px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
             />
           </div>
           <div className="flex gap-2">
@@ -321,7 +321,7 @@ function SessionDetail({ sessionId, onDelete }: { sessionId: string; onDelete: (
                 min={1}
                 value={setNum}
                 onChange={(e) => setSetNum(parseInt(e.target.value) || 1)}
-                className="w-16 px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+                className="w-16 px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
               />
             </div>
             <div>
@@ -331,14 +331,14 @@ function SessionDetail({ sessionId, onDelete }: { sessionId: string; onDelete: (
                 min={1}
                 value={repNum}
                 onChange={(e) => setRepNum(parseInt(e.target.value) || 1)}
-                className="w-16 px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-white"
+                className="w-16 px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
               />
             </div>
           </div>
           <button
             onClick={handleAdd}
             disabled={!speed}
-            className="px-4 py-1.5 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white rounded"
+            className="px-4 py-1.5 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded"
           >
             Add
           </button>
@@ -424,7 +424,7 @@ function ProgressView({ data }: { data: { entries: { date: string; max: number; 
         </div>
         <div className="bg-gray-800 rounded-lg p-4">
           <div className="text-xs text-gray-500">Latest Max</div>
-          <div className="text-2xl font-bold text-white">{latestMax.toFixed(1)}</div>
+          <div className="text-2xl font-bold text-gray-50">{latestMax.toFixed(1)}</div>
           <div className="text-xs text-gray-500">mph</div>
         </div>
         <div className="bg-gray-800 rounded-lg p-4">
@@ -436,14 +436,14 @@ function ProgressView({ data }: { data: { entries: { date: string; max: number; 
         </div>
         <div className="bg-gray-800 rounded-lg p-4">
           <div className="text-xs text-gray-500">Sessions</div>
-          <div className="text-2xl font-bold text-white">{entries.length}</div>
+          <div className="text-2xl font-bold text-gray-50">{entries.length}</div>
           <div className="text-xs text-gray-500">logged</div>
         </div>
       </div>
 
       {/* Simple bar chart */}
       <div className="bg-gray-800 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-white mb-4">Driver CHS Over Time</h3>
+        <h3 className="text-sm font-medium text-gray-50 mb-4">Driver CHS Over Time</h3>
         <div className="flex items-end gap-1 h-48">
           {entries.map((e, i) => {
             const pctMax = ((e.max - chartMin) / range) * 100;
@@ -464,7 +464,7 @@ function ProgressView({ data }: { data: { entries: { date: string; max: number; 
                 </div>
                 {/* Tooltip */}
                 <div className="hidden group-hover:block absolute -top-16 left-1/2 -translate-x-1/2 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs whitespace-nowrap z-10">
-                  <div className="text-white font-medium">{e.date}</div>
+                  <div className="text-gray-50 font-medium">{e.date}</div>
                   <div className="text-green-400">Max: {e.max.toFixed(1)}</div>
                   <div className="text-gray-400">Avg: {e.avg.toFixed(1)}</div>
                 </div>

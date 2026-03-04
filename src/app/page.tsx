@@ -158,7 +158,7 @@ export default function HomePage() {
       <Nav />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Golf OS</h1>
+          <h1 className="text-3xl font-bold text-gray-50 mb-2">Golf OS</h1>
           <p className="text-gray-400">Everything you need to improve your game — pick any tool to get started.</p>
         </div>
 
@@ -180,7 +180,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="text-sm font-semibold text-white group-hover:text-green-400 transition-colors">
+                        <h3 className="text-sm font-semibold text-gray-50 group-hover:text-green-400 transition-colors">
                           {mod.title}
                         </h3>
                         {mod.badge && (

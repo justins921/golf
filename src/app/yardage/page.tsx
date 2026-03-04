@@ -129,7 +129,7 @@ function YardageBuilder() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-white mb-6">Yardage Card Builder</h1>
+      <h1 className="text-2xl font-bold text-gray-50 mb-6">Yardage Card Builder</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Controls */}
@@ -147,7 +147,7 @@ function YardageBuilder() {
                   key={m.value}
                   onClick={() => setScope(m.value as YardageCardConfig['scope'])}
                   className={`px-3 py-1.5 text-sm rounded text-left ${
-                    scope === m.value ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                    scope === m.value ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                   }`}
                 >
                   {m.label}
@@ -164,7 +164,7 @@ function YardageBuilder() {
                 min={1}
                 value={rollingN}
                 onChange={(e) => setRollingN(parseInt(e.target.value) || 5)}
-                className="w-20 px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-white"
+                className="w-20 px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
               />
             </div>
           )}
@@ -218,13 +218,13 @@ function YardageBuilder() {
             <div className="flex gap-1">
               <button
                 onClick={() => setPercentileBand('P20-P80')}
-                className={`px-2 py-1 text-xs rounded ${percentileBand === 'P20-P80' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+                className={`px-2 py-1 text-xs rounded ${percentileBand === 'P20-P80' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
               >
                 P20–P80
               </button>
               <button
                 onClick={() => setPercentileBand('P10-P90')}
-                className={`px-2 py-1 text-xs rounded ${percentileBand === 'P10-P90' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+                className={`px-2 py-1 text-xs rounded ${percentileBand === 'P10-P90' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
               >
                 P10–P90
               </button>
@@ -260,7 +260,7 @@ function YardageBuilder() {
               min={1}
               value={minShots}
               onChange={(e) => setMinShots(parseInt(e.target.value) || 8)}
-              className="w-20 px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-white"
+              className="w-20 px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
             />
           </div>
 
@@ -299,7 +299,7 @@ function YardageBuilder() {
                   key={m.value}
                   onClick={() => setDistanceMode(m.value as 'observed' | 'normalized' | 'simulated')}
                   className={`px-3 py-1 text-xs rounded text-left ${
-                    distanceMode === m.value ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                    distanceMode === m.value ? 'bg-blue-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                   }`}
                 >
                   {m.label}
@@ -316,7 +316,7 @@ function YardageBuilder() {
                 value={presetName}
                 onChange={(e) => setPresetName(e.target.value)}
                 placeholder="Preset name (e.g., Loreto – March)"
-                className="w-full px-2 py-1 text-xs bg-gray-900 border border-gray-600 rounded text-white"
+                className="w-full px-2 py-1 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
               />
               <div className="grid grid-cols-2 gap-2">
                 <div>
@@ -325,7 +325,7 @@ function YardageBuilder() {
                     type="number"
                     value={destEnv.elevationFt}
                     onChange={(e) => setDestEnv({ ...destEnv, elevationFt: parseFloat(e.target.value) || 0 })}
-                    className="w-full px-1 py-0.5 text-xs bg-gray-900 border border-gray-600 rounded text-white"
+                    className="w-full px-1 py-0.5 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
                   />
                 </div>
                 <div>
@@ -334,7 +334,7 @@ function YardageBuilder() {
                     type="number"
                     value={destEnv.temperatureF}
                     onChange={(e) => setDestEnv({ ...destEnv, temperatureF: parseFloat(e.target.value) || 72 })}
-                    className="w-full px-1 py-0.5 text-xs bg-gray-900 border border-gray-600 rounded text-white"
+                    className="w-full px-1 py-0.5 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
                   />
                 </div>
                 <div>
@@ -343,7 +343,7 @@ function YardageBuilder() {
                     type="number"
                     value={destEnv.relativeHumidityPct}
                     onChange={(e) => setDestEnv({ ...destEnv, relativeHumidityPct: parseFloat(e.target.value) || 50 })}
-                    className="w-full px-1 py-0.5 text-xs bg-gray-900 border border-gray-600 rounded text-white"
+                    className="w-full px-1 py-0.5 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
                   />
                 </div>
                 <div>
@@ -354,7 +354,7 @@ function YardageBuilder() {
                     value={destEnv.pressureInHg ?? ''}
                     onChange={(e) => setDestEnv({ ...destEnv, pressureInHg: e.target.value ? parseFloat(e.target.value) : undefined })}
                     placeholder="auto"
-                    className="w-full px-1 py-0.5 text-xs bg-gray-900 border border-gray-600 rounded text-white"
+                    className="w-full px-1 py-0.5 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
                   />
                 </div>
               </div>

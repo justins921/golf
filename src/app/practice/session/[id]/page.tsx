@@ -236,7 +236,7 @@ function SessionLogger() {
   if (isComplete && shots.length > 0) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-2xl font-bold text-white mb-2">Session Complete</h1>
+        <h1 className="text-2xl font-bold text-gray-50 mb-2">Session Complete</h1>
         <p className="text-sm text-gray-500 mb-6">
           {plan?.title ?? session.mode} &middot; {formatTime(elapsed)} &middot; {shots.length} shots
         </p>
@@ -259,7 +259,7 @@ function SessionLogger() {
           {!session.completed_at && (
             <button
               onClick={handleComplete}
-              className="px-5 py-2 text-sm bg-green-600 text-white rounded-md hover:bg-green-700"
+              className="px-5 py-2 text-sm bg-green-600 text-gray-50 rounded-md hover:bg-green-700"
             >
               Save & Finish
             </button>
@@ -281,7 +281,7 @@ function SessionLogger() {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h1 className="text-lg font-bold text-white">{plan?.title ?? 'Practice'}</h1>
+          <h1 className="text-lg font-bold text-gray-50">{plan?.title ?? 'Practice'}</h1>
           <p className="text-xs text-gray-500">{formatTime(elapsed)}</p>
         </div>
         <div className="flex gap-2">
@@ -294,7 +294,7 @@ function SessionLogger() {
           </button>
           <button
             onClick={handleComplete}
-            className="px-3 py-1.5 text-xs bg-red-600/80 text-white rounded hover:bg-red-600"
+            className="px-3 py-1.5 text-xs bg-red-600/80 text-gray-50 rounded hover:bg-red-600"
           >
             End
           </button>
@@ -347,7 +347,7 @@ function SessionLogger() {
                 }`}
                 title={voice.listening ? 'Stop listening' : 'Start voice input'}
               >
-                <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-7 h-7 text-gray-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
                 </svg>
               </button>
@@ -389,7 +389,7 @@ function SessionLogger() {
                   onChange={(e) => setCarryInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleLogShot(); }}
                   placeholder="Enter carry..."
-                  className="w-28 px-3 py-3 text-lg bg-gray-800 border border-gray-700 rounded text-white text-center placeholder-gray-600 font-mono"
+                  className="w-28 px-3 py-3 text-lg bg-gray-800 border border-gray-700 rounded text-gray-50 text-center placeholder-gray-600 font-mono"
                   autoFocus={!voice.supported}
                 />
               </div>
@@ -401,13 +401,13 @@ function SessionLogger() {
                   onChange={(e) => setLateralInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleLogShot(); }}
                   placeholder="±"
-                  className="w-20 px-2 py-3 text-lg bg-gray-800 border border-gray-700 rounded text-white text-center placeholder-gray-600 font-mono"
+                  className="w-20 px-2 py-3 text-lg bg-gray-800 border border-gray-700 rounded text-gray-50 text-center placeholder-gray-600 font-mono"
                 />
               </div>
               <button
                 onClick={handleLogShot}
                 disabled={!carryInput}
-                className="px-5 py-3 text-sm bg-green-600 text-white rounded hover:bg-green-500 disabled:opacity-50"
+                className="px-5 py-3 text-sm bg-green-600 text-gray-50 rounded hover:bg-green-500 disabled:opacity-50"
               >
                 Log
               </button>
@@ -443,7 +443,7 @@ function SessionLogger() {
 function StatCard({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
     <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-center">
-      <div className={`text-xl font-bold ${highlight ? 'text-green-400' : 'text-white'}`}>{value}</div>
+      <div className={`text-xl font-bold ${highlight ? 'text-green-400' : 'text-gray-50'}`}>{value}</div>
       <div className="text-[10px] text-gray-500">{label}</div>
     </div>
   );

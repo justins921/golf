@@ -51,7 +51,7 @@ export default function FilterBar({ filter, onChange, clubs }: Props) {
             value={filter.targetWindow ?? ''}
             onChange={(e) => update({ targetWindow: e.target.value ? parseFloat(e.target.value) : null })}
             placeholder="any"
-            className="w-14 px-1 py-0.5 bg-gray-800 border border-gray-700 rounded text-white text-xs"
+            className="w-14 px-1 py-0.5 bg-gray-800 border border-gray-700 rounded text-gray-50 text-xs"
           />
           <span>yd window</span>
         </div>
@@ -61,7 +61,7 @@ export default function FilterBar({ filter, onChange, clubs }: Props) {
         <select
           value={filter.clubNames?.[0] ?? ''}
           onChange={(e) => update({ clubNames: e.target.value ? [e.target.value] : undefined })}
-          className="px-2 py-1 text-xs bg-gray-800 border border-gray-700 rounded text-white"
+          className="px-2 py-1 text-xs bg-gray-800 border border-gray-700 rounded text-gray-50"
         >
           <option value="">All clubs</option>
           {clubs.map((c) => (

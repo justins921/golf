@@ -74,7 +74,7 @@ function SessionDetail({ sessionId }: { sessionId: string }) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-white">{session?.name ?? 'Session'}</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-50">{session?.name ?? 'Session'}</h1>
           <div className="flex flex-wrap gap-3 text-sm text-gray-500 mt-1">
             {session?.played_at && <span>{new Date(session.played_at).toLocaleDateString()}</span>}
             <span>{shots.length} shots</span>
@@ -110,13 +110,13 @@ function SessionDetail({ sessionId }: { sessionId: string }) {
         <div className="flex gap-1 ml-auto">
           <button
             onClick={() => setMode('carry')}
-            className={`px-2 py-1 text-xs rounded ${mode === 'carry' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+            className={`px-2 py-1 text-xs rounded ${mode === 'carry' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
           >
             Carry
           </button>
           <button
             onClick={() => setMode('total')}
-            className={`px-2 py-1 text-xs rounded ${mode === 'total' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+            className={`px-2 py-1 text-xs rounded ${mode === 'total' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
           >
             Total
           </button>
@@ -126,13 +126,13 @@ function SessionDetail({ sessionId }: { sessionId: string }) {
           <div className="flex gap-1">
             <button
               onClick={() => setDistanceMode('observed')}
-              className={`px-2 py-1 text-xs rounded ${distanceMode === 'observed' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+              className={`px-2 py-1 text-xs rounded ${distanceMode === 'observed' ? 'bg-blue-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
             >
               Observed
             </button>
             <button
               onClick={() => setDistanceMode('normalized')}
-              className={`px-2 py-1 text-xs rounded ${distanceMode === 'normalized' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
+              className={`px-2 py-1 text-xs rounded ${distanceMode === 'normalized' ? 'bg-blue-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
             >
               Normalized
             </button>
@@ -150,7 +150,7 @@ function SessionDetail({ sessionId }: { sessionId: string }) {
                 key={t}
                 onClick={() => setTab(t)}
                 className={`px-3 py-1.5 text-sm rounded ${
-                  tab === t ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-gray-300'
+                  tab === t ? 'bg-gray-800 text-gray-50' : 'text-gray-500 hover:text-gray-300'
                 }`}
               >
                 {t === 'chart' ? 'Dispersion Chart' : t === 'table' ? 'Shot Table' : 'Recommendations'}

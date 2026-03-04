@@ -154,15 +154,15 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
           <span className="text-green-400 font-bold text-lg">Golf OS</span>
           <div className="flex items-center gap-3">
-            <a href="#pricing" className="hidden sm:inline text-sm text-gray-400 hover:text-white transition-colors">
+            <a href="#pricing" className="hidden sm:inline text-sm text-gray-400 hover:text-gray-50 transition-colors">
               Pricing
             </a>
-            <Link href="/auth/signin" className="text-sm text-gray-400 hover:text-white transition-colors">
+            <Link href="/auth/signin" className="text-sm text-gray-400 hover:text-gray-50 transition-colors">
               Sign In
             </Link>
             <Link
               href="/auth/signup"
-              className="px-4 py-1.5 text-sm bg-green-600 hover:bg-green-500 text-white font-medium rounded-md transition-colors"
+              className="px-4 py-1.5 text-sm bg-green-600 hover:bg-green-500 text-gray-50 font-medium rounded-md transition-colors"
             >
               Get Started Free
             </Link>
@@ -175,7 +175,7 @@ export default function LandingPage() {
         <p className="text-green-400 text-sm font-medium tracking-wide uppercase mb-4">
           For Garmin R50 owners who want more from their data
         </p>
-        <h1 className="text-3xl sm:text-5xl font-bold text-white leading-tight max-w-3xl mx-auto">
+        <h1 className="text-3xl sm:text-5xl font-bold text-gray-50 leading-tight max-w-3xl mx-auto">
           Your range data is worth more than averages.
         </h1>
         <p className="mt-6 text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
@@ -184,7 +184,7 @@ export default function LandingPage() {
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/auth/signup"
-            className="w-full sm:w-auto px-8 py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg text-lg transition-colors"
+            className="w-full sm:w-auto px-8 py-3 bg-green-600 hover:bg-green-500 text-gray-50 font-semibold rounded-lg text-lg transition-colors"
           >
             Start Free — No Credit Card
           </Link>
@@ -215,7 +215,7 @@ export default function LandingPage() {
       {/* Problem → Solution */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-50 mb-6">
             You have the data. You just can&apos;t use it yet.
           </h2>
           <div className="grid sm:grid-cols-2 gap-6 text-left mt-10">
@@ -246,7 +246,7 @@ export default function LandingPage() {
       {/* Features */}
       <section id="features" className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-50">
             Everything you need. Nothing you don&apos;t.
           </h2>
           <p className="mt-3 text-gray-500 max-w-xl mx-auto">
@@ -271,7 +271,7 @@ export default function LandingPage() {
                   </span>
                 )}
               </div>
-              <h3 className="text-white font-semibold mb-2">{f.title}</h3>
+              <h3 className="text-gray-50 font-semibold mb-2">{f.title}</h3>
               <p className="text-sm text-gray-400 leading-relaxed">{f.desc}</p>
               <p className="text-xs text-gray-500 mt-2">{f.detail}</p>
             </div>
@@ -282,7 +282,7 @@ export default function LandingPage() {
       {/* How it works */}
       <section className="border-y border-gray-800 bg-gray-900/30">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-50 text-center mb-12">
             Up and running in 30 seconds
           </h2>
           <div className="grid sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
@@ -295,7 +295,7 @@ export default function LandingPage() {
                 <div className="w-10 h-10 rounded-full bg-green-600/20 border border-green-600/40 text-green-400 font-bold flex items-center justify-center mx-auto mb-4">
                   {s.step}
                 </div>
-                <h3 className="text-white font-semibold mb-2">{s.title}</h3>
+                <h3 className="text-gray-50 font-semibold mb-2">{s.title}</h3>
                 <p className="text-sm text-gray-400">{s.desc}</p>
               </div>
             ))}
@@ -306,7 +306,7 @@ export default function LandingPage() {
       {/* Pricing */}
       <section id="pricing" className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-50">
             Simple pricing. Start free.
           </h2>
           <p className="mt-3 text-gray-500 max-w-xl mx-auto">
@@ -317,7 +317,7 @@ export default function LandingPage() {
             <button
               onClick={() => setBillingCycle('monthly')}
               className={`px-4 py-1.5 text-sm rounded-md transition-colors ${
-                billingCycle === 'monthly' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-gray-300'
+                billingCycle === 'monthly' ? 'bg-gray-800 text-gray-50' : 'text-gray-500 hover:text-gray-300'
               }`}
             >
               Monthly
@@ -325,7 +325,7 @@ export default function LandingPage() {
             <button
               onClick={() => setBillingCycle('annual')}
               className={`px-4 py-1.5 text-sm rounded-md transition-colors ${
-                billingCycle === 'annual' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-gray-300'
+                billingCycle === 'annual' ? 'bg-gray-800 text-gray-50' : 'text-gray-500 hover:text-gray-300'
               }`}
             >
               Annual <span className="text-green-400 text-xs ml-1">Save 18%</span>
@@ -336,9 +336,9 @@ export default function LandingPage() {
         <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
           {/* Free tier */}
           <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-            <h3 className="text-white font-semibold text-lg">Free</h3>
+            <h3 className="text-gray-50 font-semibold text-lg">Free</h3>
             <div className="mt-3 mb-5">
-              <span className="text-3xl font-bold text-white">$0</span>
+              <span className="text-3xl font-bold text-gray-50">$0</span>
               <span className="text-gray-500 text-sm ml-1">forever</span>
             </div>
             <p className="text-sm text-gray-400 mb-6">Try the core tools — no credit card, no time limit.</p>
@@ -375,13 +375,13 @@ export default function LandingPage() {
           {/* Pro tier — highlighted */}
           <div className="bg-gray-900 border-2 border-green-600 rounded-lg p-6 relative">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-              <span className="bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+              <span className="bg-green-600 text-gray-50 text-xs font-semibold px-3 py-1 rounded-full">
                 Most Popular
               </span>
             </div>
-            <h3 className="text-white font-semibold text-lg">Pro</h3>
+            <h3 className="text-gray-50 font-semibold text-lg">Pro</h3>
             <div className="mt-3 mb-5">
-              <span className="text-3xl font-bold text-white">
+              <span className="text-3xl font-bold text-gray-50">
                 {billingCycle === 'annual' ? '$49' : '$5'}
               </span>
               <span className="text-gray-500 text-sm ml-1">
@@ -394,7 +394,7 @@ export default function LandingPage() {
             <p className="text-sm text-gray-400 mb-6">Full access to everything Golf OS offers.</p>
             <Link
               href="/auth/signup"
-              className="block w-full text-center px-4 py-2.5 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg transition-colors text-sm"
+              className="block w-full text-center px-4 py-2.5 bg-green-600 hover:bg-green-500 text-gray-50 font-semibold rounded-lg transition-colors text-sm"
             >
               Start Pro — 7-Day Free Trial
             </Link>
@@ -438,7 +438,7 @@ export default function LandingPage() {
 
       {/* Objection handling / FAQ */}
       <section id="faq" className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-        <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-10">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-50 text-center mb-10">
           Common questions
         </h2>
         <div className="max-w-2xl mx-auto space-y-2">
@@ -469,7 +469,7 @@ export default function LandingPage() {
       {/* Final CTA */}
       <section className="border-t border-gray-800 bg-gray-900/50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-50 mb-4">
             Stop guessing. Start knowing.
           </h2>
           <p className="text-gray-400 mb-8 max-w-xl mx-auto">
@@ -478,7 +478,7 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/auth/signup"
-              className="w-full sm:w-auto px-8 py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-lg text-lg transition-colors"
+              className="w-full sm:w-auto px-8 py-3 bg-green-600 hover:bg-green-500 text-gray-50 font-semibold rounded-lg text-lg transition-colors"
             >
               Try Pro Free for 7 Days
             </Link>

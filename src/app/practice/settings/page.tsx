@@ -21,14 +21,14 @@ function ScoringSettings() {
     setSettings({ ...settings, [key]: value });
   };
 
-  const inputCls = 'w-24 px-2 py-1.5 text-sm bg-gray-800 border border-gray-700 rounded text-white text-center';
+  const inputCls = 'w-24 px-2 py-1.5 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50 text-center';
 
   // Preview scoring for reference
   const previewDistances = [30, 50, 75, 100, 150];
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-white mb-2">Scoring Settings</h1>
+      <h1 className="text-2xl font-bold text-gray-50 mb-2">Scoring Settings</h1>
       <p className="text-sm text-gray-500 mb-6">
         Tune the strokes-gained scoring model. Changes apply to all future practice sessions.
       </p>
@@ -36,7 +36,7 @@ function ScoringSettings() {
       <div className="space-y-6">
         {/* Lateral penalties */}
         <div className="bg-gray-900 border border-gray-700 rounded-lg p-5">
-          <h3 className="text-sm font-medium text-white mb-3">Lateral Penalty Factors</h3>
+          <h3 className="text-sm font-medium text-gray-50 mb-3">Lateral Penalty Factors</h3>
           <p className="text-xs text-gray-500 mb-4">
             How much lateral miss counts relative to distance miss. Higher = lateral misses penalized more.
           </p>
@@ -73,7 +73,7 @@ function ScoringSettings() {
 
         {/* Points scaling */}
         <div className="bg-gray-900 border border-gray-700 rounded-lg p-5">
-          <h3 className="text-sm font-medium text-white mb-3">Points Scaling</h3>
+          <h3 className="text-sm font-medium text-gray-50 mb-3">Points Scaling</h3>
           <p className="text-xs text-gray-500 mb-4">
             Controls how strokes gained translates to points. Points = clamp((SG + offset) &times; scale, min, max).
           </p>
@@ -126,7 +126,7 @@ function ScoringSettings() {
 
         {/* Mode toggle */}
         <div className="bg-gray-900 border border-gray-700 rounded-lg p-5">
-          <h3 className="text-sm font-medium text-white mb-3">Scoring Mode</h3>
+          <h3 className="text-sm font-medium text-gray-50 mb-3">Scoring Mode</h3>
           <label className="flex items-center gap-3 cursor-pointer">
             <input
               type="checkbox"
@@ -143,7 +143,7 @@ function ScoringSettings() {
 
         {/* Expected strokes reference */}
         <div className="bg-gray-900 border border-gray-700 rounded-lg p-5">
-          <h3 className="text-sm font-medium text-white mb-3">Expected Strokes Model</h3>
+          <h3 className="text-sm font-medium text-gray-50 mb-3">Expected Strokes Model</h3>
           <p className="text-xs text-gray-500 mb-3">
             Reference: expected strokes to hole out from each distance. Used as the baseline for SG calculations.
           </p>
@@ -151,7 +151,7 @@ function ScoringSettings() {
             {previewDistances.map((d) => (
               <div key={d}>
                 <div className="text-xs text-gray-500">{d} yds</div>
-                <div className="text-sm text-white font-mono">{expectedStrokes(d).toFixed(2)}</div>
+                <div className="text-sm text-gray-50 font-mono">{expectedStrokes(d).toFixed(2)}</div>
               </div>
             ))}
           </div>
