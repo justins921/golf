@@ -428,5 +428,6 @@ const ALL_MODULES = [
   { href: '/wedges', title: 'Wedge Lab', desc: 'Matrix & calibration', badge: false },
   { href: '/putters', title: 'Putter Lab', desc: 'Drill comparison', badge: false },
   { href: '/yardage', title: 'Yardage Card', desc: 'Club distances', badge: true },
+  { href: '/gapping', title: 'Club Gapping', desc: 'Bag gap analysis', badge: true },
   { href: '/calculator', title: 'Calculator', desc: 'Plays-like yardage', badge: false },
 ];

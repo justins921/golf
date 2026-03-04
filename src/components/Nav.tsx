@@ -29,6 +29,7 @@ const navGroups = [
       { href: '/wedges', label: 'Wedge Lab', desc: 'Matrix, calibration & practice', lm: false },
       { href: '/putters', label: 'Putter Lab', desc: 'Compare putters with drills', lm: false },
       { href: '/yardage', label: 'Yardage Card', desc: 'Data-driven club distances', lm: true },
+      { href: '/gapping', label: 'Club Gapping', desc: 'Distance gaps & bag analysis', lm: true },
       { href: '/calculator', label: 'Calculator', desc: 'Plays-like adjustments', lm: false },
     ],
   },
