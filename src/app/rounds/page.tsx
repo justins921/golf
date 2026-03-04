@@ -6,6 +6,7 @@ import AuthGuard from '@/components/AuthGuard';
 import { useRounds, useRoundHoles } from '@/lib/hooks';
 import type { Round, RoundHole } from '@/lib/types';
 import { CLUB_ORDER, sortClubs } from '@/lib/types';
+import RoundAnalysis from '@/components/RoundAnalysis';
 
 export default function RoundsPage() {
   return (
@@ -20,7 +21,7 @@ function RoundTracker() {
   const { rounds, loading, addRound, updateRound, deleteRound } = useRounds();
   const [selectedRoundId, setSelectedRoundId] = useState<string | null>(null);
   const [showNewRound, setShowNewRound] = useState(false);
-  const [view, setView] = useState<'rounds' | 'stats'>('rounds');
+  const [view, setView] = useState<'rounds' | 'stats' | 'analysis'>('rounds');
 
   // New round form
   const [newDate, setNewDate] = useState(new Date().toISOString().split('T')[0]);
@@ -94,18 +95,24 @@ function RoundTracker() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-white">Rounds</h1>
         <div className="flex gap-2">
-          <button onClick={() => setView('rounds')}
-            className={`px-3 py-1.5 text-sm rounded ${view === 'rounds' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
-            Scorecards
-          </button>
-          <button onClick={() => setView('stats')}
-            className={`px-3 py-1.5 text-sm rounded ${view === 'stats' ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
-            Stats
-          </button>
+          {(['rounds', 'stats', 'analysis'] as const).map((v) => (
+            <button key={v} onClick={() => setView(v)}
+              className={`px-3 py-1.5 text-sm rounded ${view === v ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
+              {v === 'rounds' ? 'Scorecards' : v === 'stats' ? 'Stats' : 'Analysis'}
+            </button>
+          ))}
         </div>
       </div>
 
       {view === 'stats' && <RoundStats stats={stats} rounds={rounds} />}
+
+      {view === 'analysis' && (
+        <RoundAnalysisView
+          rounds={rounds}
+          selectedRoundId={selectedRoundId}
+          setSelectedRoundId={setSelectedRoundId}
+        />
+      )}
 
       {view === 'rounds' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -558,6 +565,70 @@ function RoundStats({ stats, rounds }: {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function RoundAnalysisView({
+  rounds,
+  selectedRoundId,
+  setSelectedRoundId,
+}: {
+  rounds: Round[];
+  selectedRoundId: string | null;
+  setSelectedRoundId: (id: string | null) => void;
+}) {
+  const scoredRounds = rounds.filter((r) => r.total_score != null);
+  const { holes, loading } = useRoundHoles(selectedRoundId);
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Round selector */}
+      <div className="space-y-2">
+        <h3 className="text-sm font-medium text-gray-400 mb-2">Select a round to analyze</h3>
+        {scoredRounds.length === 0 && (
+          <div className="text-center text-gray-600 py-8 text-sm">
+            No scored rounds yet. Enter a scorecard first.
+          </div>
+        )}
+        {scoredRounds.map((r) => (
+          <button key={r.id} onClick={() => setSelectedRoundId(r.id)}
+            className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
+              selectedRoundId === r.id
+                ? 'bg-gray-800 border-green-600/50 text-white'
+                : 'bg-gray-900 border-gray-800 text-gray-400 hover:border-gray-700'
+            }`}>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">{r.course_name}</span>
+              <span className="text-lg font-bold text-green-400">{r.total_score}</span>
+            </div>
+            <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
+              <span>{r.round_date}</span>
+              {r.tees && <span>{r.tees}</span>}
+              <span>{r.holes_played}H</span>
+              {r.total_putts != null && <span>{r.total_putts} putts</span>}
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {/* Analysis panel */}
+      <div className="lg:col-span-2">
+        {selectedRoundId && !loading ? (
+          <RoundAnalysis
+            round={scoredRounds.find((r) => r.id === selectedRoundId)!}
+            holes={holes}
+          />
+        ) : loading ? (
+          <div className="flex items-center justify-center h-64 text-gray-600 text-sm">
+            Loading analysis...
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-64 text-gray-600 text-sm">
+            Select a round to see Strokes Gained analysis
+          </div>
+        )}
+      </div>
     </div>
   );
 }
