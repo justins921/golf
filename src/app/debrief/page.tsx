@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import Link from 'next/link';
-import { useRounds, useRoundHoles } from '@/lib/hooks';
+import { useRounds, useRoundHoles, useDebriefShares } from '@/lib/hooks';
 import { calculateHandicap } from '@/lib/handicap';
+import { analyzeRound } from '@/lib/strokesGained';
 import {
   generateDebrief,
   getReflection, saveReflection,
@@ -14,18 +15,27 @@ import {
   type DebriefInsight,
   type DebriefActionItem,
   type HoleHighlight,
-  type ScoringPattern,
   type WhatIf,
   type CourseHistory,
 } from '@/lib/debrief';
+import type { Round, RoundHole } from '@/lib/types';
 
 // ── Emoji map ───────────────────────────────────────────────
 const EMOJI_MAP: Record<string, string> = {
   fire: '🔥', star: '⭐', thumbsup: '👍', muscle: '💪', chart: '📈', book: '📖',
 };
 
-// ── View Mode ───────────────────────────────────────────────
 type ViewMode = 'simple' | 'detailed';
+
+// ── Debounced save hook ─────────────────────────────────────
+
+function useDebouncedSave<T>(saveFn: (val: T) => void, delay: number = 500) {
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  return useCallback((val: T) => {
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => saveFn(val), delay);
+  }, [saveFn, delay]);
+}
 
 // ── Insight Card ────────────────────────────────────────────
 
@@ -113,7 +123,7 @@ function HoleChip({ h }: { h: HoleHighlight }) {
   );
 }
 
-// ── SG Bar (dynamic scaling) ────────────────────────────────
+// ── SG Bar Chart (dynamic scaling) ──────────────────────────
 
 function SGBarChart({ analysis }: { analysis: RoundDebrief['analysis'] }) {
   const items = [
@@ -122,15 +132,13 @@ function SGBarChart({ analysis }: { analysis: RoundDebrief['analysis'] }) {
     { label: 'Short Game', value: analysis.sgShortGame },
     { label: 'Putting', value: analysis.sgPutting },
   ];
-
-  // Dynamic scale: find max absolute value, use at least 2
   const maxAbs = Math.max(2, ...items.map(i => Math.abs(i.value)));
 
   return (
     <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
       <h3 className="text-sm font-semibold text-gray-50">Strokes Gained Breakdown</h3>
       {items.map(({ label, value }) => {
-        const pct = (Math.abs(value) / maxAbs) * 50; // 50% max width per side
+        const pct = (Math.abs(value) / maxAbs) * 50;
         const isPositive = value >= 0;
         return (
           <div key={label} className="flex items-center gap-3">
@@ -257,7 +265,7 @@ function RoundTagEditor({ roundId }: { roundId: string }) {
   );
 }
 
-// ── Reflection Prompts (saveable) ───────────────────────────
+// ── Reflection Prompts (saveable, debounced) ────────────────
 
 const REFLECTION_QUESTIONS = [
   'What was your best decision on the course today?',
@@ -270,6 +278,10 @@ function ReflectionSection({ roundId }: { roundId: string }) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [mounted, setMounted] = useState(false);
 
+  const debouncedSave = useDebouncedSave((val: Record<string, string>) => {
+    saveReflection(roundId, val);
+  }, 600);
+
   useEffect(() => {
     setMounted(true);
     setAnswers(getReflection(roundId));
@@ -278,7 +290,7 @@ function ReflectionSection({ roundId }: { roundId: string }) {
   const update = (q: string, val: string) => {
     const next = { ...answers, [q]: val };
     setAnswers(next);
-    saveReflection(roundId, next);
+    debouncedSave(next);
   };
 
   if (!mounted) return null;
@@ -286,7 +298,7 @@ function ReflectionSection({ roundId }: { roundId: string }) {
   return (
     <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
       <h3 className="text-sm font-semibold text-gray-50">Post-Round Reflection</h3>
-      <p className="text-xs text-gray-500">Your answers are saved automatically and visible next time you revisit this round.</p>
+      <p className="text-xs text-gray-500">Your answers are saved automatically.</p>
       <div className="space-y-3">
         {REFLECTION_QUESTIONS.map((q) => (
           <div key={q}>
@@ -311,6 +323,10 @@ function CoachNotesSection({ roundId }: { roundId: string }) {
   const [notes, setNotes] = useState('');
   const [mounted, setMounted] = useState(false);
 
+  const debouncedSave = useDebouncedSave((val: string) => {
+    saveCoachNotes(roundId, val);
+  }, 600);
+
   useEffect(() => {
     setMounted(true);
     setNotes(getCoachNotes(roundId));
@@ -318,7 +334,7 @@ function CoachNotesSection({ roundId }: { roundId: string }) {
 
   const update = (val: string) => {
     setNotes(val);
-    saveCoachNotes(roundId, val);
+    debouncedSave(val);
   };
 
   if (!mounted) return null;
@@ -338,15 +354,296 @@ function CoachNotesSection({ roundId }: { roundId: string }) {
   );
 }
 
+// ── Trend View ──────────────────────────────────────────────
+
+interface TrendPoint {
+  roundId: string;
+  date: string;
+  course: string;
+  score: number;
+  sgOtt: number;
+  sgApproach: number;
+  sgShortGame: number;
+  sgPutting: number;
+  totalSG: number;
+}
+
+function TrendView({ trends }: { trends: TrendPoint[] }) {
+  if (trends.length < 2) {
+    return (
+      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 text-center">
+        <p className="text-sm text-gray-400">Need at least 2 debriefed rounds to show trends.</p>
+      </div>
+    );
+  }
+
+  const categories = [
+    { key: 'sgOtt' as const, label: 'Off the Tee', color: 'text-blue-400' },
+    { key: 'sgApproach' as const, label: 'Approach', color: 'text-purple-400' },
+    { key: 'sgShortGame' as const, label: 'Short Game', color: 'text-amber-400' },
+    { key: 'sgPutting' as const, label: 'Putting', color: 'text-cyan-400' },
+  ];
+
+  // Calculate averages for first half vs second half (trend direction)
+  const mid = Math.floor(trends.length / 2);
+  const firstHalf = trends.slice(0, mid);
+  const secondHalf = trends.slice(mid);
+
+  const avg = (arr: TrendPoint[], key: keyof TrendPoint) =>
+    arr.reduce((s, t) => s + (t[key] as number), 0) / arr.length;
+
+  return (
+    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
+      <h3 className="text-sm font-semibold text-gray-50">SG Trends (Last {trends.length} Rounds)</h3>
+
+      {/* Sparkline table */}
+      <div className="space-y-3">
+        {categories.map(cat => {
+          const vals = trends.map(t => t[cat.key] as number);
+          const firstAvg = avg(firstHalf, cat.key);
+          const secondAvg = avg(secondHalf, cat.key);
+          const improving = secondAvg > firstAvg;
+          const delta = secondAvg - firstAvg;
+
+          return (
+            <div key={cat.key} className="flex items-center gap-3">
+              <span className={`text-xs w-24 text-right ${cat.color}`}>{cat.label}</span>
+              <div className="flex-1 flex items-center gap-1">
+                {vals.map((v, i) => {
+                  const h = Math.max(4, Math.min(20, Math.abs(v) * 8 + 4));
+                  return (
+                    <div key={i} className="flex-1 flex items-center justify-center" title={`${trends[i].date}: ${v >= 0 ? '+' : ''}${v.toFixed(1)}`}>
+                      <div
+                        className={`w-full rounded-sm ${v >= 0 ? 'bg-green-500/60' : 'bg-red-500/60'}`}
+                        style={{ height: `${h}px` }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <span className={`text-xs w-16 text-right ${improving ? 'text-green-400' : delta < -0.3 ? 'text-red-400' : 'text-gray-400'}`}>
+                {improving ? '↑' : delta < -0.3 ? '↓' : '→'} {delta >= 0 ? '+' : ''}{delta.toFixed(1)}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Score trend */}
+      <div className="border-t border-gray-700 pt-3">
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-gray-400">Score Trend</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500">
+              {trends[0].score} → {trends[trends.length - 1].score}
+            </span>
+            {(() => {
+              const scoreFirst = avg(firstHalf, 'score');
+              const scoreSecond = avg(secondHalf, 'score');
+              const improving = scoreSecond < scoreFirst;
+              return (
+                <span className={`text-xs font-medium ${improving ? 'text-green-400' : 'text-red-400'}`}>
+                  {improving ? '↓' : '↑'} {Math.abs(scoreSecond - scoreFirst).toFixed(1)}
+                </span>
+              );
+            })()}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Share / Export ───────────────────────────────────────────
+
+function ShareExportSection({ debrief, roundId }: { debrief: RoundDebrief; roundId: string }) {
+  const [copied, setCopied] = useState(false);
+  const { shares, createShare, deleteShare } = useDebriefShares(roundId);
+  const [shareCreating, setShareCreating] = useState(false);
+  const [coachName, setCoachName] = useState('');
+
+  const exportAsText = () => {
+    const { round, analysis, insights, actionItems, strengths, improvementAreas, whatIfs } = debrief;
+    const score = round.total_score ?? 0;
+    const par = analysis.holes.reduce((s, h) => s + h.par, 0) || 72;
+    const toPar = score - par;
+
+    const lines: string[] = [
+      `POST-ROUND DEBRIEF`,
+      `${round.course_name} — ${round.round_date}`,
+      `Score: ${score} (${toPar >= 0 ? '+' : ''}${toPar})`,
+      '',
+      `STROKES GAINED`,
+      `  Off the Tee:  ${analysis.sgOtt >= 0 ? '+' : ''}${analysis.sgOtt.toFixed(1)}`,
+      `  Approach:     ${analysis.sgApproach >= 0 ? '+' : ''}${analysis.sgApproach.toFixed(1)}`,
+      `  Short Game:   ${analysis.sgShortGame >= 0 ? '+' : ''}${analysis.sgShortGame.toFixed(1)}`,
+      `  Putting:      ${analysis.sgPutting >= 0 ? '+' : ''}${analysis.sgPutting.toFixed(1)}`,
+      `  Total:        ${analysis.totalSG >= 0 ? '+' : ''}${analysis.totalSG.toFixed(1)}`,
+      '',
+      `KEY STATS`,
+      `  Putts: ${analysis.totalPutts} (${analysis.puttsPerGir}/GIR)`,
+      `  GIR: ${analysis.girPct}% (${analysis.girCount})`,
+      `  Fairways: ${analysis.firPct}% (${analysis.firCount}/${analysis.firHoles})`,
+      `  Penalties: ${analysis.totalPenalties}`,
+      `  3-Putts: ${analysis.threePuttCount}  |  1-Putts: ${analysis.onePuttCount}`,
+    ];
+
+    if (strengths.length > 0) {
+      lines.push('', 'STRENGTHS');
+      strengths.forEach(s => lines.push(`  + ${s}`));
+    }
+    if (improvementAreas.length > 0) {
+      lines.push('', 'FOCUS AREAS');
+      improvementAreas.forEach(s => lines.push(`  - ${s}`));
+    }
+    if (insights.length > 0) {
+      lines.push('', 'INSIGHTS');
+      insights.forEach(i => lines.push(`  [${i.category === 'positive' ? '+' : i.category === 'negative' ? '!' : '·'}] ${i.title}: ${i.detail}`));
+    }
+    if (actionItems.length > 0) {
+      lines.push('', 'ACTION PLAN');
+      actionItems.forEach((a, i) => lines.push(`  ${i + 1}. ${a.action} (${a.area})`));
+    }
+    if (whatIfs.length > 0) {
+      lines.push('', 'WHAT-IF');
+      whatIfs.forEach(w => lines.push(`  ${w.label}: ${w.hypotheticalScore} (-${w.savedStrokes})`));
+    }
+
+    return lines.join('\n');
+  };
+
+  const handleCopy = async () => {
+    const text = exportAsText();
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleCreateShare = async () => {
+    setShareCreating(true);
+    await createShare(coachName || undefined);
+    setCoachName('');
+    setShareCreating(false);
+  };
+
+  return (
+    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
+      <h3 className="text-sm font-semibold text-gray-50">Share & Export</h3>
+
+      {/* Copy as text */}
+      <div className="flex gap-2">
+        <button onClick={handleCopy}
+          className="flex-1 px-3 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors">
+          {copied ? 'Copied!' : 'Copy as Text'}
+        </button>
+      </div>
+
+      {/* Share with coach */}
+      <div className="border-t border-gray-700 pt-3 space-y-2">
+        <div className="text-xs text-gray-400">Share with coach (generates a link)</div>
+        <div className="flex gap-2">
+          <input
+            value={coachName}
+            onChange={e => setCoachName(e.target.value)}
+            placeholder="Coach name (optional)"
+            className="flex-1 px-3 py-1.5 text-sm bg-gray-900 border border-gray-700 rounded-lg text-gray-200 placeholder-gray-600 focus:outline-none focus:border-green-500/40"
+          />
+          <button onClick={handleCreateShare} disabled={shareCreating}
+            className="px-3 py-1.5 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white rounded-lg transition-colors">
+            {shareCreating ? '...' : 'Create Link'}
+          </button>
+        </div>
+      </div>
+
+      {/* Active shares */}
+      {shares.length > 0 && (
+        <div className="space-y-2">
+          <div className="text-xs text-gray-500">Active share links</div>
+          {shares.map(s => (
+            <div key={s.id} className="flex items-center justify-between bg-gray-900 rounded-lg px-3 py-2">
+              <div>
+                <div className="text-xs text-gray-300 font-mono">{window.location.origin}/debrief/shared/{s.share_token}</div>
+                {s.recipient_name && <div className="text-[10px] text-gray-500">For: {s.recipient_name}</div>}
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => {
+                  navigator.clipboard.writeText(`${window.location.origin}/debrief/shared/${s.share_token}`);
+                }} className="text-xs text-green-400 hover:text-green-300">Copy</button>
+                <button onClick={() => deleteShare(s.id)} className="text-xs text-red-400 hover:text-red-300">Remove</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Miss Pattern Summary ────────────────────────────────────
+
+function MissPatternSummary({ holes }: { holes: RoundHole[] }) {
+  const teeMisses = holes.filter(h => h.tee_miss_direction != null);
+  const approachMisses = holes.filter(h => h.approach_miss_direction != null);
+
+  if (teeMisses.length === 0 && approachMisses.length === 0) return null;
+
+  const countDir = (arr: RoundHole[], field: 'tee_miss_direction' | 'approach_miss_direction') => {
+    const counts: Record<string, number> = {};
+    for (const h of arr) {
+      const d = h[field]!;
+      counts[d] = (counts[d] ?? 0) + 1;
+    }
+    return Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  };
+
+  return (
+    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+      <h3 className="text-sm font-semibold text-gray-50 mb-3">Miss Patterns</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {teeMisses.length > 0 && (
+          <div>
+            <div className="text-xs text-gray-500 mb-2">Tee Shot Misses ({teeMisses.length})</div>
+            <div className="flex gap-2">
+              {countDir(teeMisses, 'tee_miss_direction').map(([dir, count]) => (
+                <div key={dir} className="bg-gray-900 rounded-lg px-3 py-2 text-center">
+                  <div className="text-sm font-bold text-amber-400 capitalize">{dir}</div>
+                  <div className="text-[10px] text-gray-500">{count}x</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        {approachMisses.length > 0 && (
+          <div>
+            <div className="text-xs text-gray-500 mb-2">Green Misses ({approachMisses.length})</div>
+            <div className="flex gap-2 flex-wrap">
+              {countDir(approachMisses, 'approach_miss_direction').map(([dir, count]) => (
+                <div key={dir} className="bg-gray-900 rounded-lg px-3 py-2 text-center">
+                  <div className="text-sm font-bold text-amber-400 capitalize">{dir}</div>
+                  <div className="text-[10px] text-gray-500">{count}x</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Round Selector ──────────────────────────────────────────
 
-function RoundSelector({ rounds, holesCache, selectedId, onSelect }: {
-  rounds: ReturnType<typeof useRounds>['rounds'];
-  holesCache: Map<string, number>;
+function RoundSelector({ rounds, selectedId, onSelect }: {
+  rounds: Round[];
   selectedId: string | null;
   onSelect: (id: string) => void;
 }) {
-  const scored = rounds.filter(r => r.total_score != null);
+  // Filter scored, sort by date descending (most recent first)
+  const scored = useMemo(() =>
+    rounds.filter(r => r.total_score != null)
+      .sort((a, b) => b.round_date.localeCompare(a.round_date)),
+    [rounds]
+  );
 
   if (scored.length === 0) {
     return (
@@ -376,8 +673,7 @@ function RoundSelector({ rounds, holesCache, selectedId, onSelect }: {
       <p className="text-xs text-gray-500">Choose any scored round for auto-generated analysis and insights.</p>
       <div className="space-y-2 max-h-96 overflow-y-auto">
         {scored.map((r) => {
-          const holePar = holesCache.get(r.id);
-          const par = holePar ?? (r.holes_played === 18 ? 72 : 36);
+          const par = r.holes_played === 18 ? 72 : 36; // fallback, actual par used in debrief
           const toPar = (r.total_score ?? 0) - par;
           return (
             <button key={r.id} onClick={() => onSelect(r.id)}
@@ -404,10 +700,11 @@ function RoundSelector({ rounds, holesCache, selectedId, onSelect }: {
 
 // ── Tab Button ──────────────────────────────────────────────
 
-function TabBar({ tab, setTab }: { tab: 'summary' | 'deep-dive' | 'notes'; setTab: (t: 'summary' | 'deep-dive' | 'notes') => void }) {
+function TabBar({ tab, setTab }: { tab: string; setTab: (t: 'summary' | 'deep-dive' | 'trends' | 'notes') => void }) {
   const tabs = [
     { key: 'summary' as const, label: 'Summary' },
     { key: 'deep-dive' as const, label: 'Deep Dive' },
+    { key: 'trends' as const, label: 'Trends' },
     { key: 'notes' as const, label: 'Notes' },
   ];
   return (
@@ -426,8 +723,10 @@ function TabBar({ tab, setTab }: { tab: 'summary' | 'deep-dive' | 'notes'; setTa
 
 // ── Debrief View ────────────────────────────────────────────
 
-function DebriefView({ debrief, viewMode }: { debrief: RoundDebrief; viewMode: ViewMode }) {
-  const [tab, setTab] = useState<'summary' | 'deep-dive' | 'notes'>('summary');
+function DebriefView({ debrief, viewMode, trends, allHoles }: {
+  debrief: RoundDebrief; viewMode: ViewMode; trends: TrendPoint[]; allHoles: RoundHole[];
+}) {
+  const [tab, setTab] = useState<'summary' | 'deep-dive' | 'trends' | 'notes'>('summary');
   const { round, analysis, overallVerdict, overallEmoji, insights, actionItems, holeHighlights, scoringPatterns, strengths, improvementAreas, whatIfs, courseHistory } = debrief;
   const score = round.total_score ?? 0;
   const par = analysis.holes.reduce((s, h) => s + h.par, 0) || 72;
@@ -455,10 +754,8 @@ function DebriefView({ debrief, viewMode }: { debrief: RoundDebrief; viewMode: V
       {/* ── Summary Tab ─────────────────────────────────── */}
       {tab === 'summary' && (
         <div className="space-y-5">
-          {/* Course history */}
           {courseHistory && <CourseHistoryCard history={courseHistory} />}
 
-          {/* Key stats grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
               { label: 'Putts', value: String(analysis.totalPutts), sub: `${analysis.puttsPerGir} per GIR` },
@@ -474,7 +771,6 @@ function DebriefView({ debrief, viewMode }: { debrief: RoundDebrief; viewMode: V
             ))}
           </div>
 
-          {/* Insights — show top 3 in simple mode */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-gray-50">Key Takeaways</h3>
             {(simple ? insights.slice(0, 3) : insights).map((ins, i) => (
@@ -494,7 +790,6 @@ function DebriefView({ debrief, viewMode }: { debrief: RoundDebrief; viewMode: V
             )}
           </div>
 
-          {/* Strengths & Focus Areas */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {strengths.length > 0 && (
               <div className="bg-green-500/5 border border-green-500/20 rounded-lg p-4">
@@ -522,7 +817,6 @@ function DebriefView({ debrief, viewMode }: { debrief: RoundDebrief; viewMode: V
             )}
           </div>
 
-          {/* Action items */}
           {actionItems.length > 0 && (
             <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
               <h3 className="text-sm font-semibold text-gray-50">Action Plan</h3>
@@ -537,10 +831,8 @@ function DebriefView({ debrief, viewMode }: { debrief: RoundDebrief; viewMode: V
       {/* ── Deep Dive Tab ───────────────────────────────── */}
       {tab === 'deep-dive' && (
         <div className="space-y-5">
-          {/* SG breakdown */}
           <SGBarChart analysis={analysis} />
 
-          {/* Scoring patterns */}
           {scoringPatterns.length > 0 && (
             <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
               <h3 className="text-sm font-semibold text-gray-50 mb-3">Scoring Patterns</h3>
@@ -560,7 +852,6 @@ function DebriefView({ debrief, viewMode }: { debrief: RoundDebrief; viewMode: V
             </div>
           )}
 
-          {/* All insights */}
           {insights.length > 0 && (
             <div className="space-y-3">
               <h3 className="text-sm font-semibold text-gray-50">All Insights</h3>
@@ -570,7 +861,9 @@ function DebriefView({ debrief, viewMode }: { debrief: RoundDebrief; viewMode: V
             </div>
           )}
 
-          {/* Hole highlights */}
+          {/* Miss patterns */}
+          <MissPatternSummary holes={allHoles} />
+
           {holeHighlights.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-gray-50 mb-3">Hole Highlights</h3>
@@ -582,11 +875,15 @@ function DebriefView({ debrief, viewMode }: { debrief: RoundDebrief; viewMode: V
             </div>
           )}
 
-          {/* What-If */}
           <WhatIfSection whatIfs={whatIfs} actualScore={score} />
-
-          {/* Course history */}
           {courseHistory && <CourseHistoryCard history={courseHistory} />}
+        </div>
+      )}
+
+      {/* ── Trends Tab ──────────────────────────────────── */}
+      {tab === 'trends' && (
+        <div className="space-y-5">
+          <TrendView trends={trends} />
         </div>
       )}
 
@@ -595,8 +892,8 @@ function DebriefView({ debrief, viewMode }: { debrief: RoundDebrief; viewMode: V
         <div className="space-y-5">
           <ReflectionSection roundId={round.id} />
           <CoachNotesSection roundId={round.id} />
+          <ShareExportSection debrief={debrief} roundId={round.id} />
 
-          {/* Links to related features */}
           <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
             <h3 className="text-sm font-semibold text-gray-50 mb-3">Related</h3>
             <div className="grid grid-cols-2 gap-2">
@@ -628,6 +925,7 @@ export default function DebriefPage() {
   const { holes, loading: holesLoading } = useRoundHoles(selectedRoundId);
   const [debrief, setDebrief] = useState<RoundDebrief | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('simple');
+  const [autoSelected, setAutoSelected] = useState(false);
 
   // Calculate actual handicap from all rounds
   const handicapResult = rounds.length > 0 ? calculateHandicap(rounds) : null;
@@ -635,18 +933,71 @@ export default function DebriefPage() {
 
   const selectedRound = rounds.find(r => r.id === selectedRoundId);
 
+  // Auto-select most recent scored round on first load
+  useEffect(() => {
+    if (!loading && !autoSelected && rounds.length > 0 && !selectedRoundId) {
+      const mostRecent = [...rounds]
+        .filter(r => r.total_score != null)
+        .sort((a, b) => b.round_date.localeCompare(a.round_date))[0];
+      if (mostRecent) {
+        setSelectedRoundId(mostRecent.id);
+        setAutoSelected(true);
+      }
+    }
+  }, [loading, rounds, autoSelected, selectedRoundId]);
+
   const handleSelect = useCallback((id: string) => {
     setSelectedRoundId(id);
     setDebrief(null);
   }, []);
 
-  // Generate debrief when holes load (useEffect, not useMemo)
+  // Generate debrief when holes load
   useEffect(() => {
     if (selectedRound && holes.length > 0 && !holesLoading) {
       const d = generateDebrief(selectedRound, holes, rounds, handicap);
       setDebrief(d);
     }
   }, [selectedRound, holes, holesLoading, rounds, handicap]);
+
+  // Build trend data from all rounds that have holes
+  const trends = useMemo((): TrendPoint[] => {
+    const scored = rounds
+      .filter(r => r.total_score != null)
+      .sort((a, b) => a.round_date.localeCompare(b.round_date))
+      .slice(-10); // last 10
+
+    // We can only compute SG for the currently loaded round's holes,
+    // but we can use the round-level totals for a simplified trend
+    return scored.map(r => {
+      const hcap = handicap ?? 15;
+      // Use round-level stats for trend approximation
+      const totalScore = r.total_score ?? 0;
+      const expectedScore = hcap + 72; // rough benchmark
+      const totalSG = expectedScore - totalScore;
+
+      // Distribute SG roughly based on available stats
+      const girPct = r.total_gir != null && r.holes_played > 0 ? r.total_gir / r.holes_played : 0.33;
+      const firPct = r.total_fairways != null && r.total_fairways > 0 && r.total_fairways_hit != null ? r.total_fairways_hit / r.total_fairways : 0.5;
+
+      // Rough SG distribution heuristic from round-level stats
+      const sgPutting = r.total_putts != null ? (36 - r.total_putts) * 0.5 : 0;
+      const sgApproach = (girPct - 0.33) * 10;
+      const sgOtt = (firPct - 0.5) * 5;
+      const sgShortGame = totalSG - sgPutting - sgApproach - sgOtt;
+
+      return {
+        roundId: r.id,
+        date: r.round_date,
+        course: r.course_name,
+        score: totalScore,
+        sgOtt: Math.round(sgOtt * 10) / 10,
+        sgApproach: Math.round(sgApproach * 10) / 10,
+        sgShortGame: Math.round(sgShortGame * 10) / 10,
+        sgPutting: Math.round(sgPutting * 10) / 10,
+        totalSG: Math.round(totalSG * 10) / 10,
+      };
+    });
+  }, [rounds, handicap]);
 
   if (loading) {
     return (
@@ -672,13 +1023,12 @@ export default function DebriefPage() {
         <div className="flex items-center gap-2">
           {debrief && (
             <>
-              {/* View mode toggle */}
               <button onClick={() => setViewMode(v => v === 'simple' ? 'detailed' : 'simple')}
                 className="px-3 py-1.5 text-xs bg-gray-800 border border-gray-700 hover:bg-gray-700 text-gray-300 rounded-lg transition-colors"
                 title={viewMode === 'simple' ? 'Switch to detailed view with SG data' : 'Switch to simplified view'}>
                 {viewMode === 'simple' ? 'Detailed' : 'Simple'}
               </button>
-              <button onClick={() => { setSelectedRoundId(null); setDebrief(null); }}
+              <button onClick={() => { setSelectedRoundId(null); setDebrief(null); setAutoSelected(true); }}
                 className="px-3 py-1.5 text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors">
                 Change Round
               </button>
@@ -687,8 +1037,8 @@ export default function DebriefPage() {
         </div>
       </div>
 
-      {!debrief && (
-        <RoundSelector rounds={rounds} holesCache={new Map()} selectedId={selectedRoundId} onSelect={handleSelect} />
+      {!debrief && !selectedRoundId && (
+        <RoundSelector rounds={rounds} selectedId={selectedRoundId} onSelect={handleSelect} />
       )}
 
       {selectedRoundId && holesLoading && (
@@ -717,7 +1067,7 @@ export default function DebriefPage() {
         </div>
       )}
 
-      {debrief && <DebriefView debrief={debrief} viewMode={viewMode} />}
+      {debrief && <DebriefView debrief={debrief} viewMode={viewMode} trends={trends} allHoles={holes} />}
     </div>
   );
 }

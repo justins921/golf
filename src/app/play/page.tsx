@@ -28,6 +28,8 @@ interface HoleEntry {
   fairway_hit: boolean | null;
   gir: boolean | null;
   penalty_strokes: number;
+  tee_miss_direction: string | null;
+  approach_miss_direction: string | null;
 }
 
 function emptyHoles(n: number): HoleEntry[] {
@@ -39,6 +41,8 @@ function emptyHoles(n: number): HoleEntry[] {
     fairway_hit: null,
     gir: null,
     penalty_strokes: 0,
+    tee_miss_direction: null,
+    approach_miss_direction: null,
   }));
 }
 
@@ -139,6 +143,8 @@ function PlayMode() {
       penalty_strokes: h.penalty_strokes,
       club_off_tee: null as string | null,
       approach_distance_yd: null as number | null,
+      tee_miss_direction: h.tee_miss_direction,
+      approach_miss_direction: h.approach_miss_direction,
       notes: null as string | null,
     }));
 
@@ -479,6 +485,39 @@ function PlayMode() {
               </div>
             </div>
           </div>
+
+          {/* Miss direction (conditional) */}
+          {hole.fairway_hit === false && hole.par >= 4 && (
+            <div className="mb-4">
+              <div className="text-xs text-gray-500 uppercase text-center mb-2">Tee Miss</div>
+              <div className="flex gap-2 justify-center">
+                {(['left', 'right'] as const).map((dir) => (
+                  <button key={dir} onClick={() => updateHole(currentHole, 'tee_miss_direction', hole.tee_miss_direction === dir ? null : dir)}
+                    className={`px-3 h-9 rounded-lg text-xs font-medium capitalize ${
+                      hole.tee_miss_direction === dir ? 'bg-amber-600 text-gray-50' : 'bg-gray-800 text-gray-400'
+                    }`}>
+                    {dir}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {hole.gir === false && (
+            <div className="mb-4">
+              <div className="text-xs text-gray-500 uppercase text-center mb-2">Green Miss</div>
+              <div className="flex gap-2 justify-center flex-wrap">
+                {(['short', 'long', 'left', 'right'] as const).map((dir) => (
+                  <button key={dir} onClick={() => updateHole(currentHole, 'approach_miss_direction', hole.approach_miss_direction === dir ? null : dir)}
+                    className={`px-3 h-9 rounded-lg text-xs font-medium capitalize ${
+                      hole.approach_miss_direction === dir ? 'bg-amber-600 text-gray-50' : 'bg-gray-800 text-gray-400'
+                    }`}>
+                    {dir}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Penalty */}
           <div className="mb-4">

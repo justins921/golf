@@ -261,6 +261,8 @@ function Scorecard({
       penalty_strokes: 0,
       club_off_tee: null,
       approach_distance_yd: null,
+      tee_miss_direction: null,
+      approach_miss_direction: null,
       notes: null,
     }))
   );
@@ -312,6 +314,8 @@ function Scorecard({
       penalty_strokes: (h.penalty_strokes as number) ?? 0,
       club_off_tee: (h.club_off_tee as string | null) ?? null,
       approach_distance_yd: (h.approach_distance_yd as number | null) ?? null,
+      tee_miss_direction: (h.tee_miss_direction as string | null) ?? null,
+      approach_miss_direction: (h.approach_miss_direction as string | null) ?? null,
       notes: (h.notes as string | null) ?? null,
     }));
     await upsertHoles(round.id, holeData);
@@ -380,6 +384,7 @@ function Scorecard({
               <th className="p-1.5 text-center w-14">Putts</th>
               <th className="p-1.5 text-center w-14">FIR</th>
               <th className="p-1.5 text-center w-14">GIR</th>
+              <th className="p-1.5 text-center w-16">Miss</th>
               <th className="p-1.5 text-center w-14">Pen</th>
             </tr>
           </thead>
@@ -443,6 +448,23 @@ function Scorecard({
                     </button>
                   </td>
                   <td className="p-1.5 text-center">
+                    {(hole.fairway_hit === false || hole.gir === false) ? (
+                      <select
+                        value={(hole.fairway_hit === false ? hole.tee_miss_direction : hole.approach_miss_direction) as string ?? ''}
+                        onChange={(e) => {
+                          const field = hole.fairway_hit === false ? 'tee_miss_direction' : 'approach_miss_direction';
+                          updateHole(idx, field, e.target.value || null);
+                        }}
+                        className="w-14 px-0.5 py-0.5 text-xs bg-gray-900 border border-gray-700 rounded text-gray-300">
+                        <option value="">—</option>
+                        <option value="left">L</option>
+                        <option value="right">R</option>
+                        <option value="short">Short</option>
+                        <option value="long">Long</option>
+                      </select>
+                    ) : <span className="text-gray-700">—</span>}
+                  </td>
+                  <td className="p-1.5 text-center">
                     <input type="number" min={0} max={5}
                       value={(hole.penalty_strokes as number) ?? 0}
                       onChange={(e) => updateHole(idx, 'penalty_strokes', parseInt(e.target.value) || 0)}
@@ -459,14 +481,14 @@ function Scorecard({
                   <td className="p-1.5 text-center text-xs text-gray-400">{localHoles.slice(0, 9).reduce((a, h) => a + (h.par as number ?? 4), 0)}</td>
                   <td className="p-1.5 text-center text-xs text-gray-50 font-medium">{localHoles.slice(0, 9).reduce((a, h) => a + ((h.score as number) ?? 0), 0) || '—'}</td>
                   <td className="p-1.5 text-center text-xs text-gray-400">{localHoles.slice(0, 9).reduce((a, h) => a + ((h.putts as number) ?? 0), 0) || '—'}</td>
-                  <td colSpan={3} />
+                  <td colSpan={4} />
                 </tr>
                 <tr className="bg-gray-800/50">
                   <td className="p-1.5 text-center text-xs text-gray-500 font-medium">IN</td>
                   <td className="p-1.5 text-center text-xs text-gray-400">{localHoles.slice(9, 18).reduce((a, h) => a + (h.par as number ?? 4), 0)}</td>
                   <td className="p-1.5 text-center text-xs text-gray-50 font-medium">{localHoles.slice(9, 18).reduce((a, h) => a + ((h.score as number) ?? 0), 0) || '—'}</td>
                   <td className="p-1.5 text-center text-xs text-gray-400">{localHoles.slice(9, 18).reduce((a, h) => a + ((h.putts as number) ?? 0), 0) || '—'}</td>
-                  <td colSpan={3} />
+                  <td colSpan={4} />
                 </tr>
               </>
             )}

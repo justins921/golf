@@ -676,7 +676,33 @@ export interface RoundHole {
   penalty_strokes: number;
   club_off_tee: string | null;
   approach_distance_yd: number | null;
+  tee_miss_direction: string | null;
+  approach_miss_direction: string | null;
   notes: string | null;
+  created_at: string;
+}
+
+// ============================================================
+// Debrief sharing types
+// ============================================================
+
+export interface DebriefShare {
+  id: string;
+  round_id: string;
+  owner_id: string;
+  share_token: string;
+  recipient_email: string | null;
+  recipient_name: string | null;
+  can_add_notes: boolean;
+  expires_at: string | null;
+  created_at: string;
+}
+
+export interface DebriefCoachNote {
+  id: string;
+  share_id: string;
+  author_name: string;
+  note_text: string;
   created_at: string;
 }
 

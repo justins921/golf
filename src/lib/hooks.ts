@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from './supabase';
-import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem, SpeedSession, SpeedReading, WorkoutLog, Round, RoundHole, WedgeSession, WedgeSessionShot, SeasonGoal, Course } from './types';
+import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem, SpeedSession, SpeedReading, WorkoutLog, Round, RoundHole, WedgeSession, WedgeSessionShot, SeasonGoal, Course, DebriefShare, DebriefCoachNote } from './types';
 import { filterShots } from './stats';
 
 export function useSessions() {
@@ -767,4 +767,119 @@ export function useCourses() {
   };
 
   return { courses, loading, refetch: fetchCourses, addCourse, updateCourse, deleteCourse };
+}
+
+// ============================================================
+// Debrief sharing hooks
+// ============================================================
+
+function generateShareToken(): string {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let token = '';
+  for (let i = 0; i < 12; i++) token += chars[Math.floor(Math.random() * chars.length)];
+  return token;
+}
+
+export function useDebriefShares(roundId: string | null) {
+  const [shares, setShares] = useState<DebriefShare[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchShares = useCallback(async () => {
+    if (!roundId) { setShares([]); setLoading(false); return; }
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('debrief_shares')
+      .select('*')
+      .eq('round_id', roundId)
+      .order('created_at', { ascending: false });
+    if (!error && data) setShares(data as DebriefShare[]);
+    setLoading(false);
+  }, [roundId]);
+
+  useEffect(() => { fetchShares(); }, [fetchShares]);
+
+  const createShare = async (recipientName?: string, recipientEmail?: string) => {
+    if (!roundId) return { error: new Error('No round'), data: null };
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { error: new Error('Not authenticated'), data: null };
+    const { data, error } = await supabase
+      .from('debrief_shares')
+      .insert({
+        round_id: roundId,
+        owner_id: user.id,
+        share_token: generateShareToken(),
+        recipient_name: recipientName || null,
+        recipient_email: recipientEmail || null,
+        can_add_notes: true,
+      })
+      .select()
+      .single();
+    if (!error) await fetchShares();
+    return { data: data as DebriefShare | null, error };
+  };
+
+  const deleteShare = async (id: string) => {
+    const { error } = await supabase.from('debrief_shares').delete().eq('id', id);
+    if (!error) await fetchShares();
+    return error;
+  };
+
+  return { shares, loading, refetch: fetchShares, createShare, deleteShare };
+}
+
+export function useDebriefByToken(token: string | null) {
+  const [share, setShare] = useState<DebriefShare | null>(null);
+  const [round, setRound] = useState<Round | null>(null);
+  const [holes, setHoles] = useState<RoundHole[]>([]);
+  const [coachNotes, setCoachNotes] = useState<DebriefCoachNote[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetch = useCallback(async () => {
+    if (!token) { setLoading(false); return; }
+    setLoading(true);
+
+    // Get share record
+    const { data: shareData } = await supabase
+      .from('debrief_shares')
+      .select('*')
+      .eq('share_token', token)
+      .single();
+    if (!shareData) { setLoading(false); return; }
+    const s = shareData as DebriefShare;
+    setShare(s);
+
+    // Check expiration
+    if (s.expires_at && new Date(s.expires_at) < new Date()) {
+      setLoading(false);
+      return;
+    }
+
+    // Fetch round + holes + notes in parallel
+    const [roundRes, holesRes, notesRes] = await Promise.all([
+      supabase.from('rounds').select('*').eq('id', s.round_id).single(),
+      supabase.from('round_holes').select('*').eq('round_id', s.round_id).order('hole_number'),
+      supabase.from('debrief_coach_notes').select('*').eq('share_id', s.id).order('created_at'),
+    ]);
+
+    if (roundRes.data) setRound(roundRes.data as Round);
+    if (holesRes.data) setHoles(holesRes.data as RoundHole[]);
+    if (notesRes.data) setCoachNotes(notesRes.data as DebriefCoachNote[]);
+    setLoading(false);
+  }, [token]);
+
+  useEffect(() => { fetch(); }, [fetch]);
+
+  const addCoachNote = async (authorName: string, noteText: string) => {
+    if (!share) return;
+    await supabase.from('debrief_coach_notes').insert({
+      share_id: share.id,
+      author_name: authorName,
+      note_text: noteText,
+    });
+    await fetch();
+  };
+
+  return { share, round, holes, coachNotes, loading, addCoachNote, refetch: fetch };
 }

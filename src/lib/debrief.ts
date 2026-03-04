@@ -388,6 +388,51 @@ export function generateDebrief(
     });
   }
 
+  // ── Miss Direction Patterns ────────────────────────────
+  const teeMisses = holes.filter(h => h.tee_miss_direction != null);
+  if (teeMisses.length >= 3) {
+    const counts: Record<string, number> = {};
+    for (const h of teeMisses) {
+      const d = h.tee_miss_direction!;
+      counts[d] = (counts[d] ?? 0) + 1;
+    }
+    const dominant = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+    if (dominant && dominant[1] >= teeMisses.length * 0.6) {
+      insights.push({
+        category: 'negative', area: 'Off the Tee',
+        title: `Tee Shots Missing ${dominant[0].charAt(0).toUpperCase() + dominant[0].slice(1)}`,
+        detail: `${dominant[1]} of ${teeMisses.length} tee misses went ${dominant[0]}. A consistent miss pattern is coachable.`,
+        casualDetail: `Most of your tee shots that missed the fairway went ${dominant[0]}. That's actually a good sign — it means your miss is predictable and fixable.`,
+        impact: 'medium',
+      });
+      actionItems.push({
+        priority: 3, area: 'Off the Tee',
+        action: `Address the ${dominant[0]} miss off the tee — check alignment and club path`,
+        practiceLink: '/practice/timed?category=full_swing', practiceLinkLabel: 'Start Driver Drill',
+      });
+    }
+  }
+
+  const approachMisses = holes.filter(h => h.approach_miss_direction != null);
+  if (approachMisses.length >= 3) {
+    const counts: Record<string, number> = {};
+    for (const h of approachMisses) {
+      const d = h.approach_miss_direction!;
+      counts[d] = (counts[d] ?? 0) + 1;
+    }
+    const dominant = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+    if (dominant && dominant[1] >= approachMisses.length * 0.5) {
+      const dirLabel = dominant[0].charAt(0).toUpperCase() + dominant[0].slice(1);
+      insights.push({
+        category: 'negative', area: 'Approach',
+        title: `Approach Misses Tend ${dirLabel}`,
+        detail: `${dominant[1]} of ${approachMisses.length} green misses were ${dominant[0]}. Adjust aim or club selection.`,
+        casualDetail: `When you missed the green, most misses were ${dominant[0]}. Aim a little more ${dominant[0] === 'short' ? 'club — take one more' : dominant[0] === 'long' ? 'conservatively — take one less club' : `away from the ${dominant[0]} side`}.`,
+        impact: 'medium',
+      });
+    }
+  }
+
   // ── Hole Highlights ─────────────────────────────────────
   const holeHighlights: HoleHighlight[] = [];
   const holeSGs = analysis.holes;
