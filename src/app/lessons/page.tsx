@@ -3,13 +3,25 @@
 import { useState, useMemo } from 'react';
 import Nav from '@/components/Nav';
 import AuthGuard from '@/components/AuthGuard';
-import { useLessons } from '@/lib/hooks';
+import { useLessons, useSeasonGoals } from '@/lib/hooks';
 import {
   LESSON_TYPES,
   LESSON_TYPE_LABELS,
   LESSON_FOCUS_AREAS,
+  GOAL_METRIC_LABELS,
 } from '@/lib/types';
-import type { Lesson, DrillAssignment } from '@/lib/types';
+import type { Lesson, DrillAssignment, GoalMetric } from '@/lib/types';
+
+// Map goal metrics to suggested lesson focus areas
+const GOAL_FOCUS_MAP: Partial<Record<GoalMetric, string[]>> = {
+  gir_pct: ['Alignment', 'Ball Position', 'Impact', 'Trajectory Control'],
+  fir_pct: ['Takeaway', 'Backswing', 'Tempo', 'Alignment'],
+  putts_per_round: ['Putting Stroke', 'Green Reading'],
+  scoring_avg: ['Course Management', 'Chipping', 'Pitching'],
+  best_score: ['Course Management', 'Chipping', 'Pitching'],
+  handicap_index: ['Impact', 'Weight Transfer', 'Course Management'],
+  speed_max: ['Hip Rotation', 'Shoulder Turn', 'Weight Transfer', 'Transition'],
+};
 
 export default function LessonsPage() {
   return (
@@ -22,6 +34,8 @@ export default function LessonsPage() {
 
 function LessonsTracker() {
   const { lessons, loading, addLesson, updateLesson, deleteLesson } = useLessons();
+  const { goals } = useSeasonGoals();
+  const activeGoals = useMemo(() => goals.filter(g => !g.achieved_at), [goals]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [view, setView] = useState<'list' | 'feels' | 'stats'>('list');
@@ -224,6 +238,41 @@ function LessonsTracker() {
               />
             </div>
           </div>
+
+          {/* Goal-suggested focus areas */}
+          {activeGoals.length > 0 && (
+            <div className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-3">
+              <div className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-2">
+                Based on your goals
+              </div>
+              <div className="space-y-1.5">
+                {activeGoals.map((g) => {
+                  const suggested = GOAL_FOCUS_MAP[g.metric as GoalMetric] ?? [];
+                  if (suggested.length === 0) return null;
+                  return (
+                    <div key={g.id} className="flex items-start gap-2">
+                      <span className="text-xs text-green-400 shrink-0">{g.title}:</span>
+                      <div className="flex flex-wrap gap-1">
+                        {suggested.map((area) => (
+                          <button
+                            key={area}
+                            onClick={() => { if (!focusAreas.includes(area)) setFocusAreas([...focusAreas, area]); }}
+                            className={`text-[10px] px-1.5 py-0.5 rounded transition-colors ${
+                              focusAreas.includes(area)
+                                ? 'bg-green-600/20 text-green-400 border border-green-500/20'
+                                : 'bg-gray-700 text-gray-400 hover:text-gray-50 cursor-pointer'
+                            }`}
+                          >
+                            {area}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Focus areas */}
           <div>

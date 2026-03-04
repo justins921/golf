@@ -3,11 +3,22 @@
 import { useState, useMemo } from 'react';
 import Nav from '@/components/Nav';
 import AuthGuard from '@/components/AuthGuard';
-import { useRounds, useSeasonGoals, useAllSpeedReadings } from '@/lib/hooks';
+import { useRounds, useSeasonGoals, useAllSpeedReadings, useLessons } from '@/lib/hooks';
 import { usePracticeSessions } from '@/lib/practice/hooks';
 import { calculateHandicap } from '@/lib/handicap';
-import type { SeasonGoal, GoalMetric, Round } from '@/lib/types';
-import { GOAL_METRIC_LABELS, GOAL_METRIC_DIRECTION } from '@/lib/types';
+import type { SeasonGoal, GoalMetric, Round, Lesson } from '@/lib/types';
+import { GOAL_METRIC_LABELS, GOAL_METRIC_DIRECTION, LESSON_TYPE_LABELS } from '@/lib/types';
+
+// Map goal metrics to relevant lesson focus areas for matching
+const GOAL_LESSON_RELEVANCE: Partial<Record<GoalMetric, string[]>> = {
+  gir_pct: ['Alignment', 'Ball Position', 'Impact', 'Trajectory Control', 'Shot Shaping'],
+  fir_pct: ['Takeaway', 'Backswing', 'Tempo', 'Alignment', 'Hip Rotation'],
+  putts_per_round: ['Putting Stroke', 'Green Reading'],
+  scoring_avg: ['Course Management', 'Chipping', 'Pitching', 'Bunker Play'],
+  best_score: ['Course Management', 'Chipping', 'Pitching', 'Bunker Play'],
+  handicap_index: ['Impact', 'Weight Transfer', 'Course Management', 'Tempo'],
+  speed_max: ['Hip Rotation', 'Shoulder Turn', 'Weight Transfer', 'Transition', 'Downswing'],
+};
 
 export default function GoalsPage() {
   return (
@@ -69,6 +80,7 @@ function useCurrentValues(rounds: Round[]) {
 function SeasonGoals() {
   const { rounds, loading: roundsLoading } = useRounds();
   const { goals, loading: goalsLoading, addGoal, updateGoal, deleteGoal } = useSeasonGoals();
+  const { lessons } = useLessons();
   const currentValues = useCurrentValues(rounds);
   const [showNewGoal, setShowNewGoal] = useState(false);
   const [season, setSeason] = useState('2026');
@@ -303,6 +315,7 @@ function SeasonGoals() {
             key={goal.id}
             goal={goal}
             currentValue={currentValues[goal.metric]}
+            lessons={lessons}
             onToggleAchieved={() => handleToggleAchieved(goal)}
             onDelete={() => deleteGoal(goal.id)}
           />
@@ -319,17 +332,28 @@ function SeasonGoals() {
 function GoalCard({
   goal,
   currentValue,
+  lessons,
   onToggleAchieved,
   onDelete,
 }: {
   goal: SeasonGoal;
   currentValue: number | null;
+  lessons: Lesson[];
   onToggleAchieved: () => void;
   onDelete: () => void;
 }) {
   const [showDetail, setShowDetail] = useState(false);
   const direction = GOAL_METRIC_DIRECTION[goal.metric as GoalMetric] ?? 'higher';
   const achieved = goal.achieved_at != null;
+
+  // Find lessons relevant to this goal
+  const relevantFocusAreas = GOAL_LESSON_RELEVANCE[goal.metric as GoalMetric] ?? [];
+  const relatedLessons = useMemo(() => {
+    if (relevantFocusAreas.length === 0) return [];
+    return lessons
+      .filter(l => l.focus_areas.some(f => relevantFocusAreas.includes(f)))
+      .slice(0, 3);
+  }, [lessons, relevantFocusAreas]);
 
   // Calculate progress
   const startVal = goal.start_value ?? currentValue ?? 0;
@@ -449,6 +473,49 @@ function GoalCard({
           {achieved && goal.achieved_at && (
             <div className="text-xs text-green-400">
               Achieved on {new Date(goal.achieved_at).toLocaleDateString()}
+            </div>
+          )}
+
+          {/* Related lessons */}
+          {relatedLessons.length > 0 && (
+            <div className="border-t border-gray-800 pt-2 mt-2">
+              <div className="text-[10px] uppercase tracking-wider text-gray-600 font-semibold mb-1.5">
+                Related Lessons
+              </div>
+              <div className="space-y-1">
+                {relatedLessons.map((l) => (
+                  <div key={l.id} className="flex items-center gap-2 text-xs">
+                    <span className="text-gray-500">{l.lesson_date}</span>
+                    <span className="text-gray-300">
+                      {LESSON_TYPE_LABELS[l.lesson_type] || l.lesson_type}
+                    </span>
+                    {l.coach_name && <span className="text-gray-600">w/ {l.coach_name}</span>}
+                    <div className="flex gap-1 ml-auto">
+                      {l.focus_areas.filter(f => relevantFocusAreas.includes(f)).map(f => (
+                        <span key={f} className="text-[9px] px-1 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">
+                          {f}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Suggested focus areas for next lesson */}
+          {!achieved && relevantFocusAreas.length > 0 && (
+            <div className="border-t border-gray-800 pt-2 mt-2">
+              <div className="text-[10px] uppercase tracking-wider text-gray-600 font-semibold mb-1">
+                Suggested lesson focus
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {relevantFocusAreas.map(f => (
+                  <span key={f} className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    {f}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
 

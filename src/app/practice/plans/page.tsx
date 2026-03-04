@@ -12,8 +12,9 @@ import {
   type PracticePlanDay,
   type PracticePlanBlock,
 } from '@/lib/practicePlan';
-import { useRounds } from '@/lib/hooks';
-import type { Round } from '@/lib/types';
+import { useRounds, useSeasonGoals } from '@/lib/hooks';
+import type { Round, SeasonGoal, GoalMetric } from '@/lib/types';
+import { GOAL_METRIC_LABELS } from '@/lib/types';
 
 // ── Weakness Detection from Round Stats ─────────────────────
 
@@ -157,13 +158,32 @@ function DayCard({ day, dayIndex }: { day: PracticePlanDay; dayIndex: number }) 
 
 // ── Config Form ─────────────────────────────────────────────
 
-function ConfigForm({ onGenerate, weaknesses }: {
+// Map goal metrics to practice categories for relevance
+const GOAL_PRACTICE_MAP: Partial<Record<GoalMetric, string[]>> = {
+  gir_pct: ['approach', 'full_swing', 'wedges'],
+  fir_pct: ['off_the_tee', 'full_swing'],
+  putts_per_round: ['putting'],
+  scoring_avg: ['short_game', 'putting', 'wedges'],
+  best_score: ['short_game', 'putting', 'wedges'],
+  handicap_index: ['short_game', 'putting', 'wedges', 'full_swing'],
+  speed_max: ['full_swing'],
+};
+
+function ConfigForm({ onGenerate, weaknesses, goals }: {
   onGenerate: (config: PracticePlanConfig) => void;
   weaknesses: SGWeakness[];
+  goals: SeasonGoal[];
 }) {
   const [hours, setHours] = useState<WeeklyHours>(3);
   const [length, setLength] = useState<PlanLength>(2);
   const [level, setLevel] = useState<SkillLevel>('intermediate');
+  const [selectedGoalIds, setSelectedGoalIds] = useState<string[]>(
+    () => goals.filter(g => !g.achieved_at).slice(0, 3).map(g => g.id)
+  );
+
+  const toggleGoal = (id: string) => {
+    setSelectedGoalIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
 
   const facilities: PracticePlanConfig['availableFacilities'] = ['range', 'putting_green', 'short_game_area'];
 
@@ -216,6 +236,29 @@ function ConfigForm({ onGenerate, weaknesses }: {
         </div>
       </div>
 
+      {/* Season Goals */}
+      {goals.filter(g => !g.achieved_at).length > 0 && (
+        <div>
+          <label className="block text-xs text-gray-500 mb-2">Your Goals (select to prioritize)</label>
+          <div className="flex flex-wrap gap-2">
+            {goals.filter(g => !g.achieved_at).map((g) => (
+              <button
+                key={g.id}
+                onClick={() => toggleGoal(g.id)}
+                className={`text-xs px-2.5 py-1.5 rounded-lg transition-colors ${
+                  selectedGoalIds.includes(g.id)
+                    ? 'bg-green-600/20 text-green-400 border border-green-500/30'
+                    : 'bg-gray-700 text-gray-400 hover:text-gray-200'
+                }`}
+              >
+                {g.title}
+                <span className="text-gray-500 ml-1">({GOAL_METRIC_LABELS[g.metric as GoalMetric] || g.metric})</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* SG insights */}
       {weaknesses.length > 0 && (
         <div className="bg-gray-900 border border-gray-700/50 rounded-lg p-3">
@@ -235,10 +278,33 @@ function ConfigForm({ onGenerate, weaknesses }: {
       )}
 
       <button
-        onClick={() => onGenerate({
-          weeklyHours: hours, planLength: length, level, weaknesses,
-          availableFacilities: facilities, goals: [],
-        })}
+        onClick={() => {
+          const selectedGoals = goals.filter(g => selectedGoalIds.includes(g.id));
+          const goalTitles = selectedGoals.map(g => g.title);
+
+          // Boost weaknesses based on selected goals
+          const boostedWeaknesses = [...weaknesses];
+          for (const goal of selectedGoals) {
+            const relatedCategories = GOAL_PRACTICE_MAP[goal.metric as GoalMetric] ?? [];
+            for (const cat of relatedCategories) {
+              const existing = boostedWeaknesses.find(w => w.category === cat);
+              if (existing) {
+                // Boost priority of goal-related categories
+                existing.sgPerRound -= 0.5;
+              } else {
+                boostedWeaknesses.push({ category: cat as SGWeakness['category'], sgPerRound: -0.5 });
+              }
+            }
+          }
+          boostedWeaknesses.sort((a, b) => a.sgPerRound - b.sgPerRound);
+
+          onGenerate({
+            weeklyHours: hours, planLength: length, level,
+            weaknesses: boostedWeaknesses,
+            availableFacilities: facilities,
+            goals: goalTitles,
+          });
+        }}
         className="w-full px-4 py-2.5 bg-green-600 hover:bg-green-500 text-gray-50 text-sm font-medium rounded-lg transition-colors"
       >
         Generate Practice Plan
@@ -367,6 +433,7 @@ function PlanView({ plan, onReset }: { plan: PracticePlan; onReset: () => void }
 
 export default function PracticePlansPage() {
   const { rounds, loading } = useRounds();
+  const { goals, loading: goalsLoading } = useSeasonGoals();
   const [plan, setPlan] = useState<PracticePlan | null>(null);
 
   const weaknesses = useMemo(() => {
@@ -376,8 +443,18 @@ export default function PracticePlansPage() {
 
   const handleGenerate = (config: PracticePlanConfig) => {
     const generated = generatePracticePlan(config);
+
+    // Add goal-specific insights
+    if (config.goals.length > 0) {
+      generated.insights.unshift(`Plan tailored for: ${config.goals.join(', ')}`);
+    }
+
     setPlan(generated);
   };
+
+  if (loading || goalsLoading) {
+    return <div className="max-w-4xl mx-auto px-4 py-8 text-gray-500 text-sm">Loading...</div>;
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
@@ -385,14 +462,14 @@ export default function PracticePlansPage() {
       <div>
         <h1 className="text-xl font-bold text-gray-50">Practice Plan Generator</h1>
         <p className="text-sm text-gray-400">
-          Weekly plans based on your SG data, skill level, and available time
+          Weekly plans based on your goals, SG data, skill level, and available time
         </p>
       </div>
 
       {plan ? (
         <PlanView plan={plan} onReset={() => setPlan(null)} />
       ) : (
-        <ConfigForm onGenerate={handleGenerate} weaknesses={weaknesses} />
+        <ConfigForm onGenerate={handleGenerate} weaknesses={weaknesses} goals={goals} />
       )}
     </div>
   );
