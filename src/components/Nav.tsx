@@ -13,6 +13,7 @@ const navGroups = [
       { href: '/speed', label: 'Speed Training', desc: 'Track clubhead speed progress', lm: false },
       { href: '/fitness', label: 'Golf Fitness', desc: 'Workouts & exercise library', lm: false },
       { href: '/practice', label: 'Practice', desc: 'Structured drills & scoring', lm: false },
+      { href: '/warmup', label: 'Pre-Round Warmup', desc: 'Personalized warmup routines', lm: false },
     ],
   },
   {

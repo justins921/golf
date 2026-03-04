@@ -188,8 +188,9 @@ function Dashboard() {
           {/* Quick actions */}
           <div className="mb-6">
             <h2 className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">Quick Actions</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
               <QuickAction href="/rounds" label="Log Round" icon="flag" color="text-green-400" />
+              <QuickAction href="/warmup" label="Warmup" icon="sun" color="text-yellow-400" />
               <QuickAction href="/practice" label="Practice" icon="target" color="text-purple-400" />
               <QuickAction href="/fitness" label="Workout" icon="heart" color="text-red-400" />
               <QuickAction href="/speed" label="Speed" icon="bolt" color="text-orange-400" />
@@ -395,6 +396,11 @@ function QuickAction({ href, label, icon, color }: { href: string; label: string
         <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
     ),
+    sun: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+      </svg>
+    ),
   };
 
   return (
@@ -417,6 +423,7 @@ const ALL_MODULES = [
   { href: '/speed', title: 'Speed', desc: 'CHS tracking', badge: false },
   { href: '/fitness', title: 'Fitness', desc: 'Workouts & exercises', badge: false },
   { href: '/practice', title: 'Practice', desc: 'Drills & scoring', badge: false },
+  { href: '/warmup', title: 'Warmup', desc: 'Pre-round routines', badge: false },
   { href: '/shots', title: 'Shot Data', desc: 'Garmin R50 import', badge: true },
   { href: '/compare', title: 'Compare', desc: 'Dispersion overlay', badge: true },
   { href: '/wedges', title: 'Wedge Lab', desc: 'Matrix & calibration', badge: false },
