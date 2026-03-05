@@ -932,3 +932,63 @@ export const MISS_ZONES = [
   'Short-Left', 'Short-Right', 'Long-Left', 'Long-Right',
   'Center', 'Anywhere',
 ] as const;
+
+// ============================================================
+// Challenge types
+// ============================================================
+
+export type ChallengeType =
+  | 'putting_drill'
+  | 'practice_sessions'
+  | 'rounds_played'
+  | 'scoring_target'
+  | 'fairways_hit'
+  | 'gir_target'
+  | 'speed_target'
+  | 'custom';
+
+export const CHALLENGE_TYPE_LABELS: Record<ChallengeType, string> = {
+  putting_drill: 'Putting Drill',
+  practice_sessions: 'Practice Sessions',
+  rounds_played: 'Rounds Played',
+  scoring_target: 'Scoring Target',
+  fairways_hit: 'Fairways Hit %',
+  gir_target: 'GIR %',
+  speed_target: 'Clubhead Speed',
+  custom: 'Custom',
+};
+
+export const CHALLENGE_TYPE_UNITS: Record<ChallengeType, string> = {
+  putting_drill: 'made',
+  practice_sessions: 'sessions',
+  rounds_played: 'rounds',
+  scoring_target: 'score',
+  fairways_hit: '%',
+  gir_target: '%',
+  speed_target: 'mph',
+  custom: '',
+};
+
+export interface Challenge {
+  id: string;
+  user_id: string;
+  share_token: string;
+  title: string;
+  description: string | null;
+  challenge_type: ChallengeType;
+  target_value: number;
+  unit: string;
+  start_date: string;
+  end_date: string;
+  created_at: string;
+}
+
+export interface ChallengeEntry {
+  id: string;
+  challenge_id: string;
+  participant_name: string;
+  value: number;
+  entry_date: string;
+  notes: string | null;
+  created_at: string;
+}

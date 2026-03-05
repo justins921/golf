@@ -24,6 +24,7 @@ const navGroups = [
       { href: '/play', label: 'Play', desc: 'On-course quick scorer', lm: false },
       { href: '/rounds', label: 'Rounds', desc: 'Scorecards & on-course stats', lm: false },
       { href: '/goals', label: 'Season Goals', desc: 'Track targets & milestones', lm: false },
+      { href: '/challenges', label: 'Challenges', desc: 'Compete with friends', lm: false },
       { href: '/debrief', label: 'Post-Round Debrief', desc: 'Insights & action items', lm: false },
       { href: '/mental', label: 'Mental Game', desc: 'Journal, routines & mindset', lm: false },
       { href: '/strategy', label: 'Course Strategy', desc: 'Hole-by-hole game plans', lm: false },

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from './supabase';
-import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem, SpeedSession, SpeedReading, WorkoutLog, Round, RoundHole, WedgeSession, WedgeSessionShot, SeasonGoal, Course, DebriefShare, DebriefCoachNote, Lesson, MentalGameLog, CourseStrategy } from './types';
+import type { Session, Shot, ShotFilter, Putter, PutterTest, BagClub, WedgeMatrix, SwingSystem, SpeedSession, SpeedReading, WorkoutLog, Round, RoundHole, WedgeSession, WedgeSessionShot, SeasonGoal, Course, DebriefShare, DebriefCoachNote, Lesson, MentalGameLog, CourseStrategy, Challenge, ChallengeEntry } from './types';
 import { filterShots } from './stats';
 
 export function useSessions() {
@@ -1014,4 +1014,126 @@ export function useCourseStrategies() {
   };
 
   return { strategies, loading, refetch: fetchStrategies, addStrategy, updateStrategy, deleteStrategy };
+}
+
+// ============================================================
+// Challenge hooks
+// ============================================================
+
+function generateChallengeToken(): string {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let token = '';
+  for (let i = 0; i < 12; i++) token += chars[Math.floor(Math.random() * chars.length)];
+  return token;
+}
+
+export function useChallenges() {
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchChallenges = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('challenges')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!error && data) setChallenges(data as Challenge[]);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { fetchChallenges(); }, [fetchChallenges]);
+
+  const addChallenge = async (challenge: Omit<Challenge, 'id' | 'user_id' | 'share_token' | 'created_at'>) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { error: new Error('Not authenticated'), data: null };
+    const { data, error } = await supabase
+      .from('challenges')
+      .insert({ ...challenge, user_id: user.id, share_token: generateChallengeToken() })
+      .select()
+      .single();
+    if (!error) await fetchChallenges();
+    return { data: data as Challenge | null, error };
+  };
+
+  const deleteChallenge = async (id: string) => {
+    const { error } = await supabase.from('challenges').delete().eq('id', id);
+    if (!error) await fetchChallenges();
+    return error;
+  };
+
+  return { challenges, loading, refetch: fetchChallenges, addChallenge, deleteChallenge };
+}
+
+export function useChallengeByToken(token: string | null) {
+  const [challenge, setChallenge] = useState<Challenge | null>(null);
+  const [entries, setEntries] = useState<ChallengeEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetch = useCallback(async () => {
+    if (!token) { setLoading(false); return; }
+    setLoading(true);
+
+    const { data: challengeData } = await supabase
+      .from('challenges')
+      .select('*')
+      .eq('share_token', token)
+      .single();
+    if (!challengeData) { setLoading(false); return; }
+    const c = challengeData as Challenge;
+    setChallenge(c);
+
+    const { data: entriesData } = await supabase
+      .from('challenge_entries')
+      .select('*')
+      .eq('challenge_id', c.id)
+      .order('entry_date', { ascending: false });
+    if (entriesData) setEntries(entriesData as ChallengeEntry[]);
+    setLoading(false);
+  }, [token]);
+
+  useEffect(() => { fetch(); }, [fetch]);
+
+  const addEntry = async (participantName: string, value: number, entryDate: string, notes?: string) => {
+    if (!challenge) return;
+    await supabase.from('challenge_entries').insert({
+      challenge_id: challenge.id,
+      participant_name: participantName,
+      value,
+      entry_date: entryDate,
+      notes: notes || null,
+    });
+    await fetch();
+  };
+
+  return { challenge, entries, loading, addEntry, refetch: fetch };
+}
+
+export function useChallengeEntries(challengeId: string | null) {
+  const [entries, setEntries] = useState<ChallengeEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  const fetchEntries = useCallback(async () => {
+    if (!challengeId) { setEntries([]); setLoading(false); return; }
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('challenge_entries')
+      .select('*')
+      .eq('challenge_id', challengeId)
+      .order('entry_date', { ascending: false });
+    if (!error && data) setEntries(data as ChallengeEntry[]);
+    setLoading(false);
+  }, [challengeId]);
+
+  useEffect(() => { fetchEntries(); }, [fetchEntries]);
+
+  const addEntry = async (entry: Omit<ChallengeEntry, 'id' | 'created_at'>) => {
+    const { error } = await supabase.from('challenge_entries').insert(entry);
+    if (!error) await fetchEntries();
+    return error;
+  };
+
+  return { entries, loading, refetch: fetchEntries, addEntry };
 }

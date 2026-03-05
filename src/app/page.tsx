@@ -10,6 +10,7 @@ import { usePracticeSessions } from '@/lib/practice/hooks';
 import { analyzeRound } from '@/lib/strokesGained';
 import { generatePracticeReport } from '@/lib/practicePrioritizer';
 import { calculateHandicap } from '@/lib/handicap';
+import { computePersonalBests } from '@/lib/personalBests';
 
 export default function HomePage() {
   return (
@@ -104,6 +105,11 @@ function Dashboard() {
       .reverse();
   }, [rounds]);
 
+  const personalBests = useMemo(
+    () => computePersonalBests(rounds, readings, workouts, practiceSessions),
+    [rounds, readings, workouts, practiceSessions],
+  );
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Header */}
@@ -178,14 +184,33 @@ function Dashboard() {
           {/* Quick actions */}
           <div>
             <h2 className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">Quick Actions</h2>
-            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
               <QuickAction href="/play" label="Play" icon="flag" color="text-green-400" />
               <QuickAction href="/warmup" label="Warmup" icon="sun" color="text-yellow-400" />
               <QuickAction href="/practice" label="Practice" icon="target" color="text-purple-400" />
               <QuickAction href="/fitness" label="Workout" icon="heart" color="text-red-400" />
               <QuickAction href="/speed" label="Speed" icon="bolt" color="text-orange-400" />
+              <QuickAction href="/challenges" label="Challenge" icon="trophy" color="text-yellow-400" />
             </div>
           </div>
+
+          {personalBests.length > 0 && (
+            <div className="mt-6">
+              <h2 className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">Personal Bests</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                {personalBests.map((pb, i) => (
+                  <div key={i} className="bg-gray-900 border border-gray-800 rounded-lg p-3 relative">
+                    {pb.isNew && (
+                      <span className="absolute top-2 right-2 text-xs font-bold text-yellow-400">NEW</span>
+                    )}
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">{pb.label}</div>
+                    <div className="text-xl font-bold text-green-400 mt-1">{pb.value}</div>
+                    <div className="text-xs text-gray-500 mt-1 truncate">{pb.detail}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
@@ -365,6 +390,11 @@ function QuickAction({ href, label, icon, color }: { href: string; label: string
     sun: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+      </svg>
+    ),
+    trophy: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0116.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.023 6.023 0 01-2.77.896m5.25-6.388V2.721" />
       </svg>
     ),
   };

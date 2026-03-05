@@ -473,3 +473,57 @@ create policy "Users can update own wedge session shots"
 create policy "Users can delete own wedge session shots"
   on public.wedge_session_shots for delete
   using (exists (select 1 from public.wedge_sessions ws where ws.id = wedge_session_shots.session_id and ws.user_id = auth.uid()));
+
+-- ============================================================
+-- Challenges
+-- ============================================================
+create table public.challenges (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  share_token text not null unique,
+  title text not null,
+  description text,
+  challenge_type text not null,
+  target_value float8 not null,
+  unit text not null default '',
+  start_date date not null,
+  end_date date not null,
+  created_at timestamptz not null default now()
+);
+
+create index idx_challenges_user on public.challenges(user_id);
+create unique index idx_challenges_token on public.challenges(share_token);
+
+alter table public.challenges enable row level security;
+
+create policy "Users can view own challenges"
+  on public.challenges for select using (auth.uid() = user_id);
+create policy "Anyone can view challenges by token"
+  on public.challenges for select using (true);
+create policy "Users can insert own challenges"
+  on public.challenges for insert with check (auth.uid() = user_id);
+create policy "Users can delete own challenges"
+  on public.challenges for delete using (auth.uid() = user_id);
+
+-- ============================================================
+-- Challenge entries (anyone with link can add)
+-- ============================================================
+create table public.challenge_entries (
+  id uuid primary key default uuid_generate_v4(),
+  challenge_id uuid not null references public.challenges(id) on delete cascade,
+  participant_name text not null,
+  value float8 not null,
+  entry_date date not null,
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+create index idx_challenge_entries_challenge on public.challenge_entries(challenge_id);
+
+alter table public.challenge_entries enable row level security;
+
+-- Anyone can view and insert entries (shared via link)
+create policy "Anyone can view challenge entries"
+  on public.challenge_entries for select using (true);
+create policy "Anyone can insert challenge entries"
+  on public.challenge_entries for insert with check (true);
