@@ -484,19 +484,17 @@ function GoalCard({
               </div>
               <div className="space-y-1">
                 {relatedLessons.map((l) => (
-                  <div key={l.id} className="flex items-center gap-2 text-xs">
+                  <div key={l.id} className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
                     <span className="text-gray-500">{l.lesson_date}</span>
                     <span className="text-gray-300">
                       {LESSON_TYPE_LABELS[l.lesson_type] || l.lesson_type}
                     </span>
-                    {l.coach_name && <span className="text-gray-600">w/ {l.coach_name}</span>}
-                    <div className="flex gap-1 ml-auto">
-                      {l.focus_areas.filter(f => relevantFocusAreas.includes(f)).map(f => (
-                        <span key={f} className="text-xs px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">
-                          {f}
-                        </span>
-                      ))}
-                    </div>
+                    {l.coach_name && <span className="text-gray-500">w/ {l.coach_name}</span>}
+                    {l.focus_areas.filter(f => relevantFocusAreas.includes(f)).map(f => (
+                      <span key={f} className="text-xs px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">
+                        {f}
+                      </span>
+                    ))}
                   </div>
                 ))}
               </div>

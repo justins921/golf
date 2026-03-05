@@ -118,7 +118,6 @@ function Dashboard() {
         <>
           {/* Top stats row */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-            {/* Handicap */}
             <StatCard
               label={handicapResult.roundsWithRating >= 3 ? 'Handicap Index' : 'Est. Handicap'}
               value={handicapEstimate != null ? handicapEstimate.toFixed(1) : '—'}
@@ -130,8 +129,6 @@ function Dashboard() {
               color="text-green-400"
               href="/rounds"
             />
-
-            {/* Last Round */}
             <StatCard
               label="Last Round"
               value={latestRound ? `${latestRound.total_score}` : '—'}
@@ -141,8 +138,6 @@ function Dashboard() {
               color="text-green-400"
               href="/rounds"
             />
-
-            {/* Driver Speed */}
             <StatCard
               label="Max Driver CHS"
               value={speedStats ? `${speedStats.maxChs}` : '—'}
@@ -151,8 +146,6 @@ function Dashboard() {
               href="/speed"
               unit={speedStats ? ' mph' : ''}
             />
-
-            {/* Streak */}
             <StatCard
               label="Activity Streak"
               value={streak > 0 ? `${streak}` : '0'}
@@ -164,7 +157,6 @@ function Dashboard() {
 
           {/* Middle row: Scoring trend + Practice recommendation */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-            {/* Scoring trend */}
             <div className="bg-gray-900 rounded-lg border border-gray-800 p-4">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-sm font-medium text-gray-50">Recent Scores</h2>
@@ -180,44 +172,18 @@ function Dashboard() {
                 </div>
               )}
             </div>
-
-            {/* Practice recommendation */}
             <PracticeRecommendationCard latestRound={latestRound} handicap={handicapEstimate ?? 15} />
           </div>
 
           {/* Quick actions */}
-          <div className="mb-6">
+          <div>
             <h2 className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">Quick Actions</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
               <QuickAction href="/play" label="Play" icon="flag" color="text-green-400" />
               <QuickAction href="/warmup" label="Warmup" icon="sun" color="text-yellow-400" />
               <QuickAction href="/practice" label="Practice" icon="target" color="text-purple-400" />
               <QuickAction href="/fitness" label="Workout" icon="heart" color="text-red-400" />
               <QuickAction href="/speed" label="Speed" icon="bolt" color="text-orange-400" />
-            </div>
-          </div>
-
-          {/* Module grid */}
-          <div>
-            <h2 className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">All Modules</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-              {ALL_MODULES.map((mod) => (
-                <Link
-                  key={mod.href}
-                  href={mod.href}
-                  className="group block rounded-lg border border-gray-800 bg-gray-900 p-3 transition-all hover:border-gray-700 hover:bg-gray-800"
-                >
-                  <div className={`text-sm font-medium text-gray-50 group-hover:text-green-400 transition-colors`}>
-                    {mod.title}
-                  </div>
-                  <div className="text-[11px] text-gray-500 mt-0.5">{mod.desc}</div>
-                  {mod.badge && (
-                    <span className="inline-flex mt-1 text-[9px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                      LM
-                    </span>
-                  )}
-                </Link>
-              ))}
             </div>
           </div>
         </>
@@ -247,11 +213,11 @@ function StatCard({
 }) {
   const content = (
     <div className="bg-gray-900 rounded-lg border border-gray-800 p-4">
-      <div className="text-[11px] text-gray-500 uppercase tracking-wider">{label}</div>
+      <div className="text-xs text-gray-500 uppercase tracking-wider">{label}</div>
       <div className={`text-2xl font-bold ${color} mt-1`}>
         {value}<span className="text-sm font-normal text-gray-500">{unit}</span>
       </div>
-      <div className="text-[11px] text-gray-500 mt-1 truncate">{sub}</div>
+      <div className="text-xs text-gray-500 mt-1 truncate">{sub}</div>
     </div>
   );
 
@@ -285,13 +251,13 @@ function ScoringMiniChart({ rounds }: { rounds: { total_score: number | null; co
               <div className="w-full bg-gray-800 rounded-t relative" style={{ height: `${Math.max(8, pct)}%` }}>
                 <div className="absolute inset-0 bg-green-500/40 rounded-t" />
               </div>
-              <span className="text-[9px] text-gray-600 truncate max-w-full">{r.course_name.slice(0, 10)}</span>
+              <span className="text-xs text-gray-500 truncate max-w-full">{r.course_name.slice(0, 10)}</span>
             </div>
           );
         })}
       </div>
       {scores.length >= 2 && (
-        <div className="text-[11px] text-gray-500 text-center">
+        <div className="text-xs text-gray-500 text-center">
           {scores[scores.length - 1] <= scores[0]
             ? `Trending down ${scores[0] - scores[scores.length - 1]} strokes`
             : `Up ${scores[scores.length - 1] - scores[0]} strokes from ${rounds[0].round_date}`}
@@ -348,13 +314,13 @@ function PracticeRecommendationCard({
               </span>
               <div>
                 <div className="text-xs text-gray-50 font-medium">{rec.title}</div>
-                <div className="text-[11px] text-gray-500">{rec.sgImpact.toFixed(1)} SG impact</div>
+                <div className="text-xs text-gray-500">{rec.sgImpact.toFixed(1)} SG impact</div>
               </div>
             </div>
           ))}
           <Link
             href="/rounds"
-            className="block text-center text-[11px] text-gray-500 hover:text-gray-300 mt-2 pt-2 border-t border-gray-800"
+            className="block text-center text-xs text-gray-500 hover:text-gray-300 mt-2 pt-2 border-t border-gray-800"
           >
             Full analysis
           </Link>
@@ -413,30 +379,3 @@ function QuickAction({ href, label, icon, color }: { href: string; label: string
     </Link>
   );
 }
-
-// ============================================================
-// Module data
-// ============================================================
-
-const ALL_MODULES = [
-  { href: '/play', title: 'Play', desc: 'On-course scorer', badge: false },
-  { href: '/rounds', title: 'Rounds', desc: 'Scorecards & analysis', badge: false },
-  { href: '/speed', title: 'Speed', desc: 'CHS tracking', badge: false },
-  { href: '/fitness', title: 'Fitness', desc: 'Workouts & exercises', badge: false },
-  { href: '/practice', title: 'Practice', desc: 'Drills & scoring', badge: false },
-  { href: '/warmup', title: 'Warmup', desc: 'Pre-round routines', badge: false },
-  { href: '/practice/plans', title: 'Plans', desc: 'Weekly practice plans', badge: false },
-  { href: '/goals', title: 'Goals', desc: 'Season targets', badge: false },
-  { href: '/debrief', title: 'Debrief', desc: 'Post-round insights', badge: false },
-  { href: '/lessons', title: 'Lessons', desc: 'Coaching & swing feels', badge: false },
-  { href: '/mental', title: 'Mental Game', desc: 'Journal & mindset', badge: false },
-  { href: '/strategy', title: 'Course Strategy', desc: 'Hole-by-hole plans', badge: false },
-  { href: '/shots', title: 'Shot Data', desc: 'Garmin R50 import', badge: true },
-  { href: '/compare', title: 'Compare', desc: 'Dispersion overlay', badge: true },
-  { href: '/heatmap', title: 'Heatmap', desc: 'Density & miss patterns', badge: true },
-  { href: '/wedges', title: 'Wedge Lab', desc: 'Matrix & calibration', badge: false },
-  { href: '/putters', title: 'Putter Lab', desc: 'Drill comparison', badge: false },
-  { href: '/yardage', title: 'Yardage Card', desc: 'Club distances', badge: true },
-  { href: '/gapping', title: 'Club Gapping', desc: 'Bag gap analysis', badge: true },
-  { href: '/calculator', title: 'Calculator', desc: 'Plays-like yardage', badge: false },
-];

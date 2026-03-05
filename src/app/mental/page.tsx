@@ -47,6 +47,8 @@ function MentalGameTracker() {
   const { rounds } = useRounds();
   const [showForm, setShowForm] = useState(false);
   const [view, setView] = useState<'journal' | 'trends' | 'routine'>('journal');
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showOptional, setShowOptional] = useState(false);
 
   // Form state
   const [logDate, setLogDate] = useState(new Date().toISOString().split('T')[0]);
@@ -73,6 +75,7 @@ function MentalGameTracker() {
     setPositives([]);
     setRoundId('');
     setNotes('');
+    setShowOptional(false);
   };
 
   const handleSubmit = async () => {
@@ -109,7 +112,6 @@ function MentalGameTracker() {
     const avgFocus = recent.filter((l) => l.focus_rating).reduce((s, l) => s + l.focus_rating!, 0) / recent.filter((l) => l.focus_rating).length || 0;
     const avgCommitment = recent.filter((l) => l.commitment_level).reduce((s, l) => s + l.commitment_level!, 0) / recent.filter((l) => l.commitment_level).length || 0;
 
-    // Common triggers
     const triggerCounts: Record<string, number> = {};
     const positiveCounts: Record<string, number> = {};
     for (const l of logs) {
@@ -130,12 +132,15 @@ function MentalGameTracker() {
     return logs.find((l) => l.pre_shot_routine)?.pre_shot_routine || null;
   }, [logs]);
 
+  const hasLogDetails = (l: MentalGameLog) =>
+    l.mental_triggers.length > 0 || l.positive_moments.length > 0 || l.notes || l.pre_shot_routine;
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-50">Mental Game</h1>
-          <p className="text-sm text-gray-500">Journal, routines & mental performance tracking</p>
+          <p className="text-sm text-gray-500">Journal, routines & mindset tracking</p>
         </div>
         <button
           onClick={() => { resetForm(); setShowForm(!showForm); }}
@@ -162,7 +167,7 @@ function MentalGameTracker() {
 
       {/* Form */}
       {showForm && (
-        <div className="bg-gray-900 border border-gray-700 rounded-lg p-5 mb-6 space-y-4">
+        <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 sm:p-5 mb-6 space-y-4">
           <h2 className="text-lg font-semibold text-gray-50">Mental Game Check-In</h2>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -206,7 +211,7 @@ function MentalGameTracker() {
             )}
           </div>
 
-          {/* Ratings */}
+          {/* Ratings — 2x2 on mobile, 4 across on desktop */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <RatingSelector value={moodRating} onChange={setMoodRating} label="Mood" color="bg-blue-600" />
             <RatingSelector value={confidenceRating} onChange={setConfidenceRating} label="Confidence" color="bg-green-600" />
@@ -214,69 +219,83 @@ function MentalGameTracker() {
             <RatingSelector value={commitmentLevel} onChange={setCommitmentLevel} label="Commitment" color="bg-orange-600" />
           </div>
 
-          {/* Pre-shot routine */}
-          <div>
-            <label className="block text-xs text-gray-400 mb-1">Pre-Shot Routine</label>
-            <textarea
-              value={preShotRoutine}
-              onChange={(e) => setPreShotRoutine(e.target.value)}
-              rows={2}
-              placeholder="Describe your pre-shot routine (e.g., deep breath, pick target, one practice swing, step in, go)"
-              className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
-            />
-          </div>
-
-          {/* Mental triggers */}
-          <div>
-            <label className="block text-xs text-gray-400 mb-2">Mental Triggers (what caused lapses)</label>
-            <div className="flex flex-wrap gap-1.5">
-              {COMMON_MENTAL_TRIGGERS.map((t) => (
-                <button
-                  key={t}
-                  onClick={() => toggleTrigger(t)}
-                  className={`px-2 py-1 rounded text-xs transition-colors ${
-                    triggers.includes(t)
-                      ? 'bg-red-600/20 text-red-400 border border-red-500/30'
-                      : 'bg-gray-800 text-gray-400 hover:text-gray-50'
-                  }`}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Positive moments */}
-          <div>
-            <label className="block text-xs text-gray-400 mb-2">Positive Moments (what went well)</label>
-            <div className="flex flex-wrap gap-1.5">
-              {COMMON_POSITIVE_MOMENTS.map((p) => (
-                <button
-                  key={p}
-                  onClick={() => togglePositive(p)}
-                  className={`px-2 py-1 rounded text-xs transition-colors ${
-                    positives.includes(p)
-                      ? 'bg-green-600/20 text-green-400 border border-green-500/30'
-                      : 'bg-gray-800 text-gray-400 hover:text-gray-50'
-                  }`}
-                >
-                  {p}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Notes */}
+          {/* Notes — always visible */}
           <div>
             <label className="block text-xs text-gray-400 mb-1">Notes</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              rows={3}
-              placeholder="How you felt, what you learned, what to work on..."
+              rows={2}
+              placeholder="How you felt, what you learned..."
               className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
             />
           </div>
+
+          {/* Toggle for optional sections */}
+          {!showOptional && (
+            <button
+              onClick={() => setShowOptional(true)}
+              className="w-full py-2 text-sm text-gray-400 hover:text-gray-50 border border-dashed border-gray-700 rounded-lg transition-colors"
+            >
+              + Add triggers, positives & pre-shot routine
+            </button>
+          )}
+
+          {showOptional && (
+            <div className="space-y-4 border-t border-gray-800 pt-4">
+              {/* Mental triggers */}
+              <div>
+                <label className="block text-xs text-gray-400 mb-2">Mental Triggers</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {COMMON_MENTAL_TRIGGERS.map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => toggleTrigger(t)}
+                      className={`px-2 py-1 rounded text-xs transition-colors ${
+                        triggers.includes(t)
+                          ? 'bg-red-600/20 text-red-400 border border-red-500/30'
+                          : 'bg-gray-800 text-gray-400 hover:text-gray-50'
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Positive moments */}
+              <div>
+                <label className="block text-xs text-gray-400 mb-2">Positive Moments</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {COMMON_POSITIVE_MOMENTS.map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => togglePositive(p)}
+                      className={`px-2 py-1 rounded text-xs transition-colors ${
+                        positives.includes(p)
+                          ? 'bg-green-600/20 text-green-400 border border-green-500/30'
+                          : 'bg-gray-800 text-gray-400 hover:text-gray-50'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Pre-shot routine */}
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">Pre-Shot Routine</label>
+                <textarea
+                  value={preShotRoutine}
+                  onChange={(e) => setPreShotRoutine(e.target.value)}
+                  rows={2}
+                  placeholder="Deep breath, pick target, one practice swing, step in, go"
+                  className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                />
+              </div>
+            </div>
+          )}
 
           <button
             onClick={handleSubmit}
@@ -297,10 +316,73 @@ function MentalGameTracker() {
             <p className="text-xs mt-1">Start journaling to build mental toughness</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {logs.map((l) => (
-              <LogCard key={l.id} log={l} onDelete={() => deleteLog(l.id)} />
-            ))}
+          <div className="space-y-2">
+            {logs.map((l) => {
+              const expanded = expandedId === l.id;
+              return (
+                <div key={l.id} className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
+                  {/* Summary row */}
+                  <div
+                    className="flex items-center gap-3 p-4 cursor-pointer hover:bg-gray-800/30 transition-colors"
+                    onClick={() => setExpandedId(expanded ? null : l.id)}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <span className="text-sm font-medium text-gray-50">{l.log_date}</span>
+                        <span className="text-xs px-2 py-0.5 rounded bg-gray-800 text-gray-400">
+                          {MENTAL_LOG_TYPE_LABELS[l.log_type] || l.log_type}
+                        </span>
+                      </div>
+                      {/* Compact ratings row */}
+                      <div className="flex gap-3 mt-1.5">
+                        {l.mood_rating && <RatingBadge label="Mood" value={l.mood_rating} color="text-blue-400" />}
+                        {l.confidence_rating && <RatingBadge label="Conf" value={l.confidence_rating} color="text-green-400" />}
+                        {l.focus_rating && <RatingBadge label="Focus" value={l.focus_rating} color="text-purple-400" />}
+                        {l.commitment_level && <RatingBadge label="Commit" value={l.commitment_level} color="text-orange-400" />}
+                      </div>
+                    </div>
+                    {hasLogDetails(l) && (
+                      <svg className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${expanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    )}
+                  </div>
+
+                  {/* Expanded details */}
+                  {expanded && (
+                    <div className="border-t border-gray-800 p-4 space-y-3">
+                      {l.mental_triggers.length > 0 && (
+                        <div>
+                          <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Triggers</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {l.mental_triggers.map((t) => (
+                              <span key={t} className="text-xs px-2 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20">{t}</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {l.positive_moments.length > 0 && (
+                        <div>
+                          <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Positives</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {l.positive_moments.map((p) => (
+                              <span key={p} className="text-xs px-2 py-1 rounded bg-green-500/10 text-green-400 border border-green-500/20">{p}</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {l.notes && <p className="text-sm text-gray-500">{l.notes}</p>}
+
+                      <div className="flex justify-end pt-2 border-t border-gray-800">
+                        <button onClick={() => deleteLog(l.id)} className="text-xs text-gray-400 hover:text-red-400">Delete</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )
       ) : view === 'trends' ? (
@@ -337,13 +419,12 @@ function MentalGameTracker() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Top triggers */}
               <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
                 <h3 className="text-sm font-medium text-gray-50 mb-3">Most Common Triggers</h3>
                 {trends.topTriggers.length === 0 ? (
-                  <p className="text-xs text-gray-500">No triggers recorded</p>
+                  <p className="text-sm text-gray-500">No triggers recorded</p>
                 ) : (
-                  <div className="space-y-1.5">
+                  <div className="space-y-2">
                     {trends.topTriggers.map(([name, count]) => (
                       <div key={name} className="flex items-center justify-between">
                         <span className="text-sm text-red-400">{name}</span>
@@ -354,13 +435,12 @@ function MentalGameTracker() {
                 )}
               </div>
 
-              {/* Top positives */}
               <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
                 <h3 className="text-sm font-medium text-gray-50 mb-3">Strengths</h3>
                 {trends.topPositives.length === 0 ? (
-                  <p className="text-xs text-gray-500">No positives recorded</p>
+                  <p className="text-sm text-gray-500">No positives recorded</p>
                 ) : (
-                  <div className="space-y-1.5">
+                  <div className="space-y-2">
                     {trends.topPositives.map(([name, count]) => (
                       <div key={name} className="flex items-center justify-between">
                         <span className="text-sm text-green-400">{name}</span>
@@ -384,7 +464,7 @@ function MentalGameTracker() {
                 <p className="text-xs text-gray-500 mt-2">From your most recent entry with a routine</p>
               </div>
             ) : (
-              <p className="text-xs text-gray-500">No pre-shot routine recorded yet. Add one in your next journal entry.</p>
+              <p className="text-sm text-gray-500">No pre-shot routine recorded yet. Add one in your next journal entry.</p>
             )}
           </div>
 
@@ -414,56 +494,11 @@ function MentalGameTracker() {
   );
 }
 
-function LogCard({ log, onDelete }: { log: MentalGameLog; onDelete: () => void }) {
-  return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-      <div className="flex items-start justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-50">{log.log_date}</span>
-          <span className="text-xs px-2 py-0.5 rounded bg-gray-800 text-gray-400">
-            {MENTAL_LOG_TYPE_LABELS[log.log_type] || log.log_type}
-          </span>
-        </div>
-        <button onClick={onDelete} className="text-xs text-gray-500 hover:text-red-400">Delete</button>
-      </div>
-
-      {/* Ratings row */}
-      <div className="flex gap-4 mb-2">
-        {log.mood_rating && <RatingBadge label="Mood" value={log.mood_rating} color="text-blue-400" />}
-        {log.confidence_rating && <RatingBadge label="Confidence" value={log.confidence_rating} color="text-green-400" />}
-        {log.focus_rating && <RatingBadge label="Focus" value={log.focus_rating} color="text-purple-400" />}
-        {log.commitment_level && <RatingBadge label="Commitment" value={log.commitment_level} color="text-orange-400" />}
-      </div>
-
-      {/* Triggers */}
-      {log.mental_triggers.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-2">
-          {log.mental_triggers.map((t) => (
-            <span key={t} className="text-xs px-2 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20">{t}</span>
-          ))}
-        </div>
-      )}
-
-      {/* Positives */}
-      {log.positive_moments.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-2">
-          {log.positive_moments.map((p) => (
-            <span key={p} className="text-xs px-2 py-1 rounded bg-green-500/10 text-green-400 border border-green-500/20">{p}</span>
-          ))}
-        </div>
-      )}
-
-      {log.notes && <p className="text-xs text-gray-500 mt-2">{log.notes}</p>}
-    </div>
-  );
-}
-
 function RatingBadge({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <div className="text-center min-w-[48px]">
-      <div className={`text-base font-bold ${color}`}>{value}/5</div>
-      <div className="text-xs text-gray-500">{label}</div>
-    </div>
+    <span className="text-xs text-gray-500">
+      <span className={`font-bold ${color}`}>{value}/5</span> {label}
+    </span>
   );
 }
 

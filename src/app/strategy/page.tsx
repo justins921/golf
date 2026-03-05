@@ -66,7 +66,7 @@ function CourseStrategyManager() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-50">Course Strategy</h1>
@@ -231,29 +231,29 @@ function StrategyDetail({
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-50">&larr; Back</button>
+      <div className="mb-4">
+        <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-50 mb-2">&larr; Back</button>
+        <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-bold text-gray-50">{strategy.course_name}</h2>
-            <div className="flex items-center gap-3 text-xs text-gray-500">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 mt-1">
               {strategy.tee_set && <span>{strategy.tee_set} tees</span>}
               <span>Par {totalPar}</span>
-              <span>{plannedHoles}/18 holes planned</span>
+              <span>{plannedHoles}/18 planned</span>
               {strategy.scoring_target && <span className="text-green-400">Target: {strategy.scoring_target}</span>}
             </div>
           </div>
-        </div>
-        <div className="flex gap-2">
-          {dirty && (
-            <button
-              onClick={save}
-              className="px-4 py-2 bg-green-600 hover:bg-green-500 text-gray-50 text-sm font-medium rounded-lg transition-colors"
-            >
-              Save Changes
-            </button>
-          )}
-          <button onClick={onDelete} className="px-3 py-2 text-xs text-gray-500 hover:text-red-400">Delete</button>
+          <div className="flex gap-2 shrink-0">
+            {dirty && (
+              <button
+                onClick={save}
+                className="px-4 py-2 bg-green-600 hover:bg-green-500 text-gray-50 text-sm font-medium rounded-lg transition-colors"
+              >
+                Save
+              </button>
+            )}
+            <button onClick={onDelete} className="px-3 py-2 text-xs text-gray-500 hover:text-red-400">Delete</button>
+          </div>
         </div>
       </div>
 
@@ -328,21 +328,25 @@ function HoleRow({
       {/* Summary row */}
       <button
         onClick={onToggleEdit}
-        className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-800/50 transition-colors"
+        className="w-full px-4 py-3 text-left hover:bg-gray-800/50 transition-colors"
       >
-        <span className="text-sm font-bold text-gray-50 w-6">#{hole.hole}</span>
-        <span className={`text-xs font-medium w-12 ${parColor}`}>Par {hole.par}</span>
-        {hole.yardage && <span className="text-xs text-gray-500 w-14">{hole.yardage} yd</span>}
-        <span className="text-xs text-gray-400 w-16">{hole.club_off_tee || '—'}</span>
-        <span className="text-xs text-gray-300 flex-1 truncate">{hole.strategy || 'No strategy set'}</span>
-        {hole.miss_zone && hole.miss_zone !== 'Center' && (
-          <span className="text-xs px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-            Miss {hole.miss_zone}
-          </span>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-bold text-gray-50 shrink-0">#{hole.hole}</span>
+          <span className={`text-xs font-medium shrink-0 ${parColor}`}>Par {hole.par}</span>
+          {hole.yardage && <span className="text-xs text-gray-500 shrink-0">{hole.yardage} yd</span>}
+          <span className="text-xs text-gray-400 shrink-0">{hole.club_off_tee || '—'}</span>
+          {hole.miss_zone && hole.miss_zone !== 'Center' && (
+            <span className="text-xs px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shrink-0 hidden sm:inline">
+              Miss {hole.miss_zone}
+            </span>
+          )}
+          <svg className={`w-4 h-4 text-gray-500 shrink-0 ml-auto transition-transform ${editing ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+        {hole.strategy && (
+          <div className="text-xs text-gray-300 mt-1 truncate">{hole.strategy}</div>
         )}
-        <svg className={`w-4 h-4 text-gray-500 transition-transform ${editing ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
       </button>
 
       {/* Edit form */}

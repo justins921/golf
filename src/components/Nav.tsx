@@ -132,7 +132,7 @@ export default function Nav() {
                             <div className="flex items-center gap-2">
                               <span className="text-sm font-medium">{item.label}</span>
                               {item.lm && (
-                                <span className="text-[9px] font-medium px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 whitespace-nowrap">
+                                <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 whitespace-nowrap">
                                   LM
                                 </span>
                               )}
@@ -195,7 +195,7 @@ export default function Nav() {
         <div className="md:hidden border-t border-gray-800 px-4 pb-3 pt-2">
           {navGroups.map((group) => (
             <div key={group.label} className="mb-2">
-              <div className="text-[10px] uppercase tracking-wider text-gray-600 font-semibold px-3 py-1">
+              <div className="text-xs uppercase tracking-wider text-gray-500 font-semibold px-3 py-1">
                 {group.label}
               </div>
               {group.items.map((item) => (
@@ -211,7 +211,7 @@ export default function Nav() {
                 >
                   {item.label}
                   {item.lm && (
-                    <span className="text-[9px] font-medium px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
                       LM
                     </span>
                   )}
