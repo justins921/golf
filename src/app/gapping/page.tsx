@@ -7,17 +7,41 @@ import { useAllShots, useSessions } from '@/lib/hooks';
 import type { Shot } from '@/lib/types';
 import { CLUB_ORDER, sortClubs } from '@/lib/types';
 import { percentile, mean, filterShots } from '@/lib/stats';
+import { copyToClipboard, formatGappingSummary } from '@/lib/shareImage';
 
 export default function GappingPage() {
+  const [tab, setTab] = useState<'actual' | 'simulator'>('actual');
+
   return (
     <AuthGuard>
       <Nav />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <h1 className="text-2xl font-bold text-gray-50 mb-1">Club Gapping</h1>
-        <p className="text-sm text-gray-500 mb-6">
+        <p className="text-sm text-gray-500 mb-4">
           Visualize carry distance gaps between clubs and identify problems in your bag.
         </p>
-        <GappingAnalysis />
+
+        {/* Tab toggle */}
+        <div className="flex gap-1 mb-6">
+          <button
+            onClick={() => setTab('actual')}
+            className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+              tab === 'actual' ? 'bg-gray-700 text-gray-50' : 'text-gray-400 hover:text-gray-50 hover:bg-gray-800'
+            }`}
+          >
+            Actual Gapping
+          </button>
+          <button
+            onClick={() => setTab('simulator')}
+            className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+              tab === 'simulator' ? 'bg-gray-700 text-gray-50' : 'text-gray-400 hover:text-gray-50 hover:bg-gray-800'
+            }`}
+          >
+            Bag Simulator
+          </button>
+        </div>
+
+        {tab === 'actual' ? <GappingAnalysis /> : <BagSimulator />}
       </div>
     </AuthGuard>
   );
@@ -142,7 +166,10 @@ function GappingAnalysis() {
 
       {/* Detail table */}
       <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-        <h2 className="text-sm font-medium text-gray-50 mb-3">Club Details</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-medium text-gray-50">Club Details</h2>
+          <ShareGappingButton clubs={clubGaps} />
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -288,6 +315,309 @@ function GapBadge({ status }: { status: ClubGap['gapStatus'] }) {
     <span className={`text-[10px] px-1.5 py-0.5 rounded border ${styles[status]}`}>
       {labels[status]}
     </span>
+  );
+}
+
+// ============================================================
+// Gap computation
+// ============================================================
+
+// ============================================================
+// Share Gapping Button
+// ============================================================
+
+function ShareGappingButton({ clubs }: { clubs: ClubGap[] }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    const text = formatGappingSummary(clubs);
+    const ok = await copyToClipboard(text);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-400 rounded transition-colors"
+    >
+      {copied ? 'Copied!' : 'Copy to Clipboard'}
+    </button>
+  );
+}
+
+// ============================================================
+// Bag Simulator — like Golf Engineer's Gap Visualizer
+// ============================================================
+
+const DEFAULT_CLUBS = [
+  { name: 'Lob Wedge', carry: 80 },
+  { name: 'Sand Wedge', carry: 90 },
+  { name: 'Gap Wedge', carry: 100 },
+  { name: 'PW', carry: 120 },
+  { name: '9 Iron', carry: 130 },
+  { name: '8 Iron', carry: 140 },
+  { name: '7 Iron', carry: 150 },
+  { name: '6 Iron', carry: 160 },
+  { name: '5 Iron', carry: 170 },
+  { name: '4 Iron', carry: 180 },
+  { name: '3 Hybrid', carry: 195 },
+  { name: '5 Wood', carry: 215 },
+  { name: '3 Wood', carry: 235 },
+  { name: 'Driver', carry: 250 },
+];
+
+interface SimClub { name: string; carry: number }
+
+function BagSimulator() {
+  const { shots, loading } = useAllShots();
+  const [clubs, setClubs] = useState<SimClub[]>([]);
+  const [mode, setMode] = useState<'equal' | 'custom'>('custom');
+  const [initialized, setInitialized] = useState(false);
+
+  // Initialize from actual shot data if available
+  const actualClubData = useMemo(() => {
+    const map: Record<string, number[]> = {};
+    for (const s of shots.filter(s => s.is_full_shot && !s.excluded_from_card)) {
+      (map[s.club_name] ??= []).push(s.carry_distance_yd);
+    }
+    const result: SimClub[] = [];
+    for (const [name, carries] of Object.entries(map)) {
+      if (carries.length < 2) continue;
+      carries.sort((a, b) => a - b);
+      result.push({ name, carry: Math.round(carries[Math.floor(carries.length / 2)]) });
+    }
+    result.sort((a, b) => a.carry - b.carry);
+    return result;
+  }, [shots]);
+
+  // Initialize clubs once when data loads
+  if (!initialized && !loading) {
+    setClubs(actualClubData.length >= 3 ? actualClubData : DEFAULT_CLUBS);
+    setInitialized(true);
+  }
+
+  const updateCarry = (idx: number, carry: number) => {
+    setClubs(prev => prev.map((c, i) => i === idx ? { ...c, carry } : c));
+  };
+
+  const updateName = (idx: number, name: string) => {
+    setClubs(prev => prev.map((c, i) => i === idx ? { ...c, name } : c));
+  };
+
+  const removeClub = (idx: number) => {
+    setClubs(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const addClub = () => {
+    const maxCarry = clubs.length > 0 ? Math.max(...clubs.map(c => c.carry)) : 100;
+    setClubs([...clubs, { name: 'New Club', carry: maxCarry + 15 }]);
+  };
+
+  const calcEqualGaps = () => {
+    if (clubs.length < 2) return;
+    const sorted = [...clubs].sort((a, b) => a.carry - b.carry);
+    const min = sorted[0].carry;
+    const max = sorted[sorted.length - 1].carry;
+    const gap = (max - min) / (clubs.length - 1);
+    const newClubs = sorted.map((c, i) => ({ ...c, carry: Math.round(min + gap * i) }));
+    setClubs(newClubs);
+    setMode('equal');
+  };
+
+  const resetToActual = () => {
+    if (actualClubData.length >= 3) {
+      setClubs(actualClubData);
+    } else {
+      setClubs(DEFAULT_CLUBS);
+    }
+    setMode('custom');
+  };
+
+  // Sort for display (longest first)
+  const sorted = useMemo(() => {
+    const s = [...clubs].sort((a, b) => b.carry - a.carry);
+    return s.map((c, i) => ({
+      ...c,
+      gap: i < s.length - 1 ? c.carry - s[i + 1].carry : null,
+    }));
+  }, [clubs]);
+
+  const maxCarry = Math.max(...clubs.map(c => c.carry), 100);
+  const minCarry = Math.min(...clubs.map(c => c.carry), 0);
+  const range = maxCarry - minCarry || 1;
+
+  if (loading) {
+    return <div className="text-center text-gray-600 py-12 text-sm">Loading shot data...</div>;
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Controls */}
+      <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h2 className="text-sm font-medium text-gray-50">Bag Setup</h2>
+            <p className="text-xs text-gray-500">{clubs.length} clubs · Dream up new configurations</p>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={calcEqualGaps} className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded transition-colors">
+              Equal Gaps
+            </button>
+            <button onClick={resetToActual} className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded transition-colors">
+              {actualClubData.length >= 3 ? 'Reset to Actual' : 'Reset to Default'}
+            </button>
+            <button onClick={addClub} className="px-3 py-1.5 text-xs bg-green-600 hover:bg-green-500 text-gray-50 rounded transition-colors">
+              + Add Club
+            </button>
+          </div>
+        </div>
+
+        {/* Club list — editable */}
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-xs text-gray-500 uppercase tracking-wider px-2 mb-1">
+            <span className="w-32">Club</span>
+            <span className="w-20 text-center">Carry (yd)</span>
+            <span className="w-16 text-center">Gap</span>
+            <span className="flex-1" />
+          </div>
+          {sorted.map((club, sortedIdx) => {
+            const realIdx = clubs.findIndex(c => c.name === club.name && c.carry === club.carry);
+            const gapColor = club.gap == null ? 'text-gray-600' :
+              club.gap >= 25 ? 'text-red-400' :
+              club.gap < 5 ? 'text-yellow-400' : 'text-green-400';
+            return (
+              <div key={sortedIdx} className="flex items-center gap-2 bg-gray-800/50 rounded px-2 py-1.5">
+                <input
+                  type="text"
+                  value={club.name}
+                  onChange={(e) => updateName(realIdx, e.target.value)}
+                  className="w-32 bg-transparent border-b border-gray-700 text-sm text-gray-50 focus:border-green-500 outline-none px-1"
+                />
+                <input
+                  type="number"
+                  value={club.carry}
+                  onChange={(e) => updateCarry(realIdx, parseInt(e.target.value) || 0)}
+                  className="w-20 bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm text-gray-50 text-center"
+                />
+                <span className={`w-16 text-center text-xs font-mono ${gapColor}`}>
+                  {club.gap != null ? `${club.gap}` : '—'}
+                </span>
+                {/* Mini bar */}
+                <div className="flex-1 h-4 relative">
+                  <div
+                    className="absolute h-full bg-green-500/30 rounded"
+                    style={{ width: `${((club.carry - minCarry) / range) * 100}%` }}
+                  />
+                </div>
+                <button
+                  onClick={() => removeClub(realIdx)}
+                  className="text-gray-600 hover:text-red-400 text-xs px-1"
+                >
+                  x
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Visual gap chart */}
+      <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+        <h2 className="text-sm font-medium text-gray-50 mb-4">Distance Ladder</h2>
+        <div className="space-y-2">
+          {sorted.map((club, i) => {
+            const pct = ((club.carry - minCarry) / range) * 100;
+            const gapColor = club.gap == null ? '' :
+              club.gap >= 25 ? 'text-red-400' :
+              club.gap < 5 ? 'text-yellow-400' : 'text-green-400';
+            return (
+              <div key={i} className="flex items-center gap-2">
+                <span className="text-xs text-gray-400 w-24 text-right shrink-0 truncate">{club.name}</span>
+                <div className="flex-1 relative h-6">
+                  <div
+                    className="absolute h-4 top-1 bg-green-500/30 rounded"
+                    style={{ width: `${Math.max(2, pct)}%` }}
+                  />
+                  <div
+                    className="absolute w-1.5 h-6 bg-green-400 rounded"
+                    style={{ left: `${pct}%` }}
+                  />
+                </div>
+                <span className="text-xs text-gray-50 w-10 text-right font-mono shrink-0">{club.carry}</span>
+                {club.gap != null && (
+                  <span className={`text-xs w-8 text-right font-mono shrink-0 ${gapColor}`}>{club.gap}</span>
+                )}
+                {club.gap == null && <span className="w-8 shrink-0" />}
+              </div>
+            );
+          })}
+        </div>
+        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-800">
+          <span className="w-24 shrink-0" />
+          <div className="flex-1 flex justify-between text-xs text-gray-600">
+            <span>{minCarry} yd</span>
+            <span>{Math.round((minCarry + maxCarry) / 2)} yd</span>
+            <span>{maxCarry} yd</span>
+          </div>
+          <span className="w-10 shrink-0" />
+          <span className="w-8 shrink-0" />
+        </div>
+      </div>
+
+      {/* Summary stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-3">
+          <div className="text-xs text-gray-500 uppercase">Clubs</div>
+          <div className="text-xl font-bold text-gray-50">{clubs.length}</div>
+        </div>
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-3">
+          <div className="text-xs text-gray-500 uppercase">Coverage</div>
+          <div className="text-xl font-bold text-gray-50">{minCarry}–{maxCarry}<span className="text-sm text-gray-500"> yd</span></div>
+        </div>
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-3">
+          <div className="text-xs text-gray-500 uppercase">Avg Gap</div>
+          <div className="text-xl font-bold text-green-400">
+            {sorted.filter(c => c.gap != null).length > 0
+              ? Math.round(sorted.filter(c => c.gap != null).reduce((s, c) => s + c.gap!, 0) / sorted.filter(c => c.gap != null).length)
+              : '—'}<span className="text-sm text-gray-500"> yd</span>
+          </div>
+        </div>
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-3">
+          <div className="text-xs text-gray-500 uppercase">Issues</div>
+          <div className="text-xl font-bold text-red-400">
+            {sorted.filter(c => c.gap != null && (c.gap >= 25 || c.gap < 5)).length}
+          </div>
+        </div>
+      </div>
+
+      {/* Comparison to actual (if shot data exists) */}
+      {actualClubData.length >= 3 && mode === 'custom' && (
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+          <h3 className="text-sm font-medium text-gray-50 mb-2">vs. Your Actual Distances</h3>
+          <p className="text-xs text-gray-500 mb-3">How this setup compares to your real shot data</p>
+          <div className="space-y-1">
+            {sorted.map((simClub, i) => {
+              const actual = actualClubData.find(a => a.name === simClub.name);
+              if (!actual) return null;
+              const diff = simClub.carry - actual.carry;
+              return (
+                <div key={i} className="flex items-center gap-3 text-sm">
+                  <span className="w-24 text-gray-400 text-xs truncate">{simClub.name}</span>
+                  <span className="text-gray-500 text-xs w-16">Actual: {actual.carry}</span>
+                  <span className="text-gray-50 text-xs w-16">Sim: {simClub.carry}</span>
+                  <span className={`text-xs font-mono ${diff > 0 ? 'text-blue-400' : diff < 0 ? 'text-red-400' : 'text-gray-600'}`}>
+                    {diff > 0 ? '+' : ''}{diff} yd
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

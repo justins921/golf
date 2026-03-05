@@ -10,6 +10,7 @@ import RoundAnalysis from '@/components/RoundAnalysis';
 import CourseSelector from '@/components/CourseSelector';
 import { calculateHandicap } from '@/lib/handicap';
 import type { ScoreDifferential } from '@/lib/handicap';
+import { copyToClipboard, nativeShare, formatRoundSummary } from '@/lib/shareImage';
 
 export default function RoundsPage() {
   return (
@@ -497,10 +498,13 @@ function Scorecard({
       </div>
 
       <div className="flex items-center justify-between">
-        <button onClick={saveScorecard} disabled={saving}
-          className="px-4 py-2 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded-lg">
-          {saving ? 'Saving...' : 'Save Scorecard'}
-        </button>
+        <div className="flex gap-2">
+          <button onClick={saveScorecard} disabled={saving}
+            className="px-4 py-2 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded-lg">
+            {saving ? 'Saving...' : 'Save Scorecard'}
+          </button>
+          <ShareRoundButton round={round} />
+        </div>
         <button onClick={onDelete} className="text-xs text-gray-600 hover:text-red-400">
           Delete Round
         </button>
@@ -880,5 +884,34 @@ function RoundAnalysisView({
         )}
       </div>
     </div>
+  );
+}
+
+// ============================================================
+// Share Round Button
+// ============================================================
+
+function ShareRoundButton({ round }: { round: Round }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = async () => {
+    const text = formatRoundSummary(round);
+    const shared = await nativeShare({ title: `${round.course_name} — ${round.round_date}`, text });
+    if (!shared) {
+      const ok = await copyToClipboard(text);
+      if (ok) {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    }
+  };
+
+  return (
+    <button
+      onClick={handleShare}
+      className="px-3 py-2 text-xs bg-gray-800 hover:bg-gray-700 text-gray-400 rounded-lg transition-colors"
+    >
+      {copied ? 'Copied!' : 'Share'}
+    </button>
   );
 }
