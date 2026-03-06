@@ -92,7 +92,7 @@ function Compare() {
     const clubsArr = Array.from(selectedClubs);
 
     if (mode === 'selected') {
-      // Each club × session combination becomes a group
+      // Each club x session combination becomes a group
       let colorIdx = 0;
       const groups: { label: string; shots: Shot[]; color: string }[] = [];
       for (const club of clubsArr) {
@@ -164,14 +164,14 @@ function Compare() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-gray-50 mb-6">Compare Sessions</h1>
+      <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-6">Compare Sessions</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar controls */}
         <div className="space-y-4">
           {/* Mode selector */}
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Compare Mode</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Compare Mode</label>
             <div className="flex flex-row lg:flex-col gap-1 flex-wrap">
               {([
                 { value: 'all-time' as CompareMode, label: 'All-time average' },
@@ -181,8 +181,8 @@ function Compare() {
                 <button
                   key={m.value}
                   onClick={() => setMode(m.value)}
-                  className={`px-3 py-1.5 text-sm rounded text-left ${
-                    mode === m.value ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                  className={`px-4 py-2 text-sm rounded-full text-left ${
+                    mode === m.value ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
                   }`}
                 >
                   {m.label}
@@ -193,14 +193,14 @@ function Compare() {
 
           {mode === 'rolling' && (
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Rolling N</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Rolling N</label>
               <input
                 type="number"
                 min={1}
                 max={50}
                 value={rollingN}
                 onChange={(e) => setRollingN(parseInt(e.target.value) || 5)}
-                className="w-20 px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
+                className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
               {rollingInfo && (
                 <p className="text-[10px] text-gray-600 mt-1">
@@ -212,10 +212,10 @@ function Compare() {
 
           {/* Club selector (multi-select) */}
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Clubs</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Clubs</label>
             <div className="flex flex-row flex-wrap lg:flex-col gap-1 max-h-60 overflow-y-auto">
               {allClubs.map((c) => (
-                <label key={c} className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer hover:text-gray-300 px-2 py-1 rounded hover:bg-gray-800">
+                <label key={c} className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer hover:text-gray-300 px-2 py-1 rounded-xl hover:bg-gray-800">
                   <input
                     type="checkbox"
                     checked={selectedClubs.has(c)}
@@ -231,7 +231,7 @@ function Compare() {
           {/* Session selector (for selected mode) */}
           {mode === 'selected' && (
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Sessions</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Sessions</label>
               <div className="flex flex-col gap-1 max-h-48 overflow-y-auto">
                 {sessions.map((s) => (
                   <label key={s.id} className="flex items-center gap-2 text-xs text-gray-400 cursor-pointer hover:text-gray-300">
@@ -250,17 +250,17 @@ function Compare() {
 
           {/* Distance mode */}
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Distance</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Distance</label>
             <div className="flex gap-1">
               <button
                 onClick={() => setDistanceMode('observed')}
-                className={`px-2 py-1 text-xs rounded ${distanceMode === 'observed' ? 'bg-blue-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
+                className={`px-4 py-2 text-xs rounded-full ${distanceMode === 'observed' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
               >
                 Observed
               </button>
               <button
                 onClick={() => setDistanceMode('normalized')}
-                className={`px-2 py-1 text-xs rounded ${distanceMode === 'normalized' ? 'bg-blue-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
+                className={`px-4 py-2 text-xs rounded-full ${distanceMode === 'normalized' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
               >
                 Normalized
               </button>
@@ -275,13 +275,13 @@ function Compare() {
           <div className="flex gap-1 mb-4">
             <button
               onClick={() => setChartMode('carry')}
-              className={`px-2 py-1 text-xs rounded ${chartMode === 'carry' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
+              className={`px-4 py-2 text-xs rounded-full ${chartMode === 'carry' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
             >
               Carry
             </button>
             <button
               onClick={() => setChartMode('total')}
-              className={`px-2 py-1 text-xs rounded ${chartMode === 'total' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
+              className={`px-4 py-2 text-xs rounded-full ${chartMode === 'total' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
             >
               Total
             </button>

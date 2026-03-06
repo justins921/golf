@@ -208,16 +208,16 @@ function PlayMode() {
       <>
         <Nav />
         <div className="max-w-md mx-auto px-4 py-8">
-          <h1 className="text-2xl font-bold text-gray-50 mb-6">Start Round</h1>
+          <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-6">Start Round</h1>
 
           {inProgress.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-xs uppercase tracking-wider text-gray-500 mb-2">Resume In Progress</h2>
+              <h2 className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Resume In Progress</h2>
               {inProgress.map((r) => (
                 <button
                   key={r.id}
                   onClick={() => handleResume(r)}
-                  className="w-full text-left px-4 py-3 bg-gray-900 border border-yellow-500/30 rounded-lg mb-2 hover:bg-gray-800"
+                  className="w-full text-left px-4 py-3 bg-gray-900 border border-yellow-500/20 rounded-2xl mb-2 hover:bg-gray-800"
                 >
                   <div className="text-sm font-medium text-gray-50">{r.course_name}</div>
                   <div className="text-xs text-gray-500">{r.tees || ''} {r.holes_played}H - Started today</div>
@@ -226,7 +226,7 @@ function PlayMode() {
             </div>
           )}
 
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-5 space-y-4">
+          <div className="bg-gray-900 rounded-2xl p-5 space-y-4">
             <CourseSelector
               onSelect={(info) => {
                 setCourse(info.courseName);
@@ -237,14 +237,14 @@ function PlayMode() {
             />
 
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Holes</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Holes</label>
               <div className="flex gap-2">
                 {[9, 18].map((n) => (
                   <button
                     key={n}
                     onClick={() => setHolesCount(n)}
-                    className={`flex-1 py-2.5 text-base rounded-lg ${
-                      holesCount === n ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'
+                    className={`flex-1 py-2.5 text-base rounded-xl ${
+                      holesCount === n ? 'bg-green-500 hover:bg-green-400 text-gray-50' : 'bg-gray-800 text-gray-400'
                     }`}
                   >
                     {n}
@@ -257,24 +257,24 @@ function PlayMode() {
             {!courseRating && !slopeRating && (
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Course Rating</label>
+                  <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Course Rating</label>
                   <input
                     type="number"
                     step="0.1"
                     value={courseRating}
                     onChange={(e) => setCourseRating(e.target.value)}
                     placeholder="72.3"
-                    className="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded-lg text-gray-50"
+                    className="w-full px-4 py-3 text-[15px] bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Slope</label>
+                  <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Slope</label>
                   <input
                     type="number"
                     value={slopeRating}
                     onChange={(e) => setSlopeRating(e.target.value)}
                     placeholder="131"
-                    className="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded-lg text-gray-50"
+                    className="w-full px-4 py-3 text-[15px] bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                   />
                 </div>
               </div>
@@ -283,7 +283,7 @@ function PlayMode() {
             <button
               onClick={handleStart}
               disabled={!course}
-              className="w-full py-3 text-lg font-medium bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded-lg"
+              className="w-full py-3 text-lg font-medium bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-2xl active:scale-[0.98]"
             >
               Start Round
             </button>
@@ -313,7 +313,7 @@ function PlayMode() {
     return (
       <div className="min-h-screen bg-gray-950 flex flex-col">
         {/* Top bar */}
-        <div className="bg-gray-900 border-b border-gray-800 px-4 py-2 flex items-center justify-between">
+        <div className="bg-gray-900/95 backdrop-blur-lg px-4 py-2 flex items-center justify-between">
           <div className="text-sm text-gray-400">{course}</div>
           <div className="flex items-center gap-3 text-sm">
             {totals.scored > 0 && (
@@ -339,7 +339,7 @@ function PlayMode() {
                 onClick={() => setCurrentHole(i)}
                 className={`w-7 h-7 rounded-full text-[10px] font-medium flex items-center justify-center transition-colors ${
                   isCurrent
-                    ? 'bg-green-600 text-gray-50'
+                    ? 'bg-green-500 text-gray-50'
                     : filled
                     ? 'bg-gray-700 text-gray-300'
                     : 'bg-gray-800/50 text-gray-600'
@@ -363,9 +363,9 @@ function PlayMode() {
                 <button
                   key={p}
                   onClick={() => updateHole(currentHole, 'par', p)}
-                  className={`w-11 h-11 rounded-lg text-lg font-medium ${
+                  className={`w-11 h-11 rounded-xl text-lg font-medium ${
                     hole.par === p
-                      ? 'bg-green-600 text-gray-50'
+                      ? 'bg-green-500 text-gray-50'
                       : 'bg-gray-800 text-gray-400'
                   }`}
                 >
@@ -416,7 +416,7 @@ function PlayMode() {
                 <button
                   key={p}
                   onClick={() => updateHole(currentHole, 'putts', p)}
-                  className={`w-12 h-12 rounded-lg text-lg font-medium ${
+                  className={`w-12 h-12 rounded-xl text-lg font-medium ${
                     hole.putts === p
                       ? 'bg-blue-600 text-gray-50'
                       : 'bg-gray-800 text-gray-400'
@@ -427,7 +427,7 @@ function PlayMode() {
               ))}
               <button
                 onClick={() => updateHole(currentHole, 'putts', (hole.putts ?? 2) + 1 > 3 ? 4 : (hole.putts ?? 2) + 1)}
-                className={`w-12 h-12 rounded-lg text-sm font-medium ${
+                className={`w-12 h-12 rounded-xl text-sm font-medium ${
                   hole.putts != null && hole.putts > 3
                     ? 'bg-blue-600 text-gray-50'
                     : 'bg-gray-800 text-gray-400'
@@ -446,15 +446,15 @@ function PlayMode() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => updateHole(currentHole, 'fairway_hit', hole.fairway_hit === true ? null : true)}
-                    className={`w-14 h-11 rounded-lg text-sm font-medium ${
-                      hole.fairway_hit === true ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'
+                    className={`w-14 h-11 rounded-xl text-sm font-medium ${
+                      hole.fairway_hit === true ? 'bg-green-500 text-gray-50' : 'bg-gray-800 text-gray-400'
                     }`}
                   >
                     Hit
                   </button>
                   <button
                     onClick={() => updateHole(currentHole, 'fairway_hit', hole.fairway_hit === false ? null : false)}
-                    className={`w-14 h-11 rounded-lg text-sm font-medium ${
+                    className={`w-14 h-11 rounded-xl text-sm font-medium ${
                       hole.fairway_hit === false ? 'bg-red-600/60 text-red-200' : 'bg-gray-800 text-gray-400'
                     }`}
                   >
@@ -468,15 +468,15 @@ function PlayMode() {
               <div className="flex gap-2">
                 <button
                   onClick={() => updateHole(currentHole, 'gir', hole.gir === true ? null : true)}
-                  className={`w-14 h-11 rounded-lg text-sm font-medium ${
-                    hole.gir === true ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'
+                  className={`w-14 h-11 rounded-xl text-sm font-medium ${
+                    hole.gir === true ? 'bg-green-500 text-gray-50' : 'bg-gray-800 text-gray-400'
                   }`}
                 >
                   GIR
                 </button>
                 <button
                   onClick={() => updateHole(currentHole, 'gir', hole.gir === false ? null : false)}
-                  className={`w-14 h-11 rounded-lg text-sm font-medium ${
+                  className={`w-14 h-11 rounded-xl text-sm font-medium ${
                     hole.gir === false ? 'bg-red-600/60 text-red-200' : 'bg-gray-800 text-gray-400'
                   }`}
                 >
@@ -493,7 +493,7 @@ function PlayMode() {
               <div className="flex gap-2 justify-center">
                 {(['left', 'right'] as const).map((dir) => (
                   <button key={dir} onClick={() => updateHole(currentHole, 'tee_miss_direction', hole.tee_miss_direction === dir ? null : dir)}
-                    className={`px-3 h-9 rounded-lg text-xs font-medium capitalize ${
+                    className={`px-3 h-9 rounded-xl text-xs font-medium capitalize ${
                       hole.tee_miss_direction === dir ? 'bg-amber-600 text-gray-50' : 'bg-gray-800 text-gray-400'
                     }`}>
                     {dir}
@@ -509,7 +509,7 @@ function PlayMode() {
               <div className="flex gap-2 justify-center flex-wrap">
                 {(['short', 'long', 'left', 'right'] as const).map((dir) => (
                   <button key={dir} onClick={() => updateHole(currentHole, 'approach_miss_direction', hole.approach_miss_direction === dir ? null : dir)}
-                    className={`px-3 h-9 rounded-lg text-xs font-medium capitalize ${
+                    className={`px-3 h-9 rounded-xl text-xs font-medium capitalize ${
                       hole.approach_miss_direction === dir ? 'bg-amber-600 text-gray-50' : 'bg-gray-800 text-gray-400'
                     }`}>
                     {dir}
@@ -527,7 +527,7 @@ function PlayMode() {
                 <button
                   key={p}
                   onClick={() => updateHole(currentHole, 'penalty_strokes', p)}
-                  className={`w-11 h-11 rounded-lg text-sm font-medium ${
+                  className={`w-11 h-11 rounded-xl text-sm font-medium ${
                     hole.penalty_strokes === p
                       ? p === 0 ? 'bg-gray-700 text-gray-50' : 'bg-yellow-600 text-gray-50'
                       : 'bg-gray-800 text-gray-400'
@@ -541,19 +541,19 @@ function PlayMode() {
         </div>
 
         {/* Bottom navigation */}
-        <div className="bg-gray-900 border-t border-gray-800 px-4 py-3 flex items-center gap-3">
+        <div className="bg-gray-900/95 backdrop-blur-lg px-4 py-3 flex items-center gap-3">
           <button
             onClick={goPrev}
             disabled={currentHole === 0}
-            className="px-4 py-2.5 text-sm bg-gray-800 text-gray-400 rounded-lg disabled:opacity-30"
+            className="px-4 py-2.5 text-sm bg-gray-800 text-gray-400 rounded-xl disabled:opacity-30"
           >
             &larr; Prev
           </button>
           <button
             onClick={goNext}
-            className={`flex-1 py-2.5 text-base font-medium rounded-lg ${
+            className={`flex-1 py-2.5 text-base font-medium rounded-2xl active:scale-[0.98] ${
               isLast
-                ? 'bg-green-600 hover:bg-green-500 text-gray-50'
+                ? 'bg-green-500 hover:bg-green-400 text-gray-50'
                 : 'bg-blue-600 hover:bg-blue-500 text-gray-50'
             }`}
           >
@@ -562,7 +562,7 @@ function PlayMode() {
           <button
             onClick={async () => { await saveRound(); }}
             disabled={saving}
-            className="px-4 py-2.5 text-sm bg-gray-800 text-gray-400 rounded-lg disabled:opacity-50"
+            className="px-4 py-2.5 text-sm bg-gray-800 text-gray-400 rounded-xl disabled:opacity-50"
           >
             {saving ? 'Saving...' : 'Save'}
           </button>
@@ -605,18 +605,18 @@ function PlayMode() {
 
         {/* Stat cards */}
         <div className="grid grid-cols-3 gap-2 mb-6">
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-3 text-center">
+          <div className="bg-gray-900 rounded-2xl p-3 text-center">
             <div className="text-[10px] text-gray-500 uppercase">Putts</div>
             <div className="text-xl font-bold text-gray-50">{totalPutts}</div>
           </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-3 text-center">
+          <div className="bg-gray-900 rounded-2xl p-3 text-center">
             <div className="text-[10px] text-gray-500 uppercase">FIR</div>
             <div className="text-xl font-bold text-gray-50">
               {firHoles.length > 0 ? `${Math.round((firCount / firHoles.length) * 100)}%` : '—'}
             </div>
             <div className="text-[10px] text-gray-600">{firCount}/{firHoles.length}</div>
           </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-3 text-center">
+          <div className="bg-gray-900 rounded-2xl p-3 text-center">
             <div className="text-[10px] text-gray-500 uppercase">GIR</div>
             <div className="text-xl font-bold text-gray-50">
               {Math.round((girCount / holes.length) * 100)}%
@@ -626,13 +626,13 @@ function PlayMode() {
         </div>
 
         {penalties > 0 && (
-          <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 text-center mb-6">
+          <div className="bg-yellow-500/10 rounded-2xl p-3 text-center mb-6">
             <span className="text-sm text-yellow-400">{penalties} penalty stroke{penalties !== 1 ? 's' : ''}</span>
           </div>
         )}
 
         {/* Score distribution */}
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 mb-6">
+        <div className="bg-gray-900 rounded-2xl p-4 mb-6">
           <h3 className="text-xs text-gray-500 uppercase tracking-wider mb-3">Score Distribution</h3>
           <div className="flex gap-2 justify-center">
             {[
@@ -644,7 +644,7 @@ function PlayMode() {
               { label: '3+', count: others, color: 'bg-purple-600' },
             ].map((item) => (
               <div key={item.label} className="flex flex-col items-center">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold text-gray-50 ${item.color} ${item.count === 0 ? 'opacity-20' : ''}`}>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-gray-50 ${item.color} ${item.count === 0 ? 'opacity-20' : ''}`}>
                   {item.count}
                 </div>
                 <div className="text-[10px] text-gray-500 mt-1">{item.label}</div>
@@ -654,7 +654,7 @@ function PlayMode() {
         </div>
 
         {/* Hole-by-hole mini scorecard */}
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 mb-6">
+        <div className="bg-gray-900 rounded-2xl p-4 mb-6">
           <h3 className="text-xs text-gray-500 uppercase tracking-wider mb-3">Scorecard</h3>
           <div className="grid grid-cols-9 gap-1 text-center text-xs">
             {holes.slice(0, 9).map((h, i) => (
@@ -668,7 +668,7 @@ function PlayMode() {
             ))}
           </div>
           {holes.length > 9 && (
-            <div className="grid grid-cols-9 gap-1 text-center text-xs mt-2 pt-2 border-t border-gray-800">
+            <div className="grid grid-cols-9 gap-1 text-center text-xs mt-2 pt-2 border-t border-gray-800/60">
               {holes.slice(9, 18).map((h, i) => (
                 <div key={i} className="space-y-0.5">
                   <div className="text-gray-600">{i + 10}</div>
@@ -686,7 +686,7 @@ function PlayMode() {
         <div className="flex gap-3">
           <Link
             href="/rounds"
-            className="flex-1 py-3 text-center text-sm bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700"
+            className="flex-1 py-3 text-center text-sm bg-gray-800 text-gray-300 rounded-2xl active:scale-[0.98] hover:bg-gray-700"
           >
             View in Rounds
           </Link>
@@ -699,7 +699,7 @@ function PlayMode() {
               setCourseRating('');
               setSlopeRating('');
             }}
-            className="flex-1 py-3 text-center text-sm bg-green-600 text-gray-50 rounded-lg hover:bg-green-500"
+            className="flex-1 py-3 text-center text-sm bg-green-500 text-gray-50 rounded-2xl active:scale-[0.98] hover:bg-green-400"
           >
             New Round
           </button>

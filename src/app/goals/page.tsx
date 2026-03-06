@@ -136,7 +136,7 @@ function SeasonGoals() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-50">Season Goals</h1>
+          <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Season Goals</h1>
           <p className="text-sm text-gray-500 mt-1">
             {achievedCount}/{filteredGoals.length} achieved
           </p>
@@ -145,14 +145,14 @@ function SeasonGoals() {
           <select
             value={season}
             onChange={(e) => setSeason(e.target.value)}
-            className="px-3 py-1.5 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
+            className="px-4 py-3 text-[15px] bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           >
             <option value="2026">2026</option>
             <option value="2025">2025</option>
           </select>
           <button
             onClick={() => setShowNewGoal(true)}
-            className="px-4 py-1.5 text-sm bg-green-600 hover:bg-green-500 text-gray-50 rounded-lg"
+            className="px-4 py-1.5 text-sm bg-green-500 hover:bg-green-400 text-white rounded-xl"
           >
             + New Goal
           </button>
@@ -161,7 +161,7 @@ function SeasonGoals() {
 
       {/* Overall progress */}
       {filteredGoals.length > 0 && (
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 mb-6">
+        <div className="bg-gray-900 rounded-2xl p-4 mb-6">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-gray-400">Season Progress</span>
             <span className="text-sm font-medium text-gray-50">
@@ -179,22 +179,22 @@ function SeasonGoals() {
 
       {/* New goal form */}
       {showNewGoal && (
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-5 mb-6 space-y-4">
-          <h2 className="text-sm font-medium text-gray-50">New Goal</h2>
+        <div className="bg-gray-900 rounded-2xl p-5 mb-6 space-y-4">
+          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">New Goal</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Goal Title</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Goal Title</label>
               <input
                 type="text"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 placeholder="Break 90"
-                className="w-full px-3 py-1.5 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Metric</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Metric</label>
               <select
                 value={newMetric}
                 onChange={(e) => {
@@ -204,7 +204,7 @@ function SeasonGoals() {
                   const cv = currentValues[m];
                   if (cv != null) setNewStartValue(cv.toFixed(1));
                 }}
-                className="w-full px-3 py-1.5 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               >
                 {(Object.keys(GOAL_METRIC_LABELS) as GoalMetric[]).map((m) => (
                   <option key={m} value={m}>{GOAL_METRIC_LABELS[m]}</option>
@@ -215,7 +215,7 @@ function SeasonGoals() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs text-gray-500 mb-1">
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">
                 Target {GOAL_METRIC_DIRECTION[newMetric] === 'lower' ? '(lower is better)' : '(higher is better)'}
               </label>
               <input
@@ -224,18 +224,18 @@ function SeasonGoals() {
                 value={newTarget}
                 onChange={(e) => setNewTarget(e.target.value)}
                 placeholder={GOAL_METRIC_DIRECTION[newMetric] === 'lower' ? '89' : '50'}
-                className="w-full px-3 py-1.5 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Starting Value</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Starting Value</label>
               <input
                 type="number"
                 step="0.1"
                 value={newStartValue}
                 onChange={(e) => setNewStartValue(e.target.value)}
                 placeholder="Current"
-                className="w-full px-3 py-1.5 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
           </div>
@@ -247,12 +247,12 @@ function SeasonGoals() {
           )}
 
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Notes (optional)</label>
+            <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Notes (optional)</label>
             <textarea
               value={newNotes}
               onChange={(e) => setNewNotes(e.target.value)}
               rows={2}
-              className="w-full px-3 py-1.5 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 resize-none focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
           </div>
 
@@ -260,13 +260,13 @@ function SeasonGoals() {
             <button
               onClick={handleCreateGoal}
               disabled={!newTitle || !newTarget}
-              className="px-4 py-1.5 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded"
+              className="px-4 py-1.5 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white rounded-xl"
             >
               Create Goal
             </button>
             <button
               onClick={() => setShowNewGoal(false)}
-              className="px-4 py-1.5 text-sm bg-gray-700 text-gray-300 rounded"
+              className="px-4 py-1.5 text-sm bg-gray-700 text-gray-300 rounded-xl"
             >
               Cancel
             </button>
@@ -274,7 +274,7 @@ function SeasonGoals() {
 
           {/* Preset suggestions */}
           <div>
-            <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Quick presets</div>
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Quick presets</div>
             <div className="flex flex-wrap gap-1">
               {PRESETS.map((p) => (
                 <button
@@ -286,7 +286,7 @@ function SeasonGoals() {
                     const cv = currentValues[p.metric];
                     if (cv != null) setNewStartValue(cv.toFixed(1));
                   }}
-                  className="text-xs px-2 py-1 rounded bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
+                  className="text-xs px-2 py-1 rounded-full bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
                 >
                   {p.title}
                 </button>
@@ -299,10 +299,10 @@ function SeasonGoals() {
       {/* Goals list */}
       {filteredGoals.length === 0 && !showNewGoal && (
         <div className="text-center py-16">
-          <div className="text-gray-600 text-sm mb-4">No goals set for {season} yet.</div>
+          <div className="text-[15px] text-gray-400 mb-4">No goals set for {season} yet.</div>
           <button
             onClick={() => setShowNewGoal(true)}
-            className="px-4 py-2 text-sm bg-green-600 hover:bg-green-500 text-gray-50 rounded-lg"
+            className="px-4 py-2 text-sm bg-green-500 hover:bg-green-400 text-white rounded-xl"
           >
             Set Your First Goal
           </button>
@@ -377,10 +377,10 @@ function GoalCard({
 
   return (
     <div
-      className={`bg-gray-900 border rounded-lg overflow-hidden transition-colors ${
+      className={`bg-gray-900 rounded-2xl overflow-hidden transition-colors ${
         achieved || autoAchieved
-          ? 'border-green-500/30 bg-green-500/5'
-          : 'border-gray-800'
+          ? 'bg-green-500/5'
+          : ''
       }`}
     >
       <div
@@ -393,7 +393,7 @@ function GoalCard({
             onClick={(e) => { e.stopPropagation(); onToggleAchieved(); }}
             className={`w-6 h-6 rounded-full flex-shrink-0 border-2 flex items-center justify-center transition-colors ${
               achieved || autoAchieved
-                ? 'bg-green-600 border-green-600 text-gray-50'
+                ? 'bg-green-500 border-green-500 text-white'
                 : 'border-gray-600 hover:border-gray-500'
             }`}
           >
@@ -423,7 +423,7 @@ function GoalCard({
             </div>
 
             {/* Progress bar */}
-            <div className="mt-2 bg-gray-800 rounded-full h-1.5 overflow-hidden">
+            <div className="mt-2 bg-gray-800 rounded-full h-2 overflow-hidden">
               <div
                 className={`${barColor} h-full rounded-full transition-all duration-500`}
                 style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
@@ -491,7 +491,7 @@ function GoalCard({
                     </span>
                     {l.coach_name && <span className="text-gray-500">w/ {l.coach_name}</span>}
                     {l.focus_areas.filter(f => relevantFocusAreas.includes(f)).map(f => (
-                      <span key={f} className="text-xs px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">
+                      <span key={f} className="text-xs px-1.5 py-0.5 rounded-full bg-green-500/10 text-green-400">
                         {f}
                       </span>
                     ))}
@@ -509,7 +509,7 @@ function GoalCard({
               </div>
               <div className="flex flex-wrap gap-1">
                 {relevantFocusAreas.map(f => (
-                  <span key={f} className="text-xs px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                  <span key={f} className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400">
                     {f}
                   </span>
                 ))}

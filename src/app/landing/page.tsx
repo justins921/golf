@@ -150,9 +150,9 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100">
       {/* Nav */}
-      <nav className="border-b border-gray-800 bg-gray-950/80 backdrop-blur-sm sticky top-0 z-50">
+      <nav className="bg-gray-950/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
-          <span className="text-green-400 font-bold text-lg">Golf OS</span>
+          <span className="text-green-400 font-bold text-lg tracking-tight">Golf OS</span>
           <div className="flex items-center gap-3">
             <a href="#pricing" className="hidden sm:inline text-sm text-gray-400 hover:text-gray-50 transition-colors">
               Pricing
@@ -162,7 +162,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/auth/signup"
-              className="px-4 py-1.5 text-sm bg-green-600 hover:bg-green-500 text-gray-50 font-medium rounded-md transition-colors"
+              className="px-6 py-2 text-sm bg-green-500 hover:bg-green-400 text-white font-semibold rounded-2xl active:scale-[0.98] transition-all"
             >
               Get Started Free
             </Link>
@@ -171,72 +171,72 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16 text-center">
-        <p className="text-green-400 text-sm font-medium tracking-wide uppercase mb-4">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-20 sm:pt-32 pb-20 text-center">
+        <p className="text-green-400 text-sm font-semibold tracking-wider uppercase mb-5">
           For Garmin R50 owners who want more from their data
         </p>
-        <h1 className="text-3xl sm:text-5xl font-bold text-gray-50 leading-tight max-w-3xl mx-auto">
+        <h1 className="text-4xl sm:text-6xl font-bold text-gray-50 leading-tight tracking-tight max-w-3xl mx-auto">
           Your range data is worth more than averages.
         </h1>
-        <p className="mt-6 text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+        <p className="mt-7 text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
           Golf OS turns Garmin R50 shot data into precise yardage cards, dispersion analysis, and structured practice plans — so you know your real distances and practice with purpose.
         </p>
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             href="/auth/signup"
-            className="w-full sm:w-auto px-8 py-3 bg-green-600 hover:bg-green-500 text-gray-50 font-semibold rounded-lg text-lg transition-colors"
+            className="w-full sm:w-auto px-8 py-3.5 bg-green-500 hover:bg-green-400 text-white font-semibold rounded-2xl text-lg active:scale-[0.98] transition-all"
           >
             Start Free — No Credit Card
           </Link>
           <a
             href="#features"
-            className="w-full sm:w-auto px-8 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium rounded-lg text-lg transition-colors text-center"
+            className="w-full sm:w-auto px-8 py-3.5 bg-gray-900 hover:bg-gray-800 text-gray-300 font-semibold rounded-2xl text-lg transition-colors text-center"
           >
             See How It Works
           </a>
         </div>
-        <p className="mt-4 text-xs text-gray-600">
+        <p className="mt-5 text-xs text-gray-500">
           Free tier available forever. Pro from $4.08/mo. Your data stays yours.
         </p>
       </section>
 
-      {/* Stats bar — social proof / credibility */}
-      <section className="border-y border-gray-800 bg-gray-900/50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+      {/* Stats bar */}
+      <section className="bg-gray-900 rounded-2xl max-w-4xl mx-auto">
+        <div className="px-4 sm:px-6 py-8 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
           {STATS.map((s) => (
             <div key={s.label}>
-              <div className="text-2xl sm:text-3xl font-bold text-green-400">{s.value}</div>
+              <div className="text-2xl sm:text-3xl font-bold text-green-400 tracking-tight">{s.value}</div>
               <div className="text-xs sm:text-sm text-gray-500 mt-1">{s.label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Problem → Solution */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+      {/* Problem -> Solution */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 py-20 sm:py-24">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-50 mb-6">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-50 tracking-tight mb-8">
             You have the data. You just can&apos;t use it yet.
           </h2>
           <div className="grid sm:grid-cols-2 gap-6 text-left mt-10">
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-5">
-              <h3 className="text-red-400 font-semibold text-sm uppercase tracking-wide mb-3">Without Golf OS</h3>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li className="flex gap-2"><span className="text-red-400/60 shrink-0">-</span> CSVs sit on your phone, unanalyzed</li>
-                <li className="flex gap-2"><span className="text-red-400/60 shrink-0">-</span> You guess at yardages from averages</li>
-                <li className="flex gap-2"><span className="text-red-400/60 shrink-0">-</span> No idea how elevation or temp affects your clubs</li>
-                <li className="flex gap-2"><span className="text-red-400/60 shrink-0">-</span> Practice is aimless — hit balls, hope for improvement</li>
-                <li className="flex gap-2"><span className="text-red-400/60 shrink-0">-</span> Putter and wedge decisions based on feel, not data</li>
+            <div className="bg-gray-900 rounded-2xl p-6">
+              <h3 className="text-red-400 font-semibold text-[13px] uppercase tracking-wider mb-4">Without Golf OS</h3>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li className="flex gap-2.5"><span className="text-red-400/60 shrink-0">-</span> CSVs sit on your phone, unanalyzed</li>
+                <li className="flex gap-2.5"><span className="text-red-400/60 shrink-0">-</span> You guess at yardages from averages</li>
+                <li className="flex gap-2.5"><span className="text-red-400/60 shrink-0">-</span> No idea how elevation or temp affects your clubs</li>
+                <li className="flex gap-2.5"><span className="text-red-400/60 shrink-0">-</span> Practice is aimless — hit balls, hope for improvement</li>
+                <li className="flex gap-2.5"><span className="text-red-400/60 shrink-0">-</span> Putter and wedge decisions based on feel, not data</li>
               </ul>
             </div>
-            <div className="bg-gray-900 border border-green-900/50 rounded-lg p-5">
-              <h3 className="text-green-400 font-semibold text-sm uppercase tracking-wide mb-3">With Golf OS</h3>
-              <ul className="space-y-2 text-sm text-gray-300">
-                <li className="flex gap-2"><span className="text-green-400 shrink-0">+</span> Import CSVs and see dispersion patterns instantly</li>
-                <li className="flex gap-2"><span className="text-green-400 shrink-0">+</span> Percentile-based yardage cards from real shot data</li>
-                <li className="flex gap-2"><span className="text-green-400 shrink-0">+</span> Environment-adjusted distances for any course</li>
-                <li className="flex gap-2"><span className="text-green-400 shrink-0">+</span> Structured practice with strokes-gained scoring</li>
-                <li className="flex gap-2"><span className="text-green-400 shrink-0">+</span> Objective putter and wedge comparisons</li>
+            <div className="bg-gray-900 rounded-2xl p-6">
+              <h3 className="text-green-400 font-semibold text-[13px] uppercase tracking-wider mb-4">With Golf OS</h3>
+              <ul className="space-y-3 text-sm text-gray-300">
+                <li className="flex gap-2.5"><span className="text-green-400 shrink-0">+</span> Import CSVs and see dispersion patterns instantly</li>
+                <li className="flex gap-2.5"><span className="text-green-400 shrink-0">+</span> Percentile-based yardage cards from real shot data</li>
+                <li className="flex gap-2.5"><span className="text-green-400 shrink-0">+</span> Environment-adjusted distances for any course</li>
+                <li className="flex gap-2.5"><span className="text-green-400 shrink-0">+</span> Structured practice with strokes-gained scoring</li>
+                <li className="flex gap-2.5"><span className="text-green-400 shrink-0">+</span> Objective putter and wedge comparisons</li>
               </ul>
             </div>
           </div>
@@ -244,29 +244,29 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section id="features" className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-50">
+      <section id="features" className="max-w-5xl mx-auto px-4 sm:px-6 py-20 sm:py-24">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-50 tracking-tight">
             Everything you need. Nothing you don&apos;t.
           </h2>
-          <p className="mt-3 text-gray-500 max-w-xl mx-auto">
+          <p className="mt-4 text-gray-500 max-w-xl mx-auto text-[15px]">
             Six tools that work together — import your data once and every feature uses it.
           </p>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {FEATURES.map((f) => (
-            <div key={f.title} className="bg-gray-900 border border-gray-800 rounded-lg p-5 hover:border-gray-700 transition-colors">
-              <div className="flex items-center justify-between mb-3">
+            <div key={f.title} className="bg-gray-900 rounded-2xl p-6 transition-transform active:scale-[0.99]">
+              <div className="flex items-center justify-between mb-4">
                 {f.icon}
                 {f.lm ? (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-medium bg-blue-500/10 text-blue-400">
                     <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
                     </svg>
                     Launch Monitor
                   </span>
                 ) : (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-green-500/10 text-green-400 border border-green-500/20">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-xl text-[10px] font-medium bg-green-500/10 text-green-400">
                     No Equipment
                   </span>
                 )}
@@ -280,9 +280,9 @@ export default function LandingPage() {
       </section>
 
       {/* How it works */}
-      <section className="border-y border-gray-800 bg-gray-900/30">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-50 text-center mb-12">
+      <section className="bg-gray-900/30">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20 sm:py-24">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-50 tracking-tight text-center mb-14">
             Up and running in 30 seconds
           </h2>
           <div className="grid sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
@@ -292,7 +292,7 @@ export default function LandingPage() {
               { step: '3', title: 'See your real numbers', desc: 'Dispersion charts, yardage card, and practice recommendations — instantly.' },
             ].map((s) => (
               <div key={s.step} className="text-center">
-                <div className="w-10 h-10 rounded-full bg-green-600/20 border border-green-600/40 text-green-400 font-bold flex items-center justify-center mx-auto mb-4">
+                <div className="w-11 h-11 rounded-2xl bg-green-500/15 text-green-400 font-bold flex items-center justify-center mx-auto mb-4 text-lg">
                   {s.step}
                 </div>
                 <h3 className="text-gray-50 font-semibold mb-2">{s.title}</h3>
@@ -304,28 +304,28 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-50">
+      <section id="pricing" className="max-w-5xl mx-auto px-4 sm:px-6 py-20 sm:py-24">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-50 tracking-tight">
             Simple pricing. Start free.
           </h2>
-          <p className="mt-3 text-gray-500 max-w-xl mx-auto">
+          <p className="mt-4 text-gray-500 max-w-xl mx-auto text-[15px]">
             Use the free tools forever. Upgrade when you want the full picture.
           </p>
           {/* Billing toggle */}
-          <div className="mt-6 inline-flex items-center bg-gray-900 border border-gray-800 rounded-lg p-1">
+          <div className="mt-8 inline-flex items-center bg-gray-900 rounded-2xl p-1.5">
             <button
               onClick={() => setBillingCycle('monthly')}
-              className={`px-4 py-1.5 text-sm rounded-md transition-colors ${
-                billingCycle === 'monthly' ? 'bg-gray-800 text-gray-50' : 'text-gray-500 hover:text-gray-300'
+              className={`px-5 py-2 text-sm rounded-xl transition-colors ${
+                billingCycle === 'monthly' ? 'bg-gray-800 text-gray-50 font-semibold' : 'text-gray-500 hover:text-gray-300'
               }`}
             >
               Monthly
             </button>
             <button
               onClick={() => setBillingCycle('annual')}
-              className={`px-4 py-1.5 text-sm rounded-md transition-colors ${
-                billingCycle === 'annual' ? 'bg-gray-800 text-gray-50' : 'text-gray-500 hover:text-gray-300'
+              className={`px-5 py-2 text-sm rounded-xl transition-colors ${
+                billingCycle === 'annual' ? 'bg-gray-800 text-gray-50 font-semibold' : 'text-gray-500 hover:text-gray-300'
               }`}
             >
               Annual <span className="text-green-400 text-xs ml-1">Save 18%</span>
@@ -335,20 +335,20 @@ export default function LandingPage() {
 
         <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
           {/* Free tier */}
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+          <div className="bg-gray-900 rounded-2xl p-6">
             <h3 className="text-gray-50 font-semibold text-lg">Free</h3>
             <div className="mt-3 mb-5">
-              <span className="text-3xl font-bold text-gray-50">$0</span>
+              <span className="text-3xl font-bold text-gray-50 tracking-tight">$0</span>
               <span className="text-gray-500 text-sm ml-1">forever</span>
             </div>
             <p className="text-sm text-gray-400 mb-6">Try the core tools — no credit card, no time limit.</p>
             <Link
               href="/auth/signup"
-              className="block w-full text-center px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium rounded-lg transition-colors text-sm"
+              className="block w-full text-center px-4 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold rounded-2xl transition-colors text-sm active:scale-[0.98]"
             >
               Get Started Free
             </Link>
-            <ul className="mt-6 space-y-2.5 text-sm">
+            <ul className="mt-6 space-y-3 text-sm">
               <li className="flex gap-2.5 text-gray-400">
                 <svg className="w-4 h-4 text-gray-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                 Plays-like yardage calculator
@@ -372,16 +372,16 @@ export default function LandingPage() {
             </ul>
           </div>
 
-          {/* Pro tier — highlighted */}
-          <div className="bg-gray-900 border-2 border-green-600 rounded-lg p-6 relative">
+          {/* Pro tier */}
+          <div className="bg-gray-900 rounded-2xl p-6 relative ring-2 ring-green-500">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-              <span className="bg-green-600 text-gray-50 text-xs font-semibold px-3 py-1 rounded-full">
+              <span className="bg-green-500 text-white text-xs font-semibold px-4 py-1 rounded-full">
                 Most Popular
               </span>
             </div>
             <h3 className="text-gray-50 font-semibold text-lg">Pro</h3>
             <div className="mt-3 mb-5">
-              <span className="text-3xl font-bold text-gray-50">
+              <span className="text-3xl font-bold text-gray-50 tracking-tight">
                 {billingCycle === 'annual' ? '$49' : '$5'}
               </span>
               <span className="text-gray-500 text-sm ml-1">
@@ -394,11 +394,11 @@ export default function LandingPage() {
             <p className="text-sm text-gray-400 mb-6">Full access to everything Golf OS offers.</p>
             <Link
               href="/auth/signup"
-              className="block w-full text-center px-4 py-2.5 bg-green-600 hover:bg-green-500 text-gray-50 font-semibold rounded-lg transition-colors text-sm"
+              className="block w-full text-center px-4 py-3 bg-green-500 hover:bg-green-400 text-white font-semibold rounded-2xl transition-all text-sm active:scale-[0.98]"
             >
               Start Pro — 7-Day Free Trial
             </Link>
-            <ul className="mt-6 space-y-2.5 text-sm">
+            <ul className="mt-6 space-y-3 text-sm">
               <li className="flex gap-2.5 text-gray-300">
                 <svg className="w-4 h-4 text-green-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                 Everything in Free
@@ -436,19 +436,19 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Objection handling / FAQ */}
-      <section id="faq" className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-50 text-center mb-10">
+      {/* FAQ */}
+      <section id="faq" className="max-w-5xl mx-auto px-4 sm:px-6 py-20 sm:py-24">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-50 tracking-tight text-center mb-12">
           Common questions
         </h2>
-        <div className="max-w-2xl mx-auto space-y-2">
+        <div className="max-w-2xl mx-auto bg-gray-900 rounded-2xl overflow-hidden divide-y divide-gray-800/50">
           {FAQ.map((item, i) => (
-            <div key={i} className="border border-gray-800 rounded-lg overflow-hidden">
+            <div key={i}>
               <button
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-900/50 transition-colors"
+                className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-gray-800/30 transition-colors"
               >
-                <span className="text-sm font-medium text-gray-200">{item.q}</span>
+                <span className="text-[15px] font-medium text-gray-200">{item.q}</span>
                 <svg
                   className={`w-4 h-4 text-gray-500 shrink-0 ml-4 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}
                   fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -457,7 +457,7 @@ export default function LandingPage() {
                 </svg>
               </button>
               {openFaq === i && (
-                <div className="px-5 pb-4 text-sm text-gray-400 leading-relaxed">
+                <div className="px-6 pb-4 text-sm text-gray-400 leading-relaxed">
                   {item.a}
                 </div>
               )}
@@ -467,37 +467,37 @@ export default function LandingPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="border-t border-gray-800 bg-gray-900/50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-50 mb-4">
+      <section className="bg-gray-900/50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20 sm:py-24 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-50 tracking-tight mb-5">
             Stop guessing. Start knowing.
           </h2>
-          <p className="text-gray-400 mb-8 max-w-xl mx-auto">
+          <p className="text-gray-400 mb-10 max-w-xl mx-auto text-[15px]">
             Import your first CSV and see what your data has been trying to tell you.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/auth/signup"
-              className="w-full sm:w-auto px-8 py-3 bg-green-600 hover:bg-green-500 text-gray-50 font-semibold rounded-lg text-lg transition-colors"
+              className="w-full sm:w-auto px-8 py-3.5 bg-green-500 hover:bg-green-400 text-white font-semibold rounded-2xl text-lg active:scale-[0.98] transition-all"
             >
               Try Pro Free for 7 Days
             </Link>
             <Link
               href="/auth/signup"
-              className="w-full sm:w-auto px-8 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium rounded-lg text-lg transition-colors text-center"
+              className="w-full sm:w-auto px-8 py-3.5 bg-gray-900 hover:bg-gray-800 text-gray-300 font-semibold rounded-2xl text-lg transition-colors text-center"
             >
               Start with Free
             </Link>
           </div>
-          <p className="mt-3 text-xs text-gray-600">No credit card for Free. Cancel anytime on Pro.</p>
+          <p className="mt-4 text-xs text-gray-500">No credit card for Free. Cancel anytime on Pro.</p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-800">
+      <footer className="border-t border-gray-800/50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-green-400 font-bold">Golf OS</span>
+            <span className="text-green-400 font-bold tracking-tight">Golf OS</span>
             <span className="text-gray-600 text-sm">by Sobojinski Solutions</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-gray-500">

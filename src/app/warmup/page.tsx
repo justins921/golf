@@ -98,7 +98,7 @@ function WarmupGenerator() {
                     className={`px-4 py-3 rounded-2xl text-center transition-colors ${
                       duration === d
                         ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
-                        : 'bg-gray-800 text-gray-400 rounded-2xl hover:bg-gray-700'
+                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                     }`}
                   >
                     <div className="text-lg font-bold">{d}</div>
@@ -123,7 +123,7 @@ function WarmupGenerator() {
                     className={`px-4 py-3 rounded-2xl text-left transition-colors ${
                       facility === f.value
                         ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
-                        : 'bg-gray-800 text-gray-400 rounded-2xl hover:bg-gray-700'
+                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                     }`}
                   >
                     <div className="text-sm font-medium">{f.label}</div>
@@ -159,7 +159,7 @@ function WarmupGenerator() {
             )}
 
             {!sgReport && rounds.length === 0 && (
-              <div className="bg-gray-900 rounded-2xl p-5 text-[15px] text-gray-400">
+              <div className="bg-gray-900 rounded-2xl p-5 text-sm text-gray-500">
                 No round data yet. Add rounds with scorecards for personalized warmup recommendations.
               </div>
             )}
@@ -312,7 +312,7 @@ function PhaseCard({
                 onClick={() => onToggle(id)}
                 className={`mt-0.5 w-6 h-6 rounded-lg flex-shrink-0 border flex items-center justify-center transition-colors ${
                   done
-                    ? 'bg-green-500 border-green-500 text-gray-50'
+                    ? 'bg-green-500 border-green-500 text-white'
                     : 'border-gray-600 hover:border-gray-500'
                 }`}
               >

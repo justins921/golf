@@ -11,7 +11,7 @@ const YardageCardPDFButtonInner = lazy(() => import('./YardageCardPDF'));
 
 function YardageCardPDFButtonLazy(props: { shots: Shot[]; config: YardageCardConfig; sessionEnv?: EnvironmentConditions | null; destEnv?: EnvironmentConditions | null }) {
   return (
-    <Suspense fallback={<button className="px-3 py-1 text-xs bg-gray-800 rounded text-gray-500" disabled>Export PDF</button>}>
+    <Suspense fallback={<button className="px-3 py-1 text-xs bg-gray-800 rounded-xl text-gray-500" disabled>Export PDF</button>}>
       <YardageCardPDFButtonInner {...props} />
     </Suspense>
   );
@@ -163,7 +163,7 @@ export default function YardageCardPreview({ shots, config, sessionEnv, destEnv,
     }
   };
 
-  const bandLabel = config.percentileBand === 'P10-P90' ? 'P10–P90' : 'P20–P80';
+  const bandLabel = config.percentileBand === 'P10-P90' ? 'P10\u2013P90' : 'P20\u2013P80';
   const modeLabel = config.distanceMode === 'normalized'
     ? 'Normalized (Std Conditions)'
     : config.distanceMode === 'simulated'
@@ -174,7 +174,7 @@ export default function YardageCardPreview({ shots, config, sessionEnv, destEnv,
     <div>
       <div
         ref={cardRef}
-        className="bg-gray-900 border border-gray-700 rounded-lg p-3 max-w-sm mx-auto"
+        className="bg-gray-900 rounded-2xl p-3 max-w-sm mx-auto"
       >
         <div className="text-center mb-2">
           <h2 className="text-green-400 font-bold text-sm">Yardage Card</h2>
@@ -183,67 +183,69 @@ export default function YardageCardPreview({ shots, config, sessionEnv, destEnv,
           </p>
           {config.distanceMode === 'simulated' && destEnv && (
             <p className="text-[8px] text-yellow-500 leading-tight">
-              {destEnv.elevationFt}ft / {destEnv.temperatureF}°F / {destEnv.relativeHumidityPct}%RH
+              {destEnv.elevationFt}ft / {destEnv.temperatureF}&deg;F / {destEnv.relativeHumidityPct}%RH
             </p>
           )}
         </div>
 
-        <table className="w-full text-[10px]">
-          <thead>
-            <tr className="border-b border-gray-700 text-gray-500 uppercase text-[7px]">
-              <th className="py-0.5 px-0.5 text-left">Club</th>
-              <th className="py-0.5 px-0.5 text-center">Carry</th>
-              <th className="py-0.5 px-0.5 text-center">Total</th>
-              {config.showGaps && <th className="py-0.5 px-0.5 text-center">Gap</th>}
-              {config.showDispersionArc && <th className="py-0.5 px-0.5 text-center">Disp</th>}
-              {config.showTendency && <th className="py-0.5 px-0.5 text-center">Tend</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {clubs.map((club) => (
-              <tr key={club.clubName} className="border-b border-gray-800/50">
-                <td className="py-0.5 px-0.5 text-gray-200 font-medium whitespace-nowrap">{club.clubName}</td>
-                <td className="py-0.5 px-0.5 text-center text-gray-300">
-                  {club.carryRange[0]}–{club.carryRange[1]}
-                </td>
-                <td className="py-0.5 px-0.5 text-center text-gray-400">
-                  {club.totalRange[0]}–{club.totalRange[1]}
-                </td>
-                {config.showGaps && (
-                  <td className="py-0.5 px-0.5 text-center text-gray-500">
-                    {club.gapToNext != null ? club.gapToNext : '—'}
-                  </td>
-                )}
-                {config.showDispersionArc && (
-                  <td className="py-0.5 px-0.5 text-center whitespace-nowrap">
-                    {club.isDriver ? (
-                      <>
-                        <span className={club.dispersionBias === 'R' ? 'text-yellow-400' : club.dispersionBias === 'L' ? 'text-blue-400' : 'text-gray-400'}>
-                          {club.dispersionArc}
-                        </span>
-                        <span className="text-[7px] text-gray-500 ml-0.5">
-                          {club.dispersionLeft}L·{club.dispersionRight}R
-                        </span>
-                      </>
-                    ) : (
-                      <span className="text-gray-400">
-                        {club.dispersionRadius}<span className="text-[7px] text-gray-500">yd</span>
-                      </span>
-                    )}
-                  </td>
-                )}
-                {config.showTendency && (
-                  <td className="py-0.5 px-0.5 text-center">
-                    <span className={club.tendency > 0.5 ? 'text-yellow-400' : club.tendency < -0.5 ? 'text-blue-400' : 'text-gray-500'}>
-                      {club.tendencyLabel}
-                    </span>
-                  </td>
-                )}
-                {/* confidence and n kept in data but hidden from card */}
+        <div className="bg-gray-900 rounded-2xl overflow-hidden">
+          <table className="w-full text-[10px]">
+            <thead>
+              <tr className="text-[13px] text-gray-500 uppercase text-[7px]">
+                <th className="py-0.5 px-0.5 text-left">Club</th>
+                <th className="py-0.5 px-0.5 text-center">Carry</th>
+                <th className="py-0.5 px-0.5 text-center">Total</th>
+                {config.showGaps && <th className="py-0.5 px-0.5 text-center">Gap</th>}
+                {config.showDispersionArc && <th className="py-0.5 px-0.5 text-center">Disp</th>}
+                {config.showTendency && <th className="py-0.5 px-0.5 text-center">Tend</th>}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-800/60">
+              {clubs.map((club) => (
+                <tr key={club.clubName}>
+                  <td className="py-0.5 px-0.5 text-gray-200 font-medium whitespace-nowrap">{club.clubName}</td>
+                  <td className="py-0.5 px-0.5 text-center text-gray-300">
+                    {club.carryRange[0]}\u2013{club.carryRange[1]}
+                  </td>
+                  <td className="py-0.5 px-0.5 text-center text-gray-400">
+                    {club.totalRange[0]}\u2013{club.totalRange[1]}
+                  </td>
+                  {config.showGaps && (
+                    <td className="py-0.5 px-0.5 text-center text-gray-500">
+                      {club.gapToNext != null ? club.gapToNext : '\u2014'}
+                    </td>
+                  )}
+                  {config.showDispersionArc && (
+                    <td className="py-0.5 px-0.5 text-center whitespace-nowrap">
+                      {club.isDriver ? (
+                        <>
+                          <span className={club.dispersionBias === 'R' ? 'text-yellow-400' : club.dispersionBias === 'L' ? 'text-blue-400' : 'text-gray-400'}>
+                            {club.dispersionArc}
+                          </span>
+                          <span className="text-[7px] text-gray-500 ml-0.5">
+                            {club.dispersionLeft}L\u00b7{club.dispersionRight}R
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-gray-400">
+                          {club.dispersionRadius}<span className="text-[7px] text-gray-500">yd</span>
+                        </span>
+                      )}
+                    </td>
+                  )}
+                  {config.showTendency && (
+                    <td className="py-0.5 px-0.5 text-center">
+                      <span className={club.tendency > 0.5 ? 'text-yellow-400' : club.tendency < -0.5 ? 'text-blue-400' : 'text-gray-500'}>
+                        {club.tendencyLabel}
+                      </span>
+                    </td>
+                  )}
+                  {/* confidence and n kept in data but hidden from card */}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         {clubs.length === 0 && (
           <div className="text-center text-gray-600 py-3 text-xs">
@@ -253,37 +255,39 @@ export default function YardageCardPreview({ shots, config, sessionEnv, destEnv,
 
         {/* Wedge matrix section */}
         {wedgeMatrix && wedgeMatrix.swing_labels.length > 0 && wedgeMatrix.wedge_clubs.length > 0 && Object.keys(wedgeMatrix.distances).length > 0 && (
-          <div className="mt-4 pt-3 border-t border-gray-700">
+          <div className="mt-4 pt-3 border-t border-gray-800">
             <h3 className="text-xs font-medium text-green-400 text-center mb-2">
               Wedge Matrix
               <span className="text-gray-500 font-normal ml-1">({SWING_SYSTEM_LABELS[wedgeMatrix.swing_system]})</span>
             </h3>
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="border-b border-gray-700 text-gray-500 uppercase">
-                  <th className="p-1 text-left">Swing</th>
-                  {wedgeMatrix.wedge_clubs.map((club) => (
-                    <th key={club} className="p-1 text-center">{club}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {wedgeMatrix.swing_labels.map((label) => (
-                  <tr key={label} className="border-b border-gray-800/50">
-                    <td className="p-1 text-gray-400 font-medium">{label}</td>
-                    {wedgeMatrix.wedge_clubs.map((club) => {
-                      const key = `${club}|${label}`;
-                      const dist = wedgeMatrix.distances[key];
-                      return (
-                        <td key={club} className="p-1 text-center text-gray-300">
-                          {dist != null ? dist : <span className="text-gray-600">—</span>}
-                        </td>
-                      );
-                    })}
+            <div className="bg-gray-900 rounded-2xl overflow-hidden">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="text-[13px] text-gray-500 uppercase">
+                    <th className="p-1 text-left">Swing</th>
+                    {wedgeMatrix.wedge_clubs.map((club) => (
+                      <th key={club} className="p-1 text-center">{club}</th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-800/60">
+                  {wedgeMatrix.swing_labels.map((label) => (
+                    <tr key={label}>
+                      <td className="p-1 text-gray-400 font-medium">{label}</td>
+                      {wedgeMatrix.wedge_clubs.map((club) => {
+                        const key = `${club}|${label}`;
+                        const dist = wedgeMatrix.distances[key];
+                        return (
+                          <td key={club} className="p-1 text-center text-gray-300">
+                            {dist != null ? dist : <span className="text-gray-600">\u2014</span>}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
@@ -296,7 +300,7 @@ export default function YardageCardPreview({ shots, config, sessionEnv, destEnv,
       <div className="flex gap-2 mt-2 justify-center">
         <button
           onClick={handleExportPng}
-          className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
+          className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded-xl text-gray-300"
         >
           Export PNG
         </button>

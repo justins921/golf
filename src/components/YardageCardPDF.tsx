@@ -147,7 +147,7 @@ export default function YardageCardPDFButton({ shots, config, sessionEnv, destEn
   return (
     <button
       onClick={handleExport}
-      className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
+      className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded-xl text-gray-300"
     >
       Export PDF
     </button>
