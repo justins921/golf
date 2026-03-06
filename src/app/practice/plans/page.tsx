@@ -129,7 +129,7 @@ function DayCard({ day, dayIndex }: { day: PracticePlanDay; dayIndex: number }) 
         className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-800 transition-colors"
       >
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-green-600/20 text-green-400 rounded-full flex items-center justify-center text-xs font-bold">
+          <div className="w-8 h-8 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center text-xs font-bold">
             {day.day.slice(0, 2)}
           </div>
           <div>
