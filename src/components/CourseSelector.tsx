@@ -195,11 +195,11 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
     setNewSlope('');
   };
 
-  const py = compact ? 'py-2' : 'py-2.5';
-  const textSize = compact ? 'text-sm' : 'text-base';
+  const py = compact ? 'py-2' : 'py-3';
+  const textSize = compact ? 'text-sm' : 'text-[15px]';
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {/* Course name input with autocomplete */}
       <div className="relative" ref={dropdownRef}>
         <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Course</label>
@@ -224,7 +224,7 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
                 <button
                   key={c.id}
                   onClick={() => handleSelectCourse(c)}
-                  className="w-full text-left px-4 py-3 hover:bg-gray-800 rounded-xl transition-colors"
+                  className="w-full text-left px-4 py-2.5 hover:bg-gray-800 transition-colors"
                 >
                   <div className="text-sm text-gray-50">{c.name}</div>
                   {c.city && (
@@ -242,11 +242,11 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
                 </button>
               ))
             ) : (
-              <div className="px-4 py-3 text-sm text-gray-500">No saved courses match</div>
+              <div className="px-4 py-2.5 text-[15px] text-gray-500">No saved courses match</div>
             )}
             <button
               onClick={handleManualEntry}
-              className="w-full text-left px-4 py-3 hover:bg-gray-800 rounded-xl border-t border-gray-800 text-sm text-blue-400"
+              className="w-full text-left px-4 py-2.5 hover:bg-gray-800 border-t border-gray-800/60 text-[15px] text-green-400"
             >
               Use &quot;{query}&quot; without lookup
             </button>
@@ -304,14 +304,14 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
       {!selectedCourse && query.length > 2 && !showSaveCourse && (
         <button
           onClick={() => setShowSaveCourse(true)}
-          className="text-xs text-blue-400 hover:text-blue-300"
+          className="text-[13px] text-green-400 hover:text-green-300"
         >
           Save &quot;{query}&quot; to your courses with rating/slope
         </button>
       )}
 
       {showSaveCourse && (
-        <div className="bg-gray-900 rounded-2xl p-3 space-y-2">
+        <div className="bg-gray-900 rounded-2xl p-4 space-y-3">
           <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">
             {selectedCourse ? `Add tee to ${selectedCourse.name}` : `Save "${query}" to your courses`}
           </div>
@@ -358,13 +358,13 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
             <button
               onClick={selectedCourse ? handleAddTee : handleSaveCourse}
               disabled={!newTeeName || !newRating || !newSlope || saving}
-              className="px-3 py-1 text-xs bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-xl"
+              className="bg-green-500 hover:bg-green-400 rounded-2xl active:scale-[0.98] px-4 py-2 text-[13px] font-semibold disabled:opacity-50 text-gray-50"
             >
               {saving ? 'Saving...' : selectedCourse ? 'Add Tee' : 'Save Course'}
             </button>
             <button
               onClick={() => setShowSaveCourse(false)}
-              className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl"
+              className="bg-gray-800 text-gray-400 rounded-2xl px-4 py-2 text-[13px]"
             >
               Cancel
             </button>

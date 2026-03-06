@@ -69,12 +69,12 @@ function CourseStrategyManager() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-50">Course Strategy</h1>
+          <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Course Strategy</h1>
           <p className="text-sm text-gray-500">Plan every hole before you play</p>
         </div>
         <button
           onClick={() => setShowNew(!showNew)}
-          className="px-4 py-2 bg-green-600 hover:bg-green-500 text-gray-50 text-sm font-medium rounded-lg transition-colors"
+          className="px-4 py-2 bg-green-500 hover:bg-green-400 text-gray-50 text-sm font-medium rounded-2xl active:scale-[0.98] transition-colors"
         >
           {showNew ? 'Cancel' : '+ New Strategy'}
         </button>
@@ -82,16 +82,16 @@ function CourseStrategyManager() {
 
       {/* New strategy form */}
       {showNew && (
-        <div className="bg-gray-900 border border-gray-700 rounded-lg p-5 mb-6 space-y-3">
+        <div className="bg-gray-900 rounded-2xl p-5 mb-6 space-y-3">
           <h2 className="text-lg font-semibold text-gray-50">Create Course Strategy</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="col-span-2">
-              <label className="block text-xs text-gray-400 mb-1">Course</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Course</label>
               {courses.length > 0 ? (
                 <select
                   value={newCourseId}
                   onChange={(e) => handleCourseSelect(e.target.value)}
-                  className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                  className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                 >
                   <option value="">Select or type below</option>
                   {courses.map((c) => (
@@ -104,47 +104,47 @@ function CourseStrategyManager() {
                   value={newCourseName}
                   onChange={(e) => setNewCourseName(e.target.value)}
                   placeholder="Course name"
-                  className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                  className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                 />
               )}
             </div>
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Tees</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Tees</label>
               <input
                 type="text"
                 value={newTeeSet}
                 onChange={(e) => setNewTeeSet(e.target.value)}
                 placeholder="Blue, White..."
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Target Score</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Target Score</label>
               <input
                 type="number"
                 value={newScoringTarget}
                 onChange={(e) => setNewScoringTarget(e.target.value)}
                 placeholder="e.g. 85"
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
           </div>
           {courses.length > 0 && !newCourseId && (
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Or enter name</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Or enter name</label>
               <input
                 type="text"
                 value={newCourseName}
                 onChange={(e) => setNewCourseName(e.target.value)}
                 placeholder="Course name"
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
           )}
           <button
             onClick={createNewStrategy}
             disabled={!newCourseName.trim()}
-            className="w-full py-2 bg-green-600 hover:bg-green-500 disabled:bg-gray-700 disabled:text-gray-500 text-gray-50 text-sm font-medium rounded-lg transition-colors"
+            className="w-full py-3 bg-green-500 hover:bg-green-400 disabled:bg-gray-700 disabled:text-gray-500 text-gray-50 text-sm font-medium rounded-2xl active:scale-[0.98] transition-colors"
           >
             Create Strategy
           </button>
@@ -165,7 +165,7 @@ function CourseStrategyManager() {
             <button
               key={s.id}
               onClick={() => setSelectedId(s.id)}
-              className="text-left bg-gray-900 border border-gray-800 rounded-lg p-4 hover:border-gray-700 transition-colors"
+              className="text-left bg-gray-900 rounded-2xl p-4 hover:bg-gray-800/60 transition-colors"
             >
               <div className="text-sm font-medium text-gray-50">{s.course_name}</div>
               {s.tee_set && <span className="text-xs text-gray-500">{s.tee_set} tees</span>}
@@ -247,7 +247,7 @@ function StrategyDetail({
             {dirty && (
               <button
                 onClick={save}
-                className="px-4 py-2 bg-green-600 hover:bg-green-500 text-gray-50 text-sm font-medium rounded-lg transition-colors"
+                className="px-4 py-2 bg-green-500 hover:bg-green-400 text-gray-50 text-sm font-medium rounded-2xl active:scale-[0.98] transition-colors"
               >
                 Save
               </button>
@@ -260,23 +260,23 @@ function StrategyDetail({
       {/* General notes */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
         <div>
-          <label className="block text-xs text-gray-400 mb-1">General Strategy Notes</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">General Strategy Notes</label>
           <textarea
             value={generalNotes}
             onChange={(e) => { setGeneralNotes(e.target.value); setDirty(true); }}
             rows={2}
             placeholder="Overall game plan, key things to remember..."
-            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
         </div>
         <div>
-          <label className="block text-xs text-gray-400 mb-1">Weather Adjustments</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Weather Adjustments</label>
           <textarea
             value={weatherAdj}
             onChange={(e) => { setWeatherAdj(e.target.value); setDirty(true); }}
             rows={2}
             placeholder="Wind notes, firmness, elevation effects..."
-            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
         </div>
       </div>
@@ -284,7 +284,7 @@ function StrategyDetail({
       {/* Hole-by-hole */}
       <div className="space-y-2">
         {/* Front nine */}
-        <h3 className="text-xs uppercase tracking-wider text-gray-600 font-semibold">Front Nine</h3>
+        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Front Nine</h3>
         {holes.filter((h) => h.hole <= 9).map((h) => (
           <HoleRow
             key={h.hole}
@@ -295,7 +295,7 @@ function StrategyDetail({
           />
         ))}
 
-        <h3 className="text-xs uppercase tracking-wider text-gray-600 font-semibold pt-3">Back Nine</h3>
+        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1 pt-3">Back Nine</h3>
         {holes.filter((h) => h.hole > 9).map((h) => (
           <HoleRow
             key={h.hole}
@@ -324,7 +324,7 @@ function HoleRow({
   const parColor = hole.par === 3 ? 'text-red-400' : hole.par === 5 ? 'text-blue-400' : 'text-gray-50';
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
+    <div className="bg-gray-900 rounded-2xl overflow-hidden">
       {/* Summary row */}
       <button
         onClick={onToggleEdit}
@@ -336,7 +336,7 @@ function HoleRow({
           {hole.yardage && <span className="text-xs text-gray-500 shrink-0">{hole.yardage} yd</span>}
           <span className="text-xs text-gray-400 shrink-0">{hole.club_off_tee || '—'}</span>
           {hole.miss_zone && hole.miss_zone !== 'Center' && (
-            <span className="text-xs px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shrink-0 hidden sm:inline">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400 shrink-0 hidden sm:inline">
               Miss {hole.miss_zone}
             </span>
           )}
@@ -351,77 +351,77 @@ function HoleRow({
 
       {/* Edit form */}
       {editing && (
-        <div className="px-4 pb-4 pt-1 border-t border-gray-800 space-y-3">
+        <div className="px-4 pb-4 pt-1 border-t border-gray-800/60 space-y-3">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Par</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Par</label>
               <select
                 value={hole.par}
                 onChange={(e) => onChange({ par: parseInt(e.target.value) })}
-                className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               >
                 {[3, 4, 5].map((p) => <option key={p} value={p}>{p}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Yardage</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Yardage</label>
               <input
                 type="number"
                 value={hole.yardage ?? ''}
                 onChange={(e) => onChange({ yardage: e.target.value ? parseInt(e.target.value) : null })}
-                className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Club Off Tee</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Club Off Tee</label>
               <select
                 value={hole.club_off_tee}
                 onChange={(e) => onChange({ club_off_tee: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               >
                 <option value="">—</option>
                 {CLUB_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Preferred Miss</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Preferred Miss</label>
               <select
                 value={hole.miss_zone}
                 onChange={(e) => onChange({ miss_zone: e.target.value })}
-                className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               >
                 {MISS_ZONES.map((z) => <option key={z} value={z}>{z}</option>)}
               </select>
             </div>
           </div>
           <div>
-            <label className="block text-xs text-gray-400 mb-1">Strategy</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Strategy</label>
             <input
               type="text"
               value={hole.strategy}
               onChange={(e) => onChange({ strategy: e.target.value })}
               placeholder="e.g. Aim left center, avoid bunker right. Layup to 100yd wedge."
-              className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-50"
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-400 mb-1">Target</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Target</label>
             <input
               type="text"
               value={hole.target}
               onChange={(e) => onChange({ target: e.target.value })}
               placeholder="e.g. Left edge of fairway, front-left of green"
-              className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-50"
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-400 mb-1">Notes</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Notes</label>
             <input
               type="text"
               value={hole.notes}
               onChange={(e) => onChange({ notes: e.target.value })}
               placeholder="Wind considerations, pin positions, danger zones..."
-              className="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1.5 text-sm text-gray-50"
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
           </div>
         </div>

@@ -16,7 +16,7 @@ export default function GappingPage() {
     <AuthGuard>
       <Nav />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <h1 className="text-2xl font-bold text-gray-50 mb-1">Club Gapping</h1>
+        <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-1">Club Gapping</h1>
         <p className="text-sm text-gray-500 mb-4">
           Visualize carry distance gaps between clubs and identify problems in your bag.
         </p>
@@ -25,16 +25,16 @@ export default function GappingPage() {
         <div className="flex gap-1 mb-6">
           <button
             onClick={() => setTab('actual')}
-            className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-              tab === 'actual' ? 'bg-gray-700 text-gray-50' : 'text-gray-400 hover:text-gray-50 hover:bg-gray-800'
+            className={`px-4 py-2 text-sm rounded-full transition-colors ${
+              tab === 'actual' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
             }`}
           >
             Actual Gapping
           </button>
           <button
             onClick={() => setTab('simulator')}
-            className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-              tab === 'simulator' ? 'bg-gray-700 text-gray-50' : 'text-gray-400 hover:text-gray-50 hover:bg-gray-800'
+            className={`px-4 py-2 text-sm rounded-full transition-colors ${
+              tab === 'simulator' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
             }`}
           >
             Bag Simulator
@@ -94,9 +94,9 @@ function GappingAnalysis() {
 
   if (shots.length === 0) {
     return (
-      <div className="text-center text-gray-600 py-12">
-        <div className="text-sm mb-2">No shot data yet</div>
-        <div className="text-xs text-gray-700">Import Garmin R50 CSV files in Shot Data to see gapping analysis.</div>
+      <div className="text-center py-16 text-[15px] text-gray-400">
+        <div className="mb-2">No shot data yet</div>
+        <div className="text-xs text-gray-500">Import Garmin R50 CSV files in Shot Data to see gapping analysis.</div>
       </div>
     );
   }
@@ -119,7 +119,7 @@ function GappingAnalysis() {
           <select
             value={minShots}
             onChange={(e) => setMinShots(parseInt(e.target.value))}
-            className="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-sm text-gray-300"
+            className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           >
             <option value={1}>1</option>
             <option value={3}>3</option>
@@ -134,7 +134,7 @@ function GappingAnalysis() {
 
       {/* Problem alerts */}
       {problems.length > 0 && (
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+        <div className="bg-gray-900 rounded-2xl p-4">
           <h2 className="text-sm font-medium text-gray-50 mb-2">
             {problems.length} Gap {problems.length === 1 ? 'Issue' : 'Issues'} Found
           </h2>
@@ -159,60 +159,62 @@ function GappingAnalysis() {
       )}
 
       {/* Visual gap ladder */}
-      <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+      <div className="bg-gray-900 rounded-2xl p-4">
         <h2 className="text-sm font-medium text-gray-50 mb-4">Distance Ladder</h2>
         <GapLadder clubs={clubGaps} />
       </div>
 
       {/* Detail table */}
-      <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+      <div className="bg-gray-900 rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-sm font-medium text-gray-50">Club Details</h2>
           <ShareGappingButton clubs={clubGaps} />
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-800 text-gray-500 text-xs uppercase">
-                <th className="p-2 text-left">Club</th>
-                <th className="p-2 text-center">Shots</th>
-                <th className="p-2 text-center">Carry (P20)</th>
-                <th className="p-2 text-center">Carry (Med)</th>
-                <th className="p-2 text-center">Carry (P80)</th>
-                <th className="p-2 text-center">Range</th>
-                <th className="p-2 text-center">Gap</th>
-                <th className="p-2 text-center">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {clubGaps.map((club) => (
-                <tr key={club.clubName} className="border-b border-gray-800/50">
-                  <td className="p-2 text-gray-50 font-medium">{club.clubName}</td>
-                  <td className="p-2 text-center text-gray-400">{club.n}</td>
-                  <td className="p-2 text-center text-gray-500">{club.p20Carry}</td>
-                  <td className="p-2 text-center text-gray-50 font-mono">{club.medianCarry}</td>
-                  <td className="p-2 text-center text-gray-500">{club.p80Carry}</td>
-                  <td className="p-2 text-center text-gray-400">{club.p80Carry - club.p20Carry} yd</td>
-                  <td className={`p-2 text-center font-mono ${
-                    club.gapStatus === 'large' ? 'text-red-400' :
-                    club.gapStatus === 'overlap' ? 'text-yellow-400' :
-                    club.gapStatus === 'good' ? 'text-green-400' :
-                    'text-gray-600'
-                  }`}>
-                    {club.gapToNext != null ? `${club.gapToNext} yd` : '—'}
-                  </td>
-                  <td className="p-2 text-center">
-                    <GapBadge status={club.gapStatus} />
-                  </td>
+        <div className="bg-gray-900 rounded-2xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-[13px] text-gray-500 uppercase tracking-wider">
+                  <th className="p-2 text-left">Club</th>
+                  <th className="p-2 text-center">Shots</th>
+                  <th className="p-2 text-center">Carry (P20)</th>
+                  <th className="p-2 text-center">Carry (Med)</th>
+                  <th className="p-2 text-center">Carry (P80)</th>
+                  <th className="p-2 text-center">Range</th>
+                  <th className="p-2 text-center">Gap</th>
+                  <th className="p-2 text-center">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-800/60">
+                {clubGaps.map((club) => (
+                  <tr key={club.clubName}>
+                    <td className="p-2 text-gray-50 font-medium">{club.clubName}</td>
+                    <td className="p-2 text-center text-gray-400">{club.n}</td>
+                    <td className="p-2 text-center text-gray-500">{club.p20Carry}</td>
+                    <td className="p-2 text-center text-gray-50 font-mono">{club.medianCarry}</td>
+                    <td className="p-2 text-center text-gray-500">{club.p80Carry}</td>
+                    <td className="p-2 text-center text-gray-400">{club.p80Carry - club.p20Carry} yd</td>
+                    <td className={`p-2 text-center font-mono ${
+                      club.gapStatus === 'large' ? 'text-red-400' :
+                      club.gapStatus === 'overlap' ? 'text-yellow-400' :
+                      club.gapStatus === 'good' ? 'text-green-400' :
+                      'text-gray-600'
+                    }`}>
+                      {club.gapToNext != null ? `${club.gapToNext} yd` : '—'}
+                    </td>
+                    <td className="p-2 text-center">
+                      <GapBadge status={club.gapStatus} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       {/* Ideal gaps info */}
-      <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 text-xs text-gray-500">
+      <div className="bg-gray-900 rounded-2xl p-4 text-xs text-gray-500">
         <h3 className="text-sm font-medium text-gray-400 mb-2">How to read this</h3>
         <ul className="space-y-1">
           <li><span className="text-green-400 font-bold">Good (10-20 yd)</span> — Ideal gap between clubs. You have consistent coverage.</li>
@@ -229,7 +231,7 @@ function GappingAnalysis() {
 // ============================================================
 
 function GapLadder({ clubs }: { clubs: ClubGap[] }) {
-  if (clubs.length === 0) return <div className="text-gray-600 text-sm">No clubs to display</div>;
+  if (clubs.length === 0) return <div className="text-center py-16 text-[15px] text-gray-400">No clubs to display</div>;
 
   const maxDist = Math.max(...clubs.map((c) => c.p80Carry));
   const minDist = Math.min(...clubs.map((c) => c.p20Carry));
@@ -248,7 +250,7 @@ function GapLadder({ clubs }: { clubs: ClubGap[] }) {
             <div className="flex-1 relative h-6">
               {/* P20-P80 range bar */}
               <div
-                className={`absolute h-4 top-1 rounded ${
+                className={`absolute h-4 top-1 rounded-xl ${
                   club.gapStatus === 'large' ? 'bg-red-500/30' :
                   club.gapStatus === 'overlap' ? 'bg-yellow-500/30' :
                   'bg-green-500/20'
@@ -298,10 +300,10 @@ function GapLadder({ clubs }: { clubs: ClubGap[] }) {
 
 function GapBadge({ status }: { status: ClubGap['gapStatus'] }) {
   const styles: Record<string, string> = {
-    good: 'bg-green-500/10 text-green-400 border-green-500/20',
-    large: 'bg-red-500/10 text-red-400 border-red-500/20',
-    overlap: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-    none: 'bg-gray-800 text-gray-600 border-gray-700',
+    good: 'bg-green-500/10 text-green-400',
+    large: 'bg-red-500/10 text-red-400',
+    overlap: 'bg-yellow-500/10 text-yellow-400',
+    none: 'bg-gray-800 text-gray-600',
   };
 
   const labels: Record<string, string> = {
@@ -312,7 +314,7 @@ function GapBadge({ status }: { status: ClubGap['gapStatus'] }) {
   };
 
   return (
-    <span className={`text-[10px] px-1.5 py-0.5 rounded border ${styles[status]}`}>
+    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${styles[status]}`}>
       {labels[status]}
     </span>
   );
@@ -341,7 +343,7 @@ function ShareGappingButton({ clubs }: { clubs: ClubGap[] }) {
   return (
     <button
       onClick={handleCopy}
-      className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-400 rounded transition-colors"
+      className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-400 rounded-full transition-colors"
     >
       {copied ? 'Copied!' : 'Copy to Clipboard'}
     </button>
@@ -456,20 +458,20 @@ function BagSimulator() {
   return (
     <div className="space-y-6">
       {/* Controls */}
-      <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+      <div className="bg-gray-900 rounded-2xl p-4">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
             <h2 className="text-sm font-medium text-gray-50">Bag Setup</h2>
             <p className="text-xs text-gray-500">{clubs.length} clubs · Dream up new configurations</p>
           </div>
           <div className="flex gap-2">
-            <button onClick={calcEqualGaps} className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded transition-colors">
+            <button onClick={calcEqualGaps} className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-full transition-colors">
               Equal Gaps
             </button>
-            <button onClick={resetToActual} className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded transition-colors">
+            <button onClick={resetToActual} className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-full transition-colors">
               {actualClubData.length >= 3 ? 'Reset to Actual' : 'Reset to Default'}
             </button>
-            <button onClick={addClub} className="px-3 py-1.5 text-xs bg-green-600 hover:bg-green-500 text-gray-50 rounded transition-colors">
+            <button onClick={addClub} className="px-3 py-1.5 text-xs bg-green-500 hover:bg-green-400 text-white rounded-full transition-colors">
               + Add Club
             </button>
           </div>
@@ -477,7 +479,7 @@ function BagSimulator() {
 
         {/* Club list — editable */}
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs text-gray-500 uppercase tracking-wider px-2 mb-1">
+          <div className="flex items-center gap-2 text-[13px] text-gray-500 uppercase tracking-wider px-2 mb-1">
             <span className="w-32">Club</span>
             <span className="w-20 text-center">Carry (yd)</span>
             <span className="w-16 text-center">Gap</span>
@@ -489,7 +491,7 @@ function BagSimulator() {
               club.gap >= 25 ? 'text-red-400' :
               club.gap < 5 ? 'text-yellow-400' : 'text-green-400';
             return (
-              <div key={sortedIdx} className="flex items-center gap-2 bg-gray-800/50 rounded px-2 py-1.5">
+              <div key={sortedIdx} className="flex items-center gap-2 bg-gray-800/50 rounded-xl px-2 py-1.5">
                 <input
                   type="text"
                   value={club.name}
@@ -500,7 +502,7 @@ function BagSimulator() {
                   type="number"
                   value={club.carry}
                   onChange={(e) => updateCarry(realIdx, parseInt(e.target.value) || 0)}
-                  className="w-20 bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm text-gray-50 text-center"
+                  className="w-20 bg-gray-800 border-0 rounded-xl px-2 py-1 text-sm text-gray-50 text-center focus:outline-none focus:ring-2 focus:ring-green-500/40"
                 />
                 <span className={`w-16 text-center text-xs font-mono ${gapColor}`}>
                   {club.gap != null ? `${club.gap}` : '—'}
@@ -508,13 +510,13 @@ function BagSimulator() {
                 {/* Mini bar */}
                 <div className="flex-1 h-4 relative">
                   <div
-                    className="absolute h-full bg-green-500/30 rounded"
+                    className="absolute h-full bg-green-500/30 rounded-xl"
                     style={{ width: `${((club.carry - minCarry) / range) * 100}%` }}
                   />
                 </div>
                 <button
                   onClick={() => removeClub(realIdx)}
-                  className="text-gray-600 hover:text-red-400 text-xs px-1"
+                  className="text-gray-500 hover:text-red-400 text-xs px-1"
                 >
                   x
                 </button>
@@ -525,7 +527,7 @@ function BagSimulator() {
       </div>
 
       {/* Visual gap chart */}
-      <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+      <div className="bg-gray-900 rounded-2xl p-4">
         <h2 className="text-sm font-medium text-gray-50 mb-4">Distance Ladder</h2>
         <div className="space-y-2">
           {sorted.map((club, i) => {
@@ -538,7 +540,7 @@ function BagSimulator() {
                 <span className="text-xs text-gray-400 w-24 text-right shrink-0 truncate">{club.name}</span>
                 <div className="flex-1 relative h-6">
                   <div
-                    className="absolute h-4 top-1 bg-green-500/30 rounded"
+                    className="absolute h-4 top-1 bg-green-500/30 rounded-xl"
                     style={{ width: `${Math.max(2, pct)}%` }}
                   />
                   <div
@@ -555,7 +557,7 @@ function BagSimulator() {
             );
           })}
         </div>
-        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-800">
+        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-800/60">
           <span className="w-24 shrink-0" />
           <div className="flex-1 flex justify-between text-xs text-gray-600">
             <span>{minCarry} yd</span>
@@ -569,24 +571,24 @@ function BagSimulator() {
 
       {/* Summary stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-3">
-          <div className="text-xs text-gray-500 uppercase">Clubs</div>
+        <div className="bg-gray-900 rounded-2xl p-3">
+          <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Clubs</div>
           <div className="text-xl font-bold text-gray-50">{clubs.length}</div>
         </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-3">
-          <div className="text-xs text-gray-500 uppercase">Coverage</div>
+        <div className="bg-gray-900 rounded-2xl p-3">
+          <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Coverage</div>
           <div className="text-xl font-bold text-gray-50">{minCarry}–{maxCarry}<span className="text-sm text-gray-500"> yd</span></div>
         </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-3">
-          <div className="text-xs text-gray-500 uppercase">Avg Gap</div>
+        <div className="bg-gray-900 rounded-2xl p-3">
+          <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Avg Gap</div>
           <div className="text-xl font-bold text-green-400">
             {sorted.filter(c => c.gap != null).length > 0
               ? Math.round(sorted.filter(c => c.gap != null).reduce((s, c) => s + c.gap!, 0) / sorted.filter(c => c.gap != null).length)
               : '—'}<span className="text-sm text-gray-500"> yd</span>
           </div>
         </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-3">
-          <div className="text-xs text-gray-500 uppercase">Issues</div>
+        <div className="bg-gray-900 rounded-2xl p-3">
+          <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Issues</div>
           <div className="text-xl font-bold text-red-400">
             {sorted.filter(c => c.gap != null && (c.gap >= 25 || c.gap < 5)).length}
           </div>
@@ -595,7 +597,7 @@ function BagSimulator() {
 
       {/* Comparison to actual (if shot data exists) */}
       {actualClubData.length >= 3 && mode === 'custom' && (
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+        <div className="bg-gray-900 rounded-2xl p-4">
           <h3 className="text-sm font-medium text-gray-50 mb-2">vs. Your Actual Distances</h3>
           <p className="text-xs text-gray-500 mb-3">How this setup compares to your real shot data</p>
           <div className="space-y-1">

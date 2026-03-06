@@ -175,7 +175,7 @@ function LessonsTracker() {
         </div>
         <button
           onClick={() => { resetForm(); setShowForm(!showForm); }}
-          className="px-4 py-2 bg-green-500 hover:bg-green-400 text-white text-sm font-medium rounded-xl transition-colors"
+          className="px-4 py-2 bg-green-500 hover:bg-green-400 text-gray-50 text-sm font-medium rounded-2xl active:scale-[0.98] transition-colors"
         >
           {showForm ? 'Cancel' : '+ Log Lesson'}
         </button>
@@ -187,8 +187,8 @@ function LessonsTracker() {
           <button
             key={v}
             onClick={() => setView(v)}
-            className={`px-4 py-2 text-sm rounded-full transition-colors ${
-              view === v ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
+            className={`px-3 py-1.5 text-sm transition-colors ${
+              view === v ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30 rounded-full' : 'bg-gray-800 text-gray-400 rounded-full'
             }`}
           >
             {v === 'list' ? 'Lessons' : v === 'feels' ? 'Swing Feels' : 'Stats'}
@@ -206,7 +206,7 @@ function LessonsTracker() {
           {/* Row 1: date, coach, type, duration */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div>
-              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Date</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Date</label>
               <input
                 type="date"
                 value={lessonDate}
@@ -215,7 +215,7 @@ function LessonsTracker() {
               />
             </div>
             <div>
-              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Coach</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Coach</label>
               <input
                 type="text"
                 value={coachName}
@@ -225,7 +225,7 @@ function LessonsTracker() {
               />
             </div>
             <div>
-              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Type</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Type</label>
               <select
                 value={lessonType}
                 onChange={(e) => setLessonType(e.target.value)}
@@ -237,7 +237,7 @@ function LessonsTracker() {
               </select>
             </div>
             <div>
-              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Duration (min)</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Duration (min)</label>
               <input
                 type="number"
                 value={durationMin}
@@ -249,7 +249,7 @@ function LessonsTracker() {
 
           {/* Focus areas */}
           <div>
-            <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Focus Areas</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Focus Areas</label>
             {/* Goal-suggested areas inline */}
             {activeGoals.length > 0 && (
               <div className="mb-2 text-xs text-gray-500">
@@ -263,7 +263,7 @@ function LessonsTracker() {
                       onClick={() => { if (!focusAreas.includes(area)) setFocusAreas([...focusAreas, area]); }}
                       className={`inline-block ml-1 mb-1 px-2 py-0.5 rounded-full transition-colors ${
                         focusAreas.includes(area)
-                          ? 'bg-green-500/20 text-green-400'
+                          ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
                           : 'bg-gray-800 text-gray-400 hover:text-gray-50 cursor-pointer'
                       }`}
                     >
@@ -279,7 +279,7 @@ function LessonsTracker() {
                   onClick={() => toggleFocus(area)}
                   className={`px-2 py-1 rounded-full text-xs transition-colors ${
                     focusAreas.includes(area)
-                      ? 'bg-green-500 text-white'
+                      ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
                       : 'bg-gray-800 text-gray-400 hover:text-gray-50'
                   }`}
                 >
@@ -292,14 +292,14 @@ function LessonsTracker() {
           {/* Rating + Notes — always visible core fields */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Rating</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Rating</label>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((r) => (
                   <button
                     key={r}
                     onClick={() => setRating(r)}
                     className={`w-10 h-10 rounded-xl text-sm font-bold transition-colors ${
-                      rating >= r ? 'bg-green-500 text-white' : 'bg-gray-800 text-gray-500'
+                      rating >= r ? 'bg-green-500 text-gray-50' : 'bg-gray-800 text-gray-500'
                     }`}
                   >
                     {r}
@@ -308,13 +308,13 @@ function LessonsTracker() {
               </div>
             </div>
             <div>
-              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Notes</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Notes</label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={2}
                 placeholder="Key takeaways..."
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 resize-none focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
           </div>
@@ -331,10 +331,10 @@ function LessonsTracker() {
 
           {/* Optional sections — collapsed by default */}
           {showOptional && (
-            <div className="space-y-4 border-t border-gray-800 pt-4">
+            <div className="space-y-4 border-t border-gray-800/60 pt-4">
               {/* Swing Feels */}
               <div>
-                <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Swing Feels / Cues</label>
+                <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Swing Feels / Cues</label>
                 <div className="flex gap-2 mb-2">
                   <input
                     type="text"
@@ -344,7 +344,7 @@ function LessonsTracker() {
                     placeholder='e.g. "Feel left hip clear first"'
                     className="flex-1 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                   />
-                  <button onClick={addFeel} className="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-gray-50 text-sm rounded-xl">
+                  <button onClick={addFeel} className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-50 text-sm rounded-xl">
                     Add
                   </button>
                 </div>
@@ -362,11 +362,11 @@ function LessonsTracker() {
 
               {/* Drills Assigned */}
               <div>
-                <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Drills Assigned</label>
+                <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Drills Assigned</label>
                 {drills.length > 0 && (
                   <div className="space-y-1 mb-2">
                     {drills.map((d, i) => (
-                      <div key={i} className="flex items-center gap-2 bg-gray-800 rounded-xl px-3 py-2 text-sm">
+                      <div key={i} className="flex items-center gap-2 bg-gray-800 rounded-xl px-4 py-3 text-sm">
                         <span className="text-gray-50 font-medium">{d.name}</span>
                         {d.reps && <span className="text-gray-500">({d.reps})</span>}
                         <button onClick={() => setDrills(drills.filter((_, j) => j !== i))} className="ml-auto text-gray-500 hover:text-red-400 text-xs">remove</button>
@@ -389,7 +389,7 @@ function LessonsTracker() {
                     placeholder="Reps"
                     className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                   />
-                  <button onClick={addDrill} className="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-gray-50 text-sm rounded-xl">
+                  <button onClick={addDrill} className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-50 text-sm rounded-xl">
                     Add
                   </button>
                 </div>
@@ -397,7 +397,7 @@ function LessonsTracker() {
 
               {/* Next lesson goals */}
               <div>
-                <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Goals for Next Lesson</label>
+                <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Goals for Next Lesson</label>
                 <input
                   type="text"
                   value={nextGoals}
@@ -411,7 +411,7 @@ function LessonsTracker() {
 
           <button
             onClick={handleSubmit}
-            className="w-full py-2 bg-green-500 hover:bg-green-400 text-white text-sm font-medium rounded-2xl transition-colors active:scale-[0.98]"
+            className="w-full py-3 bg-green-500 hover:bg-green-400 text-gray-50 text-sm font-medium rounded-2xl active:scale-[0.98] transition-colors"
           >
             {editingId ? 'Update Lesson' : 'Save Lesson'}
           </button>
@@ -419,13 +419,13 @@ function LessonsTracker() {
       )}
 
       {loading ? (
-        <div className="text-center py-16 text-[15px] text-gray-400">Loading lessons...</div>
+        <div className="text-center text-gray-600 py-12 text-sm">Loading lessons...</div>
       ) : view === 'list' ? (
         /* Lesson list */
         lessons.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-[15px] text-gray-400">No lessons logged yet</p>
-            <p className="text-xs mt-1 text-gray-500">Log your first coaching session to start tracking progress</p>
+          <div className="text-center text-gray-600 py-12">
+            <p className="text-sm">No lessons logged yet</p>
+            <p className="text-xs mt-1">Log your first coaching session to start tracking progress</p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -471,11 +471,11 @@ function LessonsTracker() {
 
                   {/* Expanded details */}
                   {expanded && (
-                    <div className="border-t border-gray-800 p-4 space-y-3">
+                    <div className="border-t border-gray-800/60 p-4 space-y-3">
                       {/* Swing feels */}
                       {l.swing_feels.length > 0 && (
                         <div>
-                          <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Feels</span>
+                          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Feels</span>
                           <div className="flex flex-wrap gap-1 mt-1">
                             {l.swing_feels.map((f, i) => (
                               <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400">
@@ -489,7 +489,7 @@ function LessonsTracker() {
                       {/* Drills */}
                       {l.drills_assigned.length > 0 && (
                         <div>
-                          <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Drills</span>
+                          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Drills</span>
                           <div className="space-y-0.5 mt-1">
                             {l.drills_assigned.map((d, i) => (
                               <div key={i} className="text-sm text-gray-400">
@@ -508,7 +508,7 @@ function LessonsTracker() {
                         </p>
                       )}
 
-                      <div className="flex gap-3 pt-2 border-t border-gray-800">
+                      <div className="flex gap-3 pt-2 border-t border-gray-800/60">
                         <button onClick={() => loadForEdit(l)} className="text-xs text-gray-400 hover:text-gray-50">Edit</button>
                         <button onClick={() => deleteLesson(l.id)} className="text-xs text-gray-400 hover:text-red-400">Delete</button>
                       </div>
@@ -522,7 +522,7 @@ function LessonsTracker() {
       ) : view === 'feels' ? (
         /* Swing Feels view */
         allFeels.length === 0 ? (
-          <div className="text-center py-16 text-[15px] text-gray-400">No swing feels recorded yet</div>
+          <div className="text-center text-gray-600 py-12 text-sm">No swing feels recorded yet</div>
         ) : (
           <div className="space-y-2">
             <p className="text-sm text-gray-500 mb-4">
@@ -544,26 +544,26 @@ function LessonsTracker() {
       ) : (
         /* Stats view */
         !stats ? (
-          <div className="text-center py-16 text-[15px] text-gray-400">Log some lessons to see stats</div>
+          <div className="text-center text-gray-600 py-12 text-sm">Log some lessons to see stats</div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div className="bg-gray-900 rounded-2xl p-4">
-              <div className="text-xs text-gray-500 uppercase tracking-wider">Total Lessons</div>
+              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Total Lessons</div>
               <div className="text-2xl font-bold text-green-400 mt-1">{stats.totalLessons}</div>
             </div>
             <div className="bg-gray-900 rounded-2xl p-4">
-              <div className="text-xs text-gray-500 uppercase tracking-wider">Avg Rating</div>
+              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Avg Rating</div>
               <div className="text-2xl font-bold text-yellow-400 mt-1">{stats.avgRating.toFixed(1)}/5</div>
             </div>
             <div className="bg-gray-900 rounded-2xl p-4">
-              <div className="text-xs text-gray-500 uppercase tracking-wider">Coaches</div>
+              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Coaches</div>
               <div className="text-sm text-gray-50 mt-2">
                 {stats.coaches.length > 0 ? stats.coaches.join(', ') : 'None recorded'}
               </div>
             </div>
             <div className="bg-gray-900 rounded-2xl p-4 col-span-2 sm:col-span-3">
-              <div className="text-xs text-gray-500 uppercase tracking-wider mb-3">Top Focus Areas</div>
-              <div className="space-y-2">
+              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Top Focus Areas</div>
+              <div className="space-y-2 mt-3">
                 {stats.topFocus.map(([area, count]) => (
                   <div key={area} className="flex items-center gap-3">
                     <span className="text-sm text-gray-50 w-36 truncate">{area}</span>

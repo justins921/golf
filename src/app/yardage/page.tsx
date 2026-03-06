@@ -129,14 +129,14 @@ function YardageBuilder() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-gray-50 mb-6">Yardage Card Builder</h1>
+      <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-6">Yardage Card Builder</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Controls */}
         <div className="space-y-4">
           {/* Scope */}
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Dataset Scope</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Dataset Scope</label>
             <div className="flex flex-row lg:flex-col gap-1 flex-wrap">
               {[
                 { value: 'all-time', label: 'All-time' },
@@ -146,8 +146,8 @@ function YardageBuilder() {
                 <button
                   key={m.value}
                   onClick={() => setScope(m.value as YardageCardConfig['scope'])}
-                  className={`px-3 py-1.5 text-sm rounded text-left ${
-                    scope === m.value ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                  className={`px-4 py-2 text-sm rounded-full text-left ${
+                    scope === m.value ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
                   }`}
                 >
                   {m.label}
@@ -158,20 +158,20 @@ function YardageBuilder() {
 
           {scope === 'rolling' && (
             <div>
-              <label className="block text-xs text-gray-500 mb-1">N sessions</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">N sessions</label>
               <input
                 type="number"
                 min={1}
                 value={rollingN}
                 onChange={(e) => setRollingN(parseInt(e.target.value) || 5)}
-                className="w-20 px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
+                className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
           )}
 
           {scope === 'selected' && (
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Sessions</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Sessions</label>
               <div className="flex flex-col gap-1 max-h-32 overflow-y-auto">
                 {sessions.map((s) => (
                   <label key={s.id} className="flex items-center gap-2 text-xs text-gray-400 cursor-pointer">
@@ -190,7 +190,7 @@ function YardageBuilder() {
 
           {/* Filters */}
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Shot Filter</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Shot Filter</label>
             <label className="flex items-center gap-2 text-xs text-gray-400">
               <input
                 type="checkbox"
@@ -204,7 +204,7 @@ function YardageBuilder() {
 
           {/* Excluded shots notice */}
           {excludedCount > 0 && (
-            <div className="bg-red-900/20 border border-red-800/40 rounded-lg p-2">
+            <div className="bg-red-900/20 rounded-2xl p-2">
               <p className="text-xs text-red-400">
                 {excludedCount} shot{excludedCount > 1 ? 's' : ''} excluded from card calculations.
                 <span className="text-gray-500 ml-1">Manage in Shot Data.</span>
@@ -214,17 +214,17 @@ function YardageBuilder() {
 
           {/* Percentile band */}
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Range Band</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Range Band</label>
             <div className="flex gap-1">
               <button
                 onClick={() => setPercentileBand('P20-P80')}
-                className={`px-2 py-1 text-xs rounded ${percentileBand === 'P20-P80' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
+                className={`px-4 py-2 text-xs rounded-full ${percentileBand === 'P20-P80' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
               >
                 P20–P80
               </button>
               <button
                 onClick={() => setPercentileBand('P10-P90')}
-                className={`px-2 py-1 text-xs rounded ${percentileBand === 'P10-P90' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
+                className={`px-4 py-2 text-xs rounded-full ${percentileBand === 'P10-P90' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
               >
                 P10–P90
               </button>
@@ -233,7 +233,7 @@ function YardageBuilder() {
 
           {/* Display options */}
           <div className="space-y-1">
-            <label className="block text-xs text-gray-500 mb-1">Display</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Display</label>
             {[
               { label: 'Show gaps', value: showGaps, set: setShowGaps },
               { label: 'Show dispersion arc', value: showDispersionArc, set: setShowDispersionArc },
@@ -254,19 +254,19 @@ function YardageBuilder() {
 
           {/* Min shots */}
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Min shots per club</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Min shots per club</label>
             <input
               type="number"
               min={1}
               value={minShots}
               onChange={(e) => setMinShots(parseInt(e.target.value) || 8)}
-              className="w-20 px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
+              className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
           </div>
 
           {/* Club selection */}
           <div>
-            <label className="block text-xs text-gray-500 mb-1">
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">
               Clubs {includedClubs.length > 0 ? `(${includedClubs.length} selected)` : '(all)'}
             </label>
             <div className="flex flex-wrap gap-1 max-h-32 overflow-y-auto">
@@ -274,10 +274,10 @@ function YardageBuilder() {
                 <button
                   key={c}
                   onClick={() => toggleClub(c)}
-                  className={`px-2 py-0.5 text-xs rounded ${
+                  className={`px-2 py-0.5 text-xs rounded-full ${
                     includedClubs.length === 0 || includedClubs.includes(c)
-                      ? 'bg-green-600/20 text-green-400 border border-green-600/40'
-                      : 'bg-gray-800 text-gray-500'
+                      ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
+                      : 'bg-gray-800 text-gray-400'
                   }`}
                 >
                   {c}
@@ -288,7 +288,7 @@ function YardageBuilder() {
 
           {/* Distance mode / Destination card */}
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Distance Mode</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Distance Mode</label>
             <div className="flex flex-row lg:flex-col gap-1 flex-wrap">
               {[
                 { value: 'observed', label: 'Observed (home)' },
@@ -298,8 +298,8 @@ function YardageBuilder() {
                 <button
                   key={m.value}
                   onClick={() => setDistanceMode(m.value as 'observed' | 'normalized' | 'simulated')}
-                  className={`px-3 py-1 text-xs rounded text-left ${
-                    distanceMode === m.value ? 'bg-blue-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                  className={`px-4 py-2 text-xs rounded-full text-left ${
+                    distanceMode === m.value ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
                   }`}
                 >
                   {m.label}
@@ -309,14 +309,14 @@ function YardageBuilder() {
           </div>
 
           {distanceMode === 'simulated' && (
-            <div className="bg-gray-800 border border-gray-700 rounded-lg p-3 space-y-2">
+            <div className="bg-gray-900 rounded-2xl p-3 space-y-2">
               <h4 className="text-xs font-medium text-gray-300">Destination Environment</h4>
               <input
                 type="text"
                 value={presetName}
                 onChange={(e) => setPresetName(e.target.value)}
                 placeholder="Preset name (e.g., Loreto – March)"
-                className="w-full px-2 py-1 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
               <div className="grid grid-cols-2 gap-2">
                 <div>
@@ -325,7 +325,7 @@ function YardageBuilder() {
                     type="number"
                     value={destEnv.elevationFt}
                     onChange={(e) => setDestEnv({ ...destEnv, elevationFt: parseFloat(e.target.value) || 0 })}
-                    className="w-full px-1 py-0.5 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
+                    className="w-full bg-gray-800 border-0 rounded-xl px-3 py-2 text-xs text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                   />
                 </div>
                 <div>
@@ -334,7 +334,7 @@ function YardageBuilder() {
                     type="number"
                     value={destEnv.temperatureF}
                     onChange={(e) => setDestEnv({ ...destEnv, temperatureF: parseFloat(e.target.value) || 72 })}
-                    className="w-full px-1 py-0.5 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
+                    className="w-full bg-gray-800 border-0 rounded-xl px-3 py-2 text-xs text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                   />
                 </div>
                 <div>
@@ -343,7 +343,7 @@ function YardageBuilder() {
                     type="number"
                     value={destEnv.relativeHumidityPct}
                     onChange={(e) => setDestEnv({ ...destEnv, relativeHumidityPct: parseFloat(e.target.value) || 50 })}
-                    className="w-full px-1 py-0.5 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
+                    className="w-full bg-gray-800 border-0 rounded-xl px-3 py-2 text-xs text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                   />
                 </div>
                 <div>
@@ -354,7 +354,7 @@ function YardageBuilder() {
                     value={destEnv.pressureInHg ?? ''}
                     onChange={(e) => setDestEnv({ ...destEnv, pressureInHg: e.target.value ? parseFloat(e.target.value) : undefined })}
                     placeholder="auto"
-                    className="w-full px-1 py-0.5 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
+                    className="w-full bg-gray-800 border-0 rounded-xl px-3 py-2 text-xs text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                   />
                 </div>
               </div>

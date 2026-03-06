@@ -105,7 +105,7 @@ function ProgramConfig({ programId }: { programId: string }) {
   };
 
   return (
-    <div className="mt-4 pt-4 border-t border-gray-800 space-y-4">
+    <div className="mt-4 pt-4 border-t border-gray-800/60 space-y-4">
       {/* Location */}
       <div>
         <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Where are you practicing?</label>

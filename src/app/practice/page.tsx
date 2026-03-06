@@ -45,7 +45,7 @@ function PracticeHome() {
       {incomplete && (
         <Link
           href={`/practice/session/${incomplete.id}`}
-          className="block mb-6 bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-4 hover:bg-yellow-500/15 transition-colors"
+          className="block mb-6 bg-yellow-500/10 rounded-2xl p-4 hover:bg-yellow-500/15 transition-colors"
         >
           <div className="flex items-center justify-between">
             <div>

@@ -38,10 +38,10 @@ export default function RoundAnalysis({
 
   if (holes.length === 0 || !holes.some((h) => h.score && h.score > 0)) {
     return (
-      <div className="text-center text-gray-600 py-12 text-sm">
+      <div className="text-center text-gray-400 py-12 text-[15px]">
         Enter your scorecard to see Strokes Gained analysis.
         <br />
-        <span className="text-gray-700 text-xs">Tip: Include putts, FIR, GIR, and up & down data for the best analysis.</span>
+        <span className="text-gray-500 text-[13px]">Tip: Include putts, FIR, GIR, and up & down data for the best analysis.</span>
       </div>
     );
   }
@@ -66,7 +66,7 @@ export default function RoundAnalysis({
           <option value={25}>25 HI</option>
           <option value={30}>30+ HI</option>
         </select>
-        <span className="text-xs text-gray-600">vs {analysis.benchmark.label} golfer</span>
+        <span className="text-[13px] text-gray-500">vs {analysis.benchmark.label} golfer</span>
       </div>
 
       {/* Tab bar */}
@@ -191,7 +191,7 @@ function SGBar({ label, sg }: { label: string; sg: number }) {
             <div className="absolute h-3 bg-red-500/60 rounded-l" style={{ width: `${pct / 2}%`, right: '50%' }} />
           )}
           {/* Center line */}
-          <div className="absolute left-1/2 w-px h-full bg-gray-600" />
+          <div className="absolute left-1/2 w-px h-full bg-gray-700" />
         </div>
       </div>
       <span className={`text-xs font-mono w-12 text-right ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
@@ -209,7 +209,7 @@ function StatRow({ label, value, benchmark, better }: { label: string; value: st
         <div className={`font-medium ${better ? 'text-green-400' : 'text-red-400'}`}>{value}</div>
       </div>
       <div className="text-right">
-        <span className="text-[10px] text-gray-600 uppercase">Benchmark</span>
+        <span className="text-[10px] text-gray-500 uppercase">Benchmark</span>
         <div className="text-xs text-gray-500">{benchmark}</div>
       </div>
     </div>
@@ -291,7 +291,7 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
         {/* Hole numbers */}
         <div className="flex gap-1 mt-1">
           {analysis.holes.map((hole) => (
-            <div key={hole.holeNumber} className="flex-1 text-center text-[9px] text-gray-600">
+            <div key={hole.holeNumber} className="flex-1 text-center text-[9px] text-gray-500">
               {hole.holeNumber}
             </div>
           ))}
@@ -302,7 +302,7 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
       <div className="bg-gray-900 rounded-2xl overflow-hidden">
         <table className="w-full text-xs">
           <thead>
-            <tr className="text-[13px] text-gray-500 uppercase">
+            <tr className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
               <th className="p-1.5 text-left">Hole</th>
               <th className="p-1.5 text-center">Par</th>
               <th className="p-1.5 text-center">Score</th>
@@ -373,7 +373,7 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
 function PracticePlan({ report }: { report: PracticePriorityReport }) {
   if (report.recommendations.length === 0) {
     return (
-      <div className="text-center text-gray-600 py-8 text-sm">
+      <div className="text-center text-gray-400 py-8 text-[15px]">
         Your round matched or exceeded benchmarks. Keep up the good work!
       </div>
     );
