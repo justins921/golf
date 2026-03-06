@@ -154,7 +154,7 @@ function RoundTracker() {
               <div className="bg-gray-900 rounded-2xl p-5 space-y-3">
                 <h3 className="text-sm font-medium text-gray-50">New Round</h3>
                 <div>
-                  <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Date</label>
+                  <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Date</label>
                   <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)}
                     className="w-full px-4 py-3 text-[15px] bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
                 </div>
@@ -170,7 +170,7 @@ function RoundTracker() {
                   }}
                 />
                 <div>
-                  <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Holes</label>
+                  <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Holes</label>
                   <div className="flex gap-1">
                     {[9, 18].map((n) => (
                       <button key={n} onClick={() => setNewHoles(n)}
@@ -181,17 +181,17 @@ function RoundTracker() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Notes</label>
+                  <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Notes</label>
                   <textarea value={newNotes} onChange={(e) => setNewNotes(e.target.value)} rows={2}
                     className="w-full px-4 py-3 text-[15px] bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
                 </div>
                 <div className="flex gap-2">
                   <button onClick={createRound} disabled={!newCourse}
-                    className="px-3 py-1 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-xl">
+                    className="px-3 py-1 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-2xl active:scale-[0.98]">
                     Create
                   </button>
                   <button onClick={() => setShowNewRound(false)}
-                    className="px-3 py-1 text-sm bg-gray-700 text-gray-300 rounded-xl">Cancel</button>
+                    className="px-3 py-1 text-sm bg-gray-800 text-gray-300 rounded-2xl">Cancel</button>
                 </div>
               </div>
             )}
@@ -435,7 +435,7 @@ function Scorecard({
                     <td className="p-1.5 text-center text-gray-400 font-medium">{idx + 1}</td>
                     <td className="p-1.5 text-center">
                       <select value={hole.par ?? 4} onChange={(e) => updateHole(idx, 'par', parseInt(e.target.value))}
-                        className="w-12 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl text-gray-300">
+                        className="w-12 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/40">
                         <option value={3}>3</option>
                         <option value={4}>4</option>
                         <option value={5}>5</option>
@@ -445,13 +445,13 @@ function Scorecard({
                       <input type="number" min={1} max={15}
                         value={(hole.score as number) ?? ''}
                         onChange={(e) => updateHole(idx, 'score', e.target.value ? parseInt(e.target.value) : null)}
-                        className={`w-12 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl ${scoreColor}`} />
+                        className={`w-12 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/40 ${scoreColor}`} />
                     </td>
                     <td className="p-1.5 text-center">
                       <input type="number" min={0} max={10}
                         value={(hole.putts as number) ?? ''}
                         onChange={(e) => updateHole(idx, 'putts', e.target.value ? parseInt(e.target.value) : null)}
-                        className="w-12 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl text-gray-300" />
+                        className="w-12 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
                     </td>
                     <td className="p-1.5 text-center">
                       {par >= 4 ? (
@@ -483,7 +483,7 @@ function Scorecard({
                             const field = hole.fairway_hit === false ? 'tee_miss_direction' : 'approach_miss_direction';
                             updateHole(idx, field, e.target.value || null);
                           }}
-                          className="w-14 px-0.5 py-0.5 text-xs bg-gray-800 border-0 rounded-xl text-gray-300">
+                          className="w-14 px-0.5 py-0.5 text-xs bg-gray-800 border-0 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/40">
                           <option value="">—</option>
                           <option value="left">L</option>
                           <option value="right">R</option>
@@ -496,7 +496,7 @@ function Scorecard({
                       <input type="number" min={0} max={5}
                         value={(hole.penalty_strokes as number) ?? 0}
                         onChange={(e) => updateHole(idx, 'penalty_strokes', parseInt(e.target.value) || 0)}
-                        className="w-10 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl text-gray-300" />
+                        className="w-10 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
                     </td>
                   </tr>
                 );
@@ -528,7 +528,7 @@ function Scorecard({
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
           <button onClick={saveScorecard} disabled={saving}
-            className="px-4 py-2 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-xl">
+            className="px-4 py-2 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-2xl active:scale-[0.98]">
             {saving ? 'Saving...' : 'Save Scorecard'}
           </button>
           <ShareRoundButton round={round} />
@@ -718,7 +718,7 @@ function HandicapView({ rounds }: { rounds: Round[] }) {
 
       {/* Differentials table */}
       {result.differentials.length > 0 && (
-        <div className="bg-gray-900 rounded-2xl p-4">
+        <div className="bg-gray-900 rounded-2xl overflow-hidden p-4">
           <h2 className="text-sm font-medium text-gray-50 mb-3">Score Differentials (Last 20)</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -867,7 +867,7 @@ function RoundAnalysisView({
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Round selector */}
       <div className="space-y-2">
-        <h3 className="text-sm font-medium text-gray-400 mb-2">Select a round to analyze</h3>
+        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Select a round to analyze</h3>
         {scoredRounds.length === 0 && (
           <div className="text-center py-16 text-[15px] text-gray-400">
             No scored rounds yet. Enter a scorecard first.
@@ -940,7 +940,7 @@ function ShareRoundButton({ round }: { round: Round }) {
   return (
     <button
       onClick={handleShare}
-      className="px-3 py-2 text-xs bg-gray-800 hover:bg-gray-700 text-gray-400 rounded-xl transition-colors"
+      className="px-3 py-2 text-xs bg-gray-800 hover:bg-gray-700 text-gray-400 rounded-2xl transition-colors"
     >
       {copied ? 'Copied!' : 'Share'}
     </button>

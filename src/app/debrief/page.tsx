@@ -40,8 +40,8 @@ function useDebouncedSave<T>(saveFn: (val: T) => void, delay: number = 500) {
 // ── Insight Card ────────────────────────────────────────────
 
 function InsightCard({ insight, simple }: { insight: DebriefInsight; simple: boolean }) {
-  const border = insight.category === 'positive' ? 'border-green-500/30' :
-    insight.category === 'negative' ? 'border-red-500/30' : 'border-gray-700';
+  const ring = insight.category === 'positive' ? 'ring-1 ring-green-500/30' :
+    insight.category === 'negative' ? 'ring-1 ring-red-500/30' : '';
   const icon = insight.category === 'positive' ? (
     <svg className="w-4 h-4 text-green-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -57,13 +57,13 @@ function InsightCard({ insight, simple }: { insight: DebriefInsight; simple: boo
   );
 
   return (
-    <div className={`bg-gray-800 border ${border} rounded-lg p-3 flex gap-3`}>
+    <div className={`bg-gray-900 rounded-2xl ${ring} p-3 flex gap-3`}>
       {icon}
       <div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-gray-50">{insight.title}</span>
           {!simple && insight.impact === 'high' && (
-            <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400">
               High Impact
             </span>
           )}
@@ -81,7 +81,7 @@ function InsightCard({ insight, simple }: { insight: DebriefInsight; simple: boo
 function ActionItemCard({ item, index }: { item: DebriefActionItem; index: number }) {
   return (
     <div className="flex gap-3 items-start">
-      <div className="w-6 h-6 bg-green-600/20 text-green-400 rounded-full flex items-center justify-center text-xs font-bold shrink-0">
+      <div className="w-6 h-6 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center text-xs font-bold shrink-0">
         {index + 1}
       </div>
       <div className="flex-1">
@@ -104,16 +104,16 @@ function ActionItemCard({ item, index }: { item: DebriefActionItem; index: numbe
 
 function HoleChip({ h }: { h: HoleHighlight }) {
   const colors: Record<string, string> = {
-    birdie: 'bg-green-500/10 border-green-500/30 text-green-400',
-    best: 'bg-blue-500/10 border-blue-500/30 text-blue-400',
-    worst: 'bg-red-500/10 border-red-500/30 text-red-400',
-    double_plus: 'bg-red-500/10 border-red-500/30 text-red-400',
-    three_putt: 'bg-amber-500/10 border-amber-500/30 text-amber-400',
-    one_putt: 'bg-green-500/10 border-green-500/30 text-green-400',
+    birdie: 'bg-green-500/10 text-green-400',
+    best: 'bg-blue-500/10 text-blue-400',
+    worst: 'bg-red-500/10 text-red-400',
+    double_plus: 'bg-red-500/10 text-red-400',
+    three_putt: 'bg-amber-500/10 text-amber-400',
+    one_putt: 'bg-green-500/10 text-green-400',
   };
 
   return (
-    <div className={`border rounded-lg p-3 ${colors[h.type] ?? 'bg-gray-800 border-gray-700 text-gray-300'}`}>
+    <div className={`rounded-2xl p-3 ${colors[h.type] ?? 'bg-gray-900 text-gray-300'}`}>
       <div className="flex items-center justify-between mb-1">
         <span className="text-sm font-bold">#{h.holeNumber}</span>
         <span className="text-xs">Par {h.par} &rarr; {h.score}</span>
@@ -135,8 +135,8 @@ function SGBarChart({ analysis }: { analysis: RoundDebrief['analysis'] }) {
   const maxAbs = Math.max(2, ...items.map(i => Math.abs(i.value)));
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
-      <h3 className="text-sm font-semibold text-gray-50">Strokes Gained Breakdown</h3>
+    <div className="bg-gray-900 rounded-2xl p-4 space-y-3">
+      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Strokes Gained Breakdown</h3>
       {items.map(({ label, value }) => {
         const pct = (Math.abs(value) / maxAbs) * 50;
         const isPositive = value >= 0;
@@ -144,7 +144,7 @@ function SGBarChart({ analysis }: { analysis: RoundDebrief['analysis'] }) {
           <div key={label} className="flex items-center gap-3">
             <span className="text-xs text-gray-400 w-24 text-right">{label}</span>
             <div className="flex-1 flex items-center h-5">
-              <div className="w-full relative h-2 bg-gray-900 rounded-full">
+              <div className="w-full relative h-2 bg-gray-800 rounded-full">
                 <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gray-600" />
                 <div
                   className={`absolute top-0 h-full rounded-full ${isPositive ? 'bg-green-500' : 'bg-red-500'}`}
@@ -162,7 +162,7 @@ function SGBarChart({ analysis }: { analysis: RoundDebrief['analysis'] }) {
           </div>
         );
       })}
-      <div className="border-t border-gray-700 pt-2 mt-2">
+      <div className="border-t border-gray-800 pt-2 mt-2">
         <div className="flex items-center gap-3">
           <span className="text-xs text-gray-400 w-24 text-right font-medium">Total SG</span>
           <div className="flex-1" />
@@ -180,12 +180,12 @@ function SGBarChart({ analysis }: { analysis: RoundDebrief['analysis'] }) {
 function WhatIfSection({ whatIfs, actualScore }: { whatIfs: WhatIf[]; actualScore: number }) {
   if (whatIfs.length === 0) return null;
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-gray-50 mb-3">What-If Scenarios</h3>
+    <div className="bg-gray-900 rounded-2xl p-4">
+      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">What-If Scenarios</h3>
       <p className="text-xs text-gray-500 mb-3">How your score changes if you fix specific weaknesses</p>
       <div className="space-y-2">
         {whatIfs.map((w, i) => (
-          <div key={i} className="flex items-center justify-between bg-gray-900 rounded-lg px-3 py-2">
+          <div key={i} className="flex items-center justify-between bg-gray-800 rounded-2xl px-3 py-2">
             <span className="text-sm text-gray-300">{w.label}</span>
             <div className="flex items-center gap-3">
               <span className="text-xs text-green-400">-{w.savedStrokes} strokes</span>
@@ -194,7 +194,7 @@ function WhatIfSection({ whatIfs, actualScore }: { whatIfs: WhatIf[]; actualScor
           </div>
         ))}
       </div>
-      <div className="mt-2 pt-2 border-t border-gray-700/50 flex items-center justify-between">
+      <div className="mt-2 pt-2 border-t border-gray-800 flex items-center justify-between">
         <span className="text-xs text-gray-500">Actual score</span>
         <span className="text-sm font-bold text-gray-400">{actualScore}</span>
       </div>
@@ -206,8 +206,8 @@ function WhatIfSection({ whatIfs, actualScore }: { whatIfs: WhatIf[]; actualScor
 
 function CourseHistoryCard({ history }: { history: CourseHistory }) {
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-gray-50 mb-3">Course History — {history.courseName}</h3>
+    <div className="bg-gray-900 rounded-2xl p-4">
+      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Course History — {history.courseName}</h3>
       <div className="grid grid-cols-3 gap-3 text-center">
         <div>
           <div className="text-xs text-gray-500">Your Average</div>
@@ -253,10 +253,10 @@ function RoundTagEditor({ roundId }: { roundId: string }) {
     <div className="flex flex-wrap gap-1.5">
       {AVAILABLE_TAGS.map(tag => (
         <button key={tag} onClick={() => toggle(tag)}
-          className={`text-xs px-2 py-1 rounded-full border transition-colors ${
+          className={`text-xs px-2 py-1 rounded-full transition-colors ${
             tags.includes(tag)
-              ? 'bg-green-600/20 border-green-500/30 text-green-400'
-              : 'bg-gray-900 border-gray-700 text-gray-500 hover:text-gray-300'
+              ? 'bg-green-500/20 ring-1 ring-green-500/30 text-green-400'
+              : 'bg-gray-900 text-gray-500 hover:text-gray-300'
           }`}>
           {tag}
         </button>
@@ -296,19 +296,19 @@ function ReflectionSection({ roundId }: { roundId: string }) {
   if (!mounted) return null;
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
-      <h3 className="text-sm font-semibold text-gray-50">Post-Round Reflection</h3>
+    <div className="bg-gray-900 rounded-2xl p-4 space-y-3">
+      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Post-Round Reflection</h3>
       <p className="text-xs text-gray-500">Your answers are saved automatically.</p>
       <div className="space-y-3">
         {REFLECTION_QUESTIONS.map((q) => (
           <div key={q}>
-            <label className="text-xs text-gray-400 block mb-1">{q}</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">{q}</label>
             <textarea
               value={answers[q] ?? ''}
               onChange={e => update(q, e.target.value)}
               placeholder="Type your answer..."
               rows={2}
-              className="w-full bg-gray-900 border border-gray-700/50 rounded-lg px-3 py-2 text-sm text-gray-200 placeholder-gray-600 resize-none focus:outline-none focus:border-green-500/40"
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 resize-none focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
           </div>
         ))}
@@ -340,15 +340,15 @@ function CoachNotesSection({ roundId }: { roundId: string }) {
   if (!mounted) return null;
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-2">
-      <h3 className="text-sm font-semibold text-gray-50">Coach / Personal Notes</h3>
+    <div className="bg-gray-900 rounded-2xl p-4 space-y-2">
+      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Coach / Personal Notes</h3>
       <p className="text-xs text-gray-500">Lesson takeaways, swing thoughts, or course strategy notes.</p>
       <textarea
         value={notes}
         onChange={e => update(e.target.value)}
         placeholder="e.g., Coach said to focus on ball position with irons..."
         rows={4}
-        className="w-full bg-gray-900 border border-gray-700/50 rounded-lg px-3 py-2 text-sm text-gray-200 placeholder-gray-600 resize-none focus:outline-none focus:border-green-500/40"
+        className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 resize-none focus:outline-none focus:ring-2 focus:ring-green-500/40"
       />
     </div>
   );
@@ -371,8 +371,8 @@ interface TrendPoint {
 function TrendView({ trends }: { trends: TrendPoint[] }) {
   if (trends.length < 2) {
     return (
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 text-center">
-        <p className="text-sm text-gray-400">Need at least 2 debriefed rounds to show trends.</p>
+      <div className="bg-gray-900 rounded-2xl p-4 text-center">
+        <p className="text-[15px] text-gray-400">Need at least 2 debriefed rounds to show trends.</p>
       </div>
     );
   }
@@ -393,8 +393,8 @@ function TrendView({ trends }: { trends: TrendPoint[] }) {
     arr.reduce((s, t) => s + (t[key] as number), 0) / arr.length;
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
-      <h3 className="text-sm font-semibold text-gray-50">SG Trends (Last {trends.length} Rounds)</h3>
+    <div className="bg-gray-900 rounded-2xl p-4 space-y-4">
+      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">SG Trends (Last {trends.length} Rounds)</h3>
 
       {/* Sparkline table */}
       <div className="space-y-3">
@@ -430,7 +430,7 @@ function TrendView({ trends }: { trends: TrendPoint[] }) {
       </div>
 
       {/* Score trend */}
-      <div className="border-t border-gray-700 pt-3">
+      <div className="border-t border-gray-800 pt-3">
         <div className="flex items-center justify-between">
           <span className="text-xs text-gray-400">Score Trend</span>
           <div className="flex items-center gap-2">
@@ -527,29 +527,29 @@ function ShareExportSection({ debrief, roundId }: { debrief: RoundDebrief; round
   };
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
-      <h3 className="text-sm font-semibold text-gray-50">Share & Export</h3>
+    <div className="bg-gray-900 rounded-2xl p-4 space-y-4">
+      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Share & Export</h3>
 
       {/* Copy as text */}
       <div className="flex gap-2">
         <button onClick={handleCopy}
-          className="flex-1 px-3 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors">
+          className="flex-1 px-3 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl transition-colors">
           {copied ? 'Copied!' : 'Copy as Text'}
         </button>
       </div>
 
       {/* Share with coach */}
-      <div className="border-t border-gray-700 pt-3 space-y-2">
+      <div className="border-t border-gray-800 pt-3 space-y-2">
         <div className="text-xs text-gray-400">Share with coach (generates a link)</div>
         <div className="flex gap-2">
           <input
             value={coachName}
             onChange={e => setCoachName(e.target.value)}
             placeholder="Coach name (optional)"
-            className="flex-1 px-3 py-1.5 text-sm bg-gray-900 border border-gray-700 rounded-lg text-gray-200 placeholder-gray-600 focus:outline-none focus:border-green-500/40"
+            className="flex-1 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
           <button onClick={handleCreateShare} disabled={shareCreating}
-            className="px-3 py-1.5 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white rounded-lg transition-colors">
+            className="px-3 py-1.5 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white rounded-xl transition-colors">
             {shareCreating ? '...' : 'Create Link'}
           </button>
         </div>
@@ -560,7 +560,7 @@ function ShareExportSection({ debrief, roundId }: { debrief: RoundDebrief; round
         <div className="space-y-2">
           <div className="text-xs text-gray-500">Active share links</div>
           {shares.map(s => (
-            <div key={s.id} className="flex items-center justify-between bg-gray-900 rounded-lg px-3 py-2">
+            <div key={s.id} className="flex items-center justify-between bg-gray-800 rounded-2xl px-3 py-2">
               <div>
                 <div className="text-xs text-gray-300 font-mono">{window.location.origin}/debrief/shared/{s.share_token}</div>
                 {s.recipient_name && <div className="text-[10px] text-gray-500">For: {s.recipient_name}</div>}
@@ -597,15 +597,15 @@ function MissPatternSummary({ holes }: { holes: RoundHole[] }) {
   };
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-gray-50 mb-3">Miss Patterns</h3>
+    <div className="bg-gray-900 rounded-2xl p-4">
+      <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Miss Patterns</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {teeMisses.length > 0 && (
           <div>
             <div className="text-xs text-gray-500 mb-2">Tee Shot Misses ({teeMisses.length})</div>
             <div className="flex gap-2">
               {countDir(teeMisses, 'tee_miss_direction').map(([dir, count]) => (
-                <div key={dir} className="bg-gray-900 rounded-lg px-3 py-2 text-center">
+                <div key={dir} className="bg-gray-800 rounded-2xl px-3 py-2 text-center">
                   <div className="text-sm font-bold text-amber-400 capitalize">{dir}</div>
                   <div className="text-[10px] text-gray-500">{count}x</div>
                 </div>
@@ -618,7 +618,7 @@ function MissPatternSummary({ holes }: { holes: RoundHole[] }) {
             <div className="text-xs text-gray-500 mb-2">Green Misses ({approachMisses.length})</div>
             <div className="flex gap-2 flex-wrap">
               {countDir(approachMisses, 'approach_miss_direction').map(([dir, count]) => (
-                <div key={dir} className="bg-gray-900 rounded-lg px-3 py-2 text-center">
+                <div key={dir} className="bg-gray-800 rounded-2xl px-3 py-2 text-center">
                   <div className="text-sm font-bold text-amber-400 capitalize">{dir}</div>
                   <div className="text-[10px] text-gray-500">{count}x</div>
                 </div>
@@ -647,19 +647,19 @@ function RoundSelector({ rounds, selectedId, onSelect }: {
 
   if (scored.length === 0) {
     return (
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-8 text-center">
+      <div className="bg-gray-900 rounded-2xl p-8 text-center">
         <div className="text-3xl mb-3">⛳</div>
         <h2 className="text-lg font-semibold text-gray-50 mb-2">No Rounds to Debrief Yet</h2>
-        <p className="text-sm text-gray-400 mb-4">
+        <p className="text-[15px] text-gray-400 mb-4">
           Complete a round with hole-by-hole scoring to unlock detailed insights, strokes gained analysis, and personalized action items.
         </p>
         <div className="flex gap-3 justify-center">
           <Link href="/play"
-            className="px-4 py-2 text-sm bg-green-600 hover:bg-green-500 text-white rounded-lg transition-colors">
+            className="px-4 py-2 text-sm bg-green-500 hover:bg-green-400 text-white rounded-xl transition-colors">
             Score a Round
           </Link>
           <Link href="/rounds"
-            className="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors">
+            className="px-4 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl transition-colors">
             Add Past Round
           </Link>
         </div>
@@ -668,8 +668,8 @@ function RoundSelector({ rounds, selectedId, onSelect }: {
   }
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
-      <h2 className="text-sm font-semibold text-gray-50">Select a Round to Debrief</h2>
+    <div className="bg-gray-900 rounded-2xl p-4 space-y-3">
+      <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Select a Round to Debrief</h2>
       <p className="text-xs text-gray-500">Choose any scored round for auto-generated analysis and insights.</p>
       <div className="space-y-2 max-h-96 overflow-y-auto">
         {scored.map((r) => {
@@ -677,8 +677,8 @@ function RoundSelector({ rounds, selectedId, onSelect }: {
           const toPar = (r.total_score ?? 0) - par;
           return (
             <button key={r.id} onClick={() => onSelect(r.id)}
-              className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors flex items-center justify-between ${
-                selectedId === r.id ? 'bg-green-600/20 border border-green-500/30' : 'bg-gray-900 border border-gray-700/50 hover:bg-gray-750'
+              className={`w-full text-left px-3 py-2.5 rounded-2xl transition-colors flex items-center justify-between ${
+                selectedId === r.id ? 'bg-green-500/20 ring-1 ring-green-500/30' : 'bg-gray-800 hover:bg-gray-700'
               }`}>
               <div>
                 <div className="text-sm font-medium text-gray-50">{r.course_name}</div>
@@ -711,8 +711,8 @@ function TabBar({ tab, setTab }: { tab: string; setTab: (t: 'summary' | 'deep-di
     <div className="flex gap-2">
       {tabs.map(t => (
         <button key={t.key} onClick={() => setTab(t.key)}
-          className={`px-3 py-1.5 text-sm rounded transition-colors ${
-            tab === t.key ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:text-gray-200'
+          className={`px-4 py-2 text-sm rounded-full transition-colors ${
+            tab === t.key ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
           }`}>
           {t.label}
         </button>
@@ -736,7 +736,7 @@ function DebriefView({ debrief, viewMode, trends, allHoles }: {
   return (
     <div className="space-y-5">
       {/* Overall verdict */}
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 text-center">
+      <div className="bg-gray-900 rounded-2xl p-5 text-center">
         <div className="text-3xl mb-2">{EMOJI_MAP[overallEmoji] ?? '⛳'}</div>
         <div className="text-2xl font-bold text-gray-50 mb-1">
           {score} <span className={`text-lg ${toPar <= 0 ? 'text-green-400' : 'text-red-400'}`}>
@@ -763,7 +763,7 @@ function DebriefView({ debrief, viewMode, trends, allHoles }: {
               { label: 'Fairways', value: `${analysis.firPct}%`, sub: `${analysis.firCount}/${analysis.firHoles}` },
               { label: 'Penalties', value: String(analysis.totalPenalties), sub: analysis.totalPenalties === 0 ? 'Clean!' : 'strokes lost' },
             ].map((stat) => (
-              <div key={stat.label} className="bg-gray-800 border border-gray-700 rounded-lg p-3 text-center">
+              <div key={stat.label} className="bg-gray-900 rounded-2xl p-3 text-center">
                 <div className="text-xs text-gray-500">{stat.label}</div>
                 <div className="text-lg font-bold text-gray-50">{stat.value}</div>
                 <div className="text-[10px] text-gray-500">{stat.sub}</div>
@@ -772,13 +772,13 @@ function DebriefView({ debrief, viewMode, trends, allHoles }: {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-gray-50">Key Takeaways</h3>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Key Takeaways</h3>
             {(simple ? insights.slice(0, 3) : insights).map((ins, i) => (
               <InsightCard key={i} insight={ins} simple={simple} />
             ))}
             {insights.length === 0 && (
-              <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 text-center">
-                <p className="text-sm text-gray-400 mb-1">Not enough data for insights.</p>
+              <div className="bg-gray-900 rounded-2xl p-4 text-center">
+                <p className="text-[15px] text-gray-400 mb-1">Not enough data for insights.</p>
                 <p className="text-xs text-gray-500">Track putts, fairways hit, and GIR on your scorecard to unlock detailed analysis.</p>
               </div>
             )}
@@ -792,8 +792,8 @@ function DebriefView({ debrief, viewMode, trends, allHoles }: {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {strengths.length > 0 && (
-              <div className="bg-green-500/5 border border-green-500/20 rounded-lg p-4">
-                <h3 className="text-sm font-semibold text-green-400 mb-2">Strengths</h3>
+              <div className="bg-green-500/10 rounded-2xl p-4">
+                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Strengths</h3>
                 <ul className="space-y-1">
                   {strengths.map((s, i) => (
                     <li key={i} className="text-sm text-gray-300 flex items-center gap-2">
@@ -804,8 +804,8 @@ function DebriefView({ debrief, viewMode, trends, allHoles }: {
               </div>
             )}
             {improvementAreas.length > 0 && (
-              <div className="bg-red-500/5 border border-red-500/20 rounded-lg p-4">
-                <h3 className="text-sm font-semibold text-red-400 mb-2">Focus Areas</h3>
+              <div className="bg-red-500/5 rounded-2xl p-4">
+                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Focus Areas</h3>
                 <ul className="space-y-1">
                   {improvementAreas.map((s, i) => (
                     <li key={i} className="text-sm text-gray-300 flex items-center gap-2">
@@ -818,8 +818,8 @@ function DebriefView({ debrief, viewMode, trends, allHoles }: {
           </div>
 
           {actionItems.length > 0 && (
-            <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
-              <h3 className="text-sm font-semibold text-gray-50">Action Plan</h3>
+            <div className="bg-gray-900 rounded-2xl p-4 space-y-4">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Action Plan</h3>
               {actionItems.map((item, i) => (
                 <ActionItemCard key={i} item={item} index={i} />
               ))}
@@ -834,8 +834,8 @@ function DebriefView({ debrief, viewMode, trends, allHoles }: {
           <SGBarChart analysis={analysis} />
 
           {scoringPatterns.length > 0 && (
-            <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-              <h3 className="text-sm font-semibold text-gray-50 mb-3">Scoring Patterns</h3>
+            <div className="bg-gray-900 rounded-2xl p-4">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Scoring Patterns</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {scoringPatterns.map((p, i) => (
                   <div key={i} className="text-center">
@@ -854,7 +854,7 @@ function DebriefView({ debrief, viewMode, trends, allHoles }: {
 
           {insights.length > 0 && (
             <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-gray-50">All Insights</h3>
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">All Insights</h3>
               {insights.map((ins, i) => (
                 <InsightCard key={i} insight={ins} simple={false} />
               ))}
@@ -866,7 +866,7 @@ function DebriefView({ debrief, viewMode, trends, allHoles }: {
 
           {holeHighlights.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-gray-50 mb-3">Hole Highlights</h3>
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Hole Highlights</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                 {holeHighlights.map((h, i) => (
                   <HoleChip key={i} h={h} />
@@ -894,8 +894,8 @@ function DebriefView({ debrief, viewMode, trends, allHoles }: {
           <CoachNotesSection roundId={round.id} />
           <ShareExportSection debrief={debrief} roundId={round.id} />
 
-          <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-gray-50 mb-3">Related</h3>
+          <div className="bg-gray-900 rounded-2xl p-4">
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Related</h3>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { href: '/rounds', label: 'All Rounds', desc: 'View full scorecard' },
@@ -904,7 +904,7 @@ function DebriefView({ debrief, viewMode, trends, allHoles }: {
                 { href: '/goals', label: 'Season Goals', desc: 'Track your targets' },
               ].map(link => (
                 <Link key={link.href} href={link.href}
-                  className="bg-gray-900 border border-gray-700/50 rounded-lg p-3 hover:bg-gray-750 transition-colors block">
+                  className="bg-gray-800 rounded-2xl p-3 hover:bg-gray-700 transition-colors block">
                   <div className="text-sm text-gray-50">{link.label}</div>
                   <div className="text-xs text-gray-500">{link.desc}</div>
                 </Link>
@@ -1003,8 +1003,8 @@ export default function DebriefPage() {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-800 rounded w-48" />
-          <div className="h-64 bg-gray-800 rounded" />
+          <div className="h-8 bg-gray-900 rounded-2xl w-48" />
+          <div className="h-64 bg-gray-900 rounded-2xl" />
         </div>
       </div>
     );
@@ -1015,7 +1015,7 @@ export default function DebriefPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-gray-50">Post-Round Debrief</h1>
+          <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Post-Round Debrief</h1>
           <p className="text-sm text-gray-400">
             {handicap != null ? `Handicap: ${handicap.toFixed(1)}` : 'Guided reflection with auto-generated insights'}
           </p>
@@ -1024,12 +1024,12 @@ export default function DebriefPage() {
           {debrief && (
             <>
               <button onClick={() => setViewMode(v => v === 'simple' ? 'detailed' : 'simple')}
-                className="px-3 py-1.5 text-xs bg-gray-800 border border-gray-700 hover:bg-gray-700 text-gray-300 rounded-lg transition-colors"
+                className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl transition-colors"
                 title={viewMode === 'simple' ? 'Switch to detailed view with SG data' : 'Switch to simplified view'}>
                 {viewMode === 'simple' ? 'Detailed' : 'Simple'}
               </button>
               <button onClick={() => { setSelectedRoundId(null); setDebrief(null); setAutoSelected(true); }}
-                className="px-3 py-1.5 text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors">
+                className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl transition-colors">
                 Change Round
               </button>
             </>
@@ -1048,19 +1048,19 @@ export default function DebriefPage() {
       )}
 
       {selectedRoundId && !holesLoading && holes.length === 0 && (
-        <div className="bg-gray-800 border border-gray-700 rounded-lg p-8 text-center">
+        <div className="bg-gray-900 rounded-2xl p-8 text-center">
           <div className="text-2xl mb-2">📝</div>
           <h3 className="text-sm font-semibold text-gray-50 mb-1">No Hole-by-Hole Data</h3>
-          <p className="text-sm text-gray-400 mb-3">
+          <p className="text-[15px] text-gray-400 mb-3">
             This round doesn&apos;t have individual hole scores yet. Add hole data to unlock SG analysis, hole highlights, and what-if scenarios.
           </p>
           <div className="flex gap-3 justify-center">
             <Link href="/rounds"
-              className="px-4 py-2 text-sm bg-green-600 hover:bg-green-500 text-white rounded-lg transition-colors">
+              className="px-4 py-2 text-sm bg-green-500 hover:bg-green-400 text-white rounded-xl transition-colors">
               Edit Round
             </Link>
             <Link href="/play"
-              className="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors">
+              className="px-4 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl transition-colors">
               Score New Round
             </Link>
           </div>
