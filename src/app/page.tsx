@@ -196,16 +196,20 @@ function Dashboard() {
 
           {personalBests.length > 0 && (
             <div className="mt-6">
-              <h2 className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">Personal Bests</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              <h2 className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2 px-1">Personal Bests</h2>
+              <div className="bg-gray-900 rounded-2xl overflow-hidden divide-y divide-gray-800/60">
                 {personalBests.map((pb, i) => (
-                  <div key={i} className="bg-gray-900 border border-gray-800 rounded-lg p-3 relative">
-                    {pb.isNew && (
-                      <span className="absolute top-2 right-2 text-xs font-bold text-yellow-400">NEW</span>
-                    )}
-                    <div className="text-xs text-gray-500 uppercase tracking-wider">{pb.label}</div>
-                    <div className="text-xl font-bold text-green-400 mt-1">{pb.value}</div>
-                    <div className="text-xs text-gray-500 mt-1 truncate">{pb.detail}</div>
+                  <div key={i} className="flex items-center justify-between px-4 py-3">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[15px] font-medium text-gray-200">{pb.label}</span>
+                        {pb.isNew && (
+                          <span className="text-[11px] font-bold text-yellow-400 bg-yellow-400/15 px-1.5 py-0.5 rounded-full">NEW</span>
+                        )}
+                      </div>
+                      <div className="text-[13px] text-gray-500 truncate mt-0.5">{pb.detail}</div>
+                    </div>
+                    <span className="text-[17px] font-bold text-green-400 tabular-nums ml-3">{pb.value}</span>
                   </div>
                 ))}
               </div>
@@ -237,17 +241,17 @@ function StatCard({
   unit?: string;
 }) {
   const content = (
-    <div className="bg-gray-900 rounded-lg border border-gray-800 p-4">
-      <div className="text-xs text-gray-500 uppercase tracking-wider">{label}</div>
+    <div className="bg-gray-900 rounded-2xl p-4">
+      <div className="text-[13px] text-gray-500 uppercase tracking-wider">{label}</div>
       <div className={`text-2xl font-bold ${color} mt-1`}>
         {value}<span className="text-sm font-normal text-gray-500">{unit}</span>
       </div>
-      <div className="text-xs text-gray-500 mt-1 truncate">{sub}</div>
+      <div className="text-[13px] text-gray-500 mt-1 truncate">{sub}</div>
     </div>
   );
 
   if (href) {
-    return <Link href={href} className="block hover:ring-1 hover:ring-gray-700 rounded-lg transition-all">{content}</Link>;
+    return <Link href={href} className="block hover:ring-1 hover:ring-gray-700 rounded-2xl transition-all">{content}</Link>;
   }
   return content;
 }
@@ -402,7 +406,7 @@ function QuickAction({ href, label, icon, color }: { href: string; label: string
   return (
     <Link
       href={href}
-      className="flex items-center gap-2 bg-gray-900 border border-gray-800 rounded-lg px-3 py-2.5 hover:border-gray-700 hover:bg-gray-800 transition-all"
+      className="flex items-center gap-2 bg-gray-900 rounded-2xl px-4 py-3 hover:bg-gray-800 transition-all active:scale-[0.97]"
     >
       <span className={color}>{icons[icon]}</span>
       <span className="text-sm text-gray-50 font-medium">{label}</span>
