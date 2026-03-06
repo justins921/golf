@@ -63,13 +63,13 @@ function extractWeaknesses(rounds: Round[]): SGWeakness[] {
 
 function CategoryBadge({ category }: { category: string }) {
   const colors: Record<string, string> = {
-    putting: 'bg-green-500/10 text-green-400 border-green-500/20',
-    short_game: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-    wedges: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    full_swing: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-    warmup: 'bg-gray-500/10 text-gray-400 border-gray-500/20',
-    cooldown: 'bg-gray-500/10 text-gray-400 border-gray-500/20',
-    random: 'bg-pink-500/10 text-pink-400 border-pink-500/20',
+    putting: 'bg-green-500/10 text-green-400',
+    short_game: 'bg-amber-500/10 text-amber-400',
+    wedges: 'bg-blue-500/10 text-blue-400',
+    full_swing: 'bg-purple-500/10 text-purple-400',
+    warmup: 'bg-gray-500/10 text-gray-400',
+    cooldown: 'bg-gray-500/10 text-gray-400',
+    random: 'bg-pink-500/10 text-pink-400',
   };
   const labels: Record<string, string> = {
     putting: 'Putting',
@@ -82,7 +82,7 @@ function CategoryBadge({ category }: { category: string }) {
   };
 
   return (
-    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border ${colors[category] ?? colors.random}`}>
+    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${colors[category] ?? colors.random}`}>
       {labels[category] ?? category}
     </span>
   );
@@ -97,7 +97,7 @@ function IntensityDot({ intensity }: { intensity: string }) {
 
 function BlockCard({ block }: { block: PracticePlanBlock }) {
   return (
-    <div className="bg-gray-900 border border-gray-700/50 rounded-lg p-3 flex gap-3">
+    <div className="bg-gray-900 rounded-2xl p-3 flex gap-3">
       <div className="text-center min-w-[40px]">
         <div className="text-lg font-bold text-gray-50">{block.minutes}</div>
         <div className="text-[10px] text-gray-500">min</div>
@@ -123,10 +123,10 @@ function DayCard({ day, dayIndex }: { day: PracticePlanDay; dayIndex: number }) 
   const [expanded, setExpanded] = useState(dayIndex === 0);
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
+    <div className="bg-gray-900 rounded-2xl overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-750 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-800 transition-colors"
       >
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-green-600/20 text-green-400 rounded-full flex items-center justify-center text-xs font-bold">
@@ -188,17 +188,17 @@ function ConfigForm({ onGenerate, weaknesses, goals }: {
   const facilities: PracticePlanConfig['availableFacilities'] = ['range', 'putting_green', 'short_game_area'];
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg p-5 space-y-5">
+    <div className="bg-gray-900 rounded-2xl p-5 space-y-5">
       <h2 className="text-base font-semibold text-gray-50">Generate Your Plan</h2>
 
       {/* Weekly hours */}
       <div>
-        <label className="block text-xs text-gray-500 mb-2">Weekly Practice Time</label>
+        <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Weekly Practice Time</label>
         <div className="flex flex-wrap gap-2">
           {([2, 3, 5, 7, 10] as WeeklyHours[]).map((h) => (
             <button key={h} onClick={() => setHours(h)}
-              className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-                hours === h ? 'bg-green-600 text-gray-50' : 'bg-gray-700 text-gray-400 hover:text-gray-200'
+              className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
+                hours === h ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
               }`}>
               {h}h/week
             </button>
@@ -208,12 +208,12 @@ function ConfigForm({ onGenerate, weaknesses, goals }: {
 
       {/* Plan length */}
       <div>
-        <label className="block text-xs text-gray-500 mb-2">Plan Duration</label>
+        <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Plan Duration</label>
         <div className="flex gap-2">
           {([1, 2, 4] as PlanLength[]).map((l) => (
             <button key={l} onClick={() => setLength(l)}
-              className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-                length === l ? 'bg-blue-600 text-gray-50' : 'bg-gray-700 text-gray-400 hover:text-gray-200'
+              className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
+                length === l ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
               }`}>
               {l} week{l > 1 ? 's' : ''}
             </button>
@@ -223,12 +223,12 @@ function ConfigForm({ onGenerate, weaknesses, goals }: {
 
       {/* Skill level */}
       <div>
-        <label className="block text-xs text-gray-500 mb-2">Skill Level</label>
+        <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Skill Level</label>
         <div className="flex gap-2">
           {(['beginner', 'intermediate', 'advanced'] as SkillLevel[]).map((l) => (
             <button key={l} onClick={() => setLevel(l)}
-              className={`px-3 py-1.5 text-sm rounded-lg capitalize transition-colors ${
-                level === l ? 'bg-purple-600 text-gray-50' : 'bg-gray-700 text-gray-400 hover:text-gray-200'
+              className={`px-3 py-1.5 text-sm rounded-full capitalize transition-colors ${
+                level === l ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
               }`}>
               {l}
             </button>
@@ -239,16 +239,16 @@ function ConfigForm({ onGenerate, weaknesses, goals }: {
       {/* Season Goals */}
       {goals.filter(g => !g.achieved_at).length > 0 && (
         <div>
-          <label className="block text-xs text-gray-500 mb-2">Your Goals (select to prioritize)</label>
+          <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Your Goals (select to prioritize)</label>
           <div className="flex flex-wrap gap-2">
             {goals.filter(g => !g.achieved_at).map((g) => (
               <button
                 key={g.id}
                 onClick={() => toggleGoal(g.id)}
-                className={`text-xs px-2.5 py-1.5 rounded-lg transition-colors ${
+                className={`text-xs px-2.5 py-1.5 rounded-full transition-colors ${
                   selectedGoalIds.includes(g.id)
-                    ? 'bg-green-600/20 text-green-400 border border-green-500/30'
-                    : 'bg-gray-700 text-gray-400 hover:text-gray-200'
+                    ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
+                    : 'bg-gray-800 text-gray-400'
                 }`}
               >
                 {g.title}
@@ -261,11 +261,11 @@ function ConfigForm({ onGenerate, weaknesses, goals }: {
 
       {/* SG insights */}
       {weaknesses.length > 0 && (
-        <div className="bg-gray-900 border border-gray-700/50 rounded-lg p-3">
+        <div className="bg-gray-800 rounded-2xl p-3">
           <div className="text-xs text-gray-500 mb-2">Detected from your rounds (auto-applied)</div>
           <div className="flex flex-wrap gap-2">
             {weaknesses.map((w) => (
-              <div key={w.category} className={`text-xs px-2 py-1 rounded ${
+              <div key={w.category} className={`text-xs px-2 py-1 rounded-full ${
                 w.sgPerRound < -1 ? 'bg-red-500/10 text-red-400' :
                 w.sgPerRound < 0 ? 'bg-amber-500/10 text-amber-400' :
                 'bg-green-500/10 text-green-400'
@@ -305,7 +305,7 @@ function ConfigForm({ onGenerate, weaknesses, goals }: {
             goals: goalTitles,
           });
         }}
-        className="w-full px-4 py-2.5 bg-green-600 hover:bg-green-500 text-gray-50 text-sm font-medium rounded-lg transition-colors"
+        className="w-full px-4 py-2.5 bg-green-500 hover:bg-green-400 text-gray-50 text-sm font-medium rounded-2xl active:scale-[0.98] transition-all"
       >
         Generate Practice Plan
       </button>
@@ -345,13 +345,13 @@ function PlanView({ plan, onReset }: { plan: PracticePlan; onReset: () => void }
           </p>
         </div>
         <button onClick={onReset}
-          className="px-3 py-1.5 text-sm bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors">
+          className="px-3 py-1.5 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-full transition-colors">
           New Plan
         </button>
       </div>
 
       {/* Insights */}
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-2">
+      <div className="bg-gray-900 rounded-2xl p-4 space-y-2">
         {plan.insights.map((insight, i) => (
           <div key={i} className="flex items-start gap-2 text-sm">
             <span className="text-green-400 mt-0.5">
@@ -375,8 +375,8 @@ function PlanView({ plan, onReset }: { plan: PracticePlan; onReset: () => void }
         <div className="flex gap-2">
           {plan.weeks.map((w, i) => (
             <button key={i} onClick={() => setActiveWeek(i)}
-              className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-                activeWeek === i ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:text-gray-200'
+              className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
+                activeWeek === i ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
               }`}>
               Week {w.weekNumber}
             </button>
@@ -385,7 +385,7 @@ function PlanView({ plan, onReset }: { plan: PracticePlan; onReset: () => void }
       )}
 
       {/* Week header */}
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+      <div className="bg-gray-900 rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
           <div>
             <h3 className="text-sm font-semibold text-gray-50">
@@ -460,7 +460,7 @@ export default function PracticePlansPage() {
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-bold text-gray-50">Practice Plan Generator</h1>
+        <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Practice Plan Generator</h1>
         <p className="text-sm text-gray-400">
           Weekly plans based on your goals, SG data, skill level, and available time
         </p>

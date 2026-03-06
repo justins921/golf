@@ -6,7 +6,7 @@ import { useAllShots } from '@/lib/hooks';
 import type { Shot } from '@/lib/types';
 import { computeClubStats } from '@/lib/stats';
 
-// ── Types ───────────────────────────────────────────────────
+// -- Types -----------------------------------------------------------
 type ViewMode = 'heatmap' | 'tendencies';
 type DistMode = 'carry' | 'total';
 
@@ -26,7 +26,7 @@ interface MissTendency {
   severity: 'low' | 'medium' | 'high';
 }
 
-// ── Helpers ─────────────────────────────────────────────────
+// -- Helpers ---------------------------------------------------------
 
 function computeMissTendencies(shots: Shot[], mode: DistMode): MissTendency[] {
   const byClub = new Map<string, Shot[]>();
@@ -86,7 +86,7 @@ const CLUB_COLORS = [
   '#ec4899', '#14b8a6', '#f97316', '#06b6d4', '#84cc16',
 ];
 
-// ── Heatmap D3 Component ────────────────────────────────────
+// -- Heatmap D3 Component --------------------------------------------
 
 function DensityHeatmap({ shots, mode, selectedClub }: {
   shots: Shot[];
@@ -249,22 +249,22 @@ function DensityHeatmap({ shots, mode, selectedClub }: {
   );
 }
 
-// ── Miss Tendency Card ──────────────────────────────────────
+// -- Miss Tendency Card -----------------------------------------------
 
 function TendencyCard({ t }: { t: MissTendency }) {
   const severityColor = t.severity === 'high' ? 'text-red-400' :
     t.severity === 'medium' ? 'text-amber-400' : 'text-green-400';
-  const severityBg = t.severity === 'high' ? 'bg-red-500/10 border-red-500/20' :
-    t.severity === 'medium' ? 'bg-amber-500/10 border-amber-500/20' : 'bg-green-500/10 border-green-500/20';
+  const severityBg = t.severity === 'high' ? 'bg-red-500/10' :
+    t.severity === 'medium' ? 'bg-amber-500/10' : 'bg-green-500/10';
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+    <div className="bg-gray-900 rounded-2xl p-4">
       <div className="flex items-center justify-between mb-3">
         <div>
           <span className="text-sm font-medium text-gray-50">{t.clubName}</span>
           <span className="text-xs text-gray-500 ml-2">{t.n} shots</span>
         </div>
-        <span className={`text-[10px] font-medium px-2 py-0.5 rounded border ${severityBg} ${severityColor}`}>
+        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${severityBg} ${severityColor}`}>
           {t.severity === 'low' ? 'Tight' : t.severity === 'medium' ? 'Moderate' : 'Wide'}
         </span>
       </div>
@@ -331,7 +331,7 @@ function TendencyCard({ t }: { t: MissTendency }) {
   );
 }
 
-// ── Main Page ───────────────────────────────────────────────
+// -- Main Page -------------------------------------------------------
 
 export default function HeatmapPage() {
   const { shots, loading } = useAllShots();
@@ -356,8 +356,8 @@ export default function HeatmapPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-800 rounded w-48" />
-          <div className="h-64 bg-gray-800 rounded" />
+          <div className="h-8 bg-gray-900 rounded-2xl w-48" />
+          <div className="h-64 bg-gray-900 rounded-2xl" />
         </div>
       </div>
     );
@@ -366,8 +366,8 @@ export default function HeatmapPage() {
   if (fullShots.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8 text-center">
-        <h1 className="text-xl font-bold text-gray-50 mb-2">Shot Pattern Heatmap</h1>
-        <p className="text-gray-400 text-sm">Import shot data from the Shot Data page to see your patterns.</p>
+        <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-2">Shot Pattern Heatmap</h1>
+        <p className="text-center py-16 text-[15px] text-gray-400">Import shot data from the Shot Data page to see your patterns.</p>
       </div>
     );
   }
@@ -377,27 +377,27 @@ export default function HeatmapPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-gray-50">Shot Pattern Heatmap</h1>
+          <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Shot Pattern Heatmap</h1>
           <p className="text-sm text-gray-400">{fullShots.length} shots across {clubs.length} clubs</p>
         </div>
         <div className="flex items-center gap-2">
           {/* View toggle */}
-          <div className="flex bg-gray-800 rounded-lg p-0.5">
+          <div className="flex gap-1">
             {(['heatmap', 'tendencies'] as const).map((v) => (
               <button key={v} onClick={() => setView(v)}
-                className={`px-3 py-1 text-xs rounded-md transition-colors ${
-                  view === v ? 'bg-green-600 text-gray-50' : 'text-gray-400 hover:text-gray-200'
+                className={`px-4 py-2 text-xs rounded-full transition-colors ${
+                  view === v ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
                 }`}>
                 {v === 'heatmap' ? 'Density Map' : 'Miss Tendencies'}
               </button>
             ))}
           </div>
           {/* Mode toggle */}
-          <div className="flex bg-gray-800 rounded-lg p-0.5">
+          <div className="flex gap-1">
             {(['carry', 'total'] as const).map((m) => (
               <button key={m} onClick={() => setMode(m)}
-                className={`px-3 py-1 text-xs rounded-md transition-colors ${
-                  mode === m ? 'bg-blue-600 text-gray-50' : 'text-gray-400 hover:text-gray-200'
+                className={`px-4 py-2 text-xs rounded-full transition-colors ${
+                  mode === m ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
                 }`}>
                 {m === 'carry' ? 'Carry' : 'Total'}
               </button>
@@ -408,8 +408,8 @@ export default function HeatmapPage() {
 
       {/* Quick insights bar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
-          <div className="text-xs text-gray-500">Widest Pattern</div>
+        <div className="bg-gray-900 rounded-2xl px-4 py-3">
+          <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Widest Pattern</div>
           <div className="text-sm font-medium text-gray-50">
             {worstMiss.length > 0 ? worstMiss[0].clubName : tendencies[0]?.clubName ?? '—'}
           </div>
@@ -419,8 +419,8 @@ export default function HeatmapPage() {
               : tendencies[0] ? `±${tendencies[0].sdLateral.toFixed(1)}yd spread` : '—'}
           </div>
         </div>
-        <div className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
-          <div className="text-xs text-gray-500">Tightest Pattern</div>
+        <div className="bg-gray-900 rounded-2xl px-4 py-3">
+          <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Tightest Pattern</div>
           <div className="text-sm font-medium text-gray-50">
             {tightestClubs.length > 0 ? tightestClubs[tightestClubs.length - 1].clubName : '—'}
           </div>
@@ -430,8 +430,8 @@ export default function HeatmapPage() {
               : '—'}
           </div>
         </div>
-        <div className="bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
-          <div className="text-xs text-gray-500">Overall Bias</div>
+        <div className="bg-gray-900 rounded-2xl px-4 py-3">
+          <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Overall Bias</div>
           {(() => {
             const allLat = fullShots.map(s => mode === 'carry' ? s.carry_lateral_yd : s.total_lateral_yd);
             const avgBias = allLat.reduce((a, b) => a + b, 0) / (allLat.length || 1);
@@ -455,7 +455,7 @@ export default function HeatmapPage() {
             <button
               onClick={() => setSelectedClub(null)}
               className={`px-3 py-1 text-xs rounded-full transition-colors ${
-                selectedClub === null ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:text-gray-200'
+                selectedClub === null ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
               }`}>
               All Clubs
             </button>
@@ -464,7 +464,7 @@ export default function HeatmapPage() {
                 className={`px-3 py-1 text-xs rounded-full transition-colors ${
                   selectedClub === club
                     ? 'text-gray-50'
-                    : 'bg-gray-800 text-gray-400 hover:text-gray-200'
+                    : 'bg-gray-800 text-gray-400'
                 }`}
                 style={selectedClub === club ? { backgroundColor: CLUB_COLORS[i % CLUB_COLORS.length] } : {}}>
                 {club}
@@ -473,15 +473,15 @@ export default function HeatmapPage() {
           </div>
 
           {/* Heatmap */}
-          <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+          <div className="bg-gray-900 rounded-2xl p-4">
             <DensityHeatmap shots={fullShots} mode={mode} selectedClub={selectedClub} />
           </div>
 
           {/* Club stats table */}
-          <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
+          <div className="bg-gray-900 rounded-2xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-700 text-xs text-gray-500">
+                <tr className="text-[13px] text-gray-500 uppercase tracking-wider">
                   <th className="text-left px-4 py-2">Club</th>
                   <th className="text-right px-4 py-2">Shots</th>
                   <th className="text-right px-4 py-2">Avg {mode === 'carry' ? 'Carry' : 'Total'}</th>
@@ -490,10 +490,10 @@ export default function HeatmapPage() {
                   <th className="text-right px-4 py-2">Miss</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-gray-800/60">
                 {tendencies.map((t) => (
                   <tr key={t.clubName}
-                    className="border-b border-gray-700/50 hover:bg-gray-750 cursor-pointer"
+                    className="hover:bg-gray-800/50 cursor-pointer"
                     onClick={() => { setSelectedClub(t.clubName); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                     <td className="px-4 py-2 font-medium text-gray-50">{t.clubName}</td>
                     <td className="px-4 py-2 text-right text-gray-400">{t.n}</td>
@@ -511,7 +511,7 @@ export default function HeatmapPage() {
                     </td>
                     <td className="px-4 py-2 text-right text-gray-300">±{t.sdLateral.toFixed(1)}yd</td>
                     <td className="px-4 py-2 text-right">
-                      <span className={`text-xs px-2 py-0.5 rounded ${
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${
                         t.severity === 'high' ? 'bg-red-500/10 text-red-400' :
                         t.severity === 'medium' ? 'bg-amber-500/10 text-amber-400' :
                         'bg-green-500/10 text-green-400'
@@ -533,7 +533,7 @@ export default function HeatmapPage() {
             <TendencyCard key={t.clubName} t={t} />
           ))}
           {tendencies.length === 0 && (
-            <p className="text-gray-500 text-sm col-span-full text-center py-8">
+            <p className="text-center py-16 text-[15px] text-gray-400 col-span-full">
               Need at least 3 shots per club to compute miss tendencies.
             </p>
           )}

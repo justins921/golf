@@ -227,7 +227,13 @@ function SessionLogger() {
   };
 
   if (!session) {
-    return <div className="max-w-4xl mx-auto px-4 py-8 text-gray-500">Loading session...</div>;
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-4">
+        <div className="h-6 w-40 bg-gray-800 rounded-2xl animate-pulse" />
+        <div className="h-4 w-24 bg-gray-800 rounded-xl animate-pulse" />
+        <div className="h-64 bg-gray-800 rounded-2xl animate-pulse" />
+      </div>
+    );
   }
 
   const isComplete = session.completed_at || progress?.isComplete;
@@ -343,7 +349,7 @@ function SessionLogger() {
                 className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${
                   voice.listening
                     ? 'bg-red-600 hover:bg-red-500 animate-pulse shadow-lg shadow-red-600/30'
-                    : 'bg-gray-700 hover:bg-gray-600'
+                    : 'bg-gray-800 hover:bg-gray-700'
                 }`}
                 title={voice.listening ? 'Stop listening' : 'Start voice input'}
               >
@@ -394,7 +400,7 @@ function SessionLogger() {
                 />
               </div>
               <div>
-                <label className="block text-xs text-gray-500 mb-1">Lateral (opt)</label>
+                <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Lateral (opt)</label>
                 <input
                   type="number"
                   value={lateralInput}

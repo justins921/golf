@@ -52,11 +52,11 @@ export default function RoundAnalysis({
     <div className="space-y-4">
       {/* Handicap selector */}
       <div className="flex items-center gap-3">
-        <label className="text-xs text-gray-500">Benchmark handicap:</label>
+        <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Benchmark handicap:</label>
         <select
           value={handicap}
           onChange={(e) => setHandicap(parseInt(e.target.value))}
-          className="px-2 py-1 text-sm bg-gray-900 border border-gray-700 rounded text-gray-300"
+          className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/40"
         >
           <option value={0}>Scratch (0)</option>
           <option value={5}>5 HI</option>
@@ -70,13 +70,13 @@ export default function RoundAnalysis({
       </div>
 
       {/* Tab bar */}
-      <div className="flex gap-1 border-b border-gray-800 pb-1">
+      <div className="flex gap-1 pb-1">
         {(['overview', 'holes', 'practice'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-3 py-1.5 text-sm rounded-t ${
-              activeTab === tab ? 'bg-gray-800 text-gray-50' : 'text-gray-500 hover:text-gray-300'
+            className={`px-3 py-1.5 text-sm rounded-full ${
+              activeTab === tab ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
             }`}
           >
             {tab === 'overview' ? 'SG Overview' : tab === 'holes' ? 'By Hole' : 'Practice Plan'}
@@ -108,7 +108,7 @@ function SGOverview({ analysis }: { analysis: RoundSGAnalysis }) {
   return (
     <div className="space-y-5">
       {/* Total SG card */}
-      <div className="bg-gray-800 rounded-lg p-4 text-center">
+      <div className="bg-gray-900 rounded-2xl p-4 text-center">
         <div className="text-xs text-gray-500 mb-1">
           Total Strokes Gained vs {b.label} Golfer
         </div>
@@ -128,8 +128,8 @@ function SGOverview({ analysis }: { analysis: RoundSGAnalysis }) {
       </div>
 
       {/* SG bar chart */}
-      <div className="bg-gray-800 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-gray-50 mb-3">Strokes Gained Breakdown</h3>
+      <div className="bg-gray-900 rounded-2xl p-4">
+        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Strokes Gained Breakdown</h3>
         <div className="space-y-2">
           {categories.map((cat) => (
             <SGBar key={cat.label} label={cat.label} sg={cat.sg} />
@@ -138,16 +138,16 @@ function SGOverview({ analysis }: { analysis: RoundSGAnalysis }) {
       </div>
 
       {/* Key stats */}
-      <div className="bg-gray-800 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-gray-50 mb-3">Key Stats vs Benchmark</h3>
+      <div className="bg-gray-900 rounded-2xl p-4">
+        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Key Stats vs Benchmark</h3>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <StatRow label="Fairways Hit" value={`${analysis.firCount}/${analysis.firHoles} (${analysis.firPct.toFixed(0)}%)`} benchmark={`${b.firPct}%`} better={analysis.firPct >= b.firPct} />
           <StatRow label="Greens in Reg" value={`${analysis.girCount}/${analysis.holes.length} (${analysis.girPct.toFixed(0)}%)`} benchmark={`${b.girPct}%`} better={analysis.girPct >= b.girPct} />
           <StatRow label="Up & Down" value={`${analysis.upAndDownMade}/${analysis.upAndDownAttempts} (${analysis.upAndDownPct.toFixed(0)}%)`} benchmark={`${b.upAndDownPct}%`} better={analysis.upAndDownPct >= b.upAndDownPct} />
           <StatRow label="Total Putts" value={`${analysis.totalPutts}`} benchmark={`${b.puttsPerRound}`} better={analysis.totalPutts <= b.puttsPerRound} />
-          <StatRow label="Putts / GIR" value={analysis.puttsPerGir > 0 ? `${analysis.puttsPerGir.toFixed(2)}` : '—'} benchmark={`${b.puttsPerGir}`} better={analysis.puttsPerGir <= b.puttsPerGir} />
+          <StatRow label="Putts / GIR" value={analysis.puttsPerGir > 0 ? `${analysis.puttsPerGir.toFixed(2)}` : '\u2014'} benchmark={`${b.puttsPerGir}`} better={analysis.puttsPerGir <= b.puttsPerGir} />
           <StatRow label="3-Putts" value={`${analysis.threePuttCount}`} benchmark={`~${Math.round(18 * b.threePuttPctGir / 100)}`} better={analysis.threePuttCount <= Math.round(18 * b.threePuttPctGir / 100)} />
-          <StatRow label="1-Putts" value={`${analysis.onePuttCount}`} benchmark="—" better={analysis.onePuttCount >= 3} />
+          <StatRow label="1-Putts" value={`${analysis.onePuttCount}`} benchmark="\u2014" better={analysis.onePuttCount >= 3} />
           <StatRow label="Penalties" value={`${analysis.totalPenalties}`} benchmark="~1" better={analysis.totalPenalties <= 1} />
         </div>
       </div>
@@ -164,7 +164,7 @@ function SGCategoryCard({ label, sg, color }: { label: string; sg: number; color
   };
 
   return (
-    <div className={`bg-gray-800 rounded-lg p-3 border-l-4 ${colorMap[color]}`}>
+    <div className={`bg-gray-900 rounded-2xl p-3 border-l-4 ${colorMap[color]}`}>
       <div className="text-xs text-gray-500">{label}</div>
       <div className={`text-xl font-bold ${sg >= 0 ? 'text-green-400' : 'text-red-400'}`}>
         {sg >= 0 ? '+' : ''}{sg.toFixed(1)}
@@ -241,7 +241,7 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
           <button
             key={v}
             onClick={() => setSgView(v)}
-            className={`px-2 py-1 text-xs rounded ${sgView === v ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-500'}`}
+            className={`px-2 py-1 text-xs rounded-full ${sgView === v ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
           >
             {v === 'total' ? 'Total' : v === 'putting' ? 'Putting' : 'Tee-to-Green'}
           </button>
@@ -249,7 +249,7 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
       </div>
 
       {/* Bar chart */}
-      <div className="bg-gray-800 rounded-lg p-4">
+      <div className="bg-gray-900 rounded-2xl p-4">
         <div className="flex items-end gap-1 h-40">
           {analysis.holes.map((hole) => {
             const sg = getSgValue(hole);
@@ -277,7 +277,7 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
                   )}
                 </div>
                 {/* Tooltip */}
-                <div className="hidden group-hover:block absolute -top-16 left-1/2 -translate-x-1/2 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs whitespace-nowrap z-10">
+                <div className="hidden group-hover:block absolute -top-16 left-1/2 -translate-x-1/2 bg-gray-900/95 backdrop-blur border border-gray-800 rounded-xl px-2 py-1 text-xs whitespace-nowrap z-10">
                   <div className="text-gray-400">Hole {hole.holeNumber} (Par {hole.par})</div>
                   <div className="text-gray-50">Score: {hole.score} | Putts: {hole.putts}</div>
                   <div className={sg >= 0 ? 'text-green-400' : 'text-red-400'}>
@@ -299,10 +299,10 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
       </div>
 
       {/* Hole-by-hole table */}
-      <div className="overflow-x-auto">
+      <div className="bg-gray-900 rounded-2xl overflow-hidden">
         <table className="w-full text-xs">
           <thead>
-            <tr className="border-b border-gray-800 text-gray-500 uppercase">
+            <tr className="text-[13px] text-gray-500 uppercase">
               <th className="p-1.5 text-left">Hole</th>
               <th className="p-1.5 text-center">Par</th>
               <th className="p-1.5 text-center">Score</th>
@@ -314,9 +314,9 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
               <th className="p-1.5 text-center">SG Short</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-800/60">
             {analysis.holes.map((hole) => (
-              <tr key={hole.holeNumber} className="border-b border-gray-800/50">
+              <tr key={hole.holeNumber}>
                 <td className="p-1.5 text-gray-400">{hole.holeNumber}</td>
                 <td className="p-1.5 text-center text-gray-500">{hole.par}</td>
                 <td className="p-1.5 text-center text-gray-50">{hole.score}</td>
@@ -382,8 +382,8 @@ function PracticePlan({ report }: { report: PracticePriorityReport }) {
   return (
     <div className="space-y-4">
       {/* Summary */}
-      <div className="bg-gray-800 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-gray-50 mb-2">Biggest Opportunity</h3>
+      <div className="bg-gray-900 rounded-2xl p-4">
+        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Biggest Opportunity</h3>
         <div className="text-lg font-bold text-red-400">{report.biggestOpportunity}</div>
         <div className="text-xs text-gray-500 mt-1">{report.summary}</div>
       </div>
@@ -416,11 +416,11 @@ function RecommendationCard({ rec }: { rec: PracticeRecommendation }) {
   };
 
   return (
-    <div className={`rounded-lg border-l-4 ${categoryColors[rec.category]} p-4`}>
+    <div className={`rounded-2xl border-l-4 ${categoryColors[rec.category]} p-4`}>
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs px-1.5 py-0.5 rounded bg-gray-800 text-gray-400">
+            <span className="text-xs px-1.5 py-0.5 rounded-full bg-gray-800 text-gray-400">
               #{rec.priority}
             </span>
             <span className="text-xs text-gray-500">{categoryLabels[rec.category]}</span>
@@ -442,11 +442,11 @@ function RecommendationCard({ rec }: { rec: PracticeRecommendation }) {
       {expanded && (
         <div className="mt-3 space-y-3 border-t border-gray-800 pt-3">
           <div>
-            <div className="text-[10px] text-gray-600 uppercase mb-1">Benchmark</div>
+            <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Benchmark</div>
             <div className="text-xs text-gray-400">{rec.benchmarkComparison}</div>
           </div>
           <div>
-            <div className="text-[10px] text-gray-600 uppercase mb-1">Recommended Drills</div>
+            <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Recommended Drills</div>
             <ul className="text-xs text-gray-400 space-y-1">
               {rec.drillSuggestions.map((d, i) => (
                 <li key={i} className="flex items-start gap-1.5">
@@ -456,8 +456,8 @@ function RecommendationCard({ rec }: { rec: PracticeRecommendation }) {
               ))}
             </ul>
           </div>
-          <div className="bg-gray-900 rounded p-2">
-            <div className="text-[10px] text-gray-600 uppercase mb-1">Tip</div>
+          <div className="bg-gray-900 rounded-2xl p-2">
+            <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Tip</div>
             <div className="text-xs text-gray-300">{rec.tip}</div>
           </div>
         </div>

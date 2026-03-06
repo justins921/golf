@@ -312,7 +312,7 @@ export default function DispersionChart({
   };
 
   return (
-    <div className="relative" ref={containerRef}>
+    <div className="bg-gray-900 rounded-2xl p-4" ref={containerRef}>
       {clubs.length > 1 && (
         <div className="flex flex-wrap gap-2 mb-3">
           <button
@@ -337,7 +337,7 @@ export default function DispersionChart({
         </div>
       )}
 
-      <div className="bg-gray-900 rounded-2xl p-4 overflow-x-auto">
+      <div className="relative overflow-x-auto">
         <svg ref={svgRef} />
         <div
           ref={tooltipRef}

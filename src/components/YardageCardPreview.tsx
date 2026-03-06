@@ -223,7 +223,7 @@ export default function YardageCardPreview({ shots, config, sessionEnv, destEnv,
                             {club.dispersionArc}
                           </span>
                           <span className="text-[7px] text-gray-500 ml-0.5">
-                            {club.dispersionLeft}L\u00b7{club.dispersionRight}R
+                            {club.dispersionLeft}L\u00B7{club.dispersionRight}R
                           </span>
                         </>
                       ) : (

@@ -202,7 +202,7 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
     <div className="space-y-2">
       {/* Course name input with autocomplete */}
       <div className="relative" ref={dropdownRef}>
-        <label className="block text-xs text-gray-500 mb-1">Course</label>
+        <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Course</label>
         <input
           type="text"
           value={query}
@@ -213,18 +213,18 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
           }}
           onFocus={() => setShowDropdown(true)}
           placeholder="Search or enter course name"
-          className={`w-full px-3 ${py} ${textSize} bg-gray-800 border border-gray-700 rounded-lg text-gray-50`}
+          className={`w-full px-3 ${py} ${textSize} bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40`}
         />
 
         {/* Dropdown */}
         {showDropdown && query.length > 0 && (
-          <div className="absolute z-20 w-full mt-1 bg-gray-800 border border-gray-700 rounded-lg shadow-lg overflow-hidden max-h-60 overflow-y-auto">
+          <div className="absolute z-20 w-full mt-1 bg-gray-900/95 backdrop-blur-lg rounded-2xl border border-gray-800 shadow-lg overflow-hidden max-h-60 overflow-y-auto">
             {filtered.length > 0 ? (
               filtered.map((c) => (
                 <button
                   key={c.id}
                   onClick={() => handleSelectCourse(c)}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-700 transition-colors"
+                  className="w-full text-left px-4 py-3 hover:bg-gray-800 rounded-xl transition-colors"
                 >
                   <div className="text-sm text-gray-50">{c.name}</div>
                   {c.city && (
@@ -233,7 +233,7 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
                   {c.tee_sets?.length > 0 && (
                     <div className="flex gap-1 mt-0.5">
                       {c.tee_sets.map((t, i) => (
-                        <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-gray-700 text-gray-400">
+                        <span key={i} className="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-800 text-gray-400">
                           {t.name} {t.course_rating}/{t.slope_rating}
                         </span>
                       ))}
@@ -242,11 +242,11 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
                 </button>
               ))
             ) : (
-              <div className="px-3 py-2 text-sm text-gray-500">No saved courses match</div>
+              <div className="px-4 py-3 text-sm text-gray-500">No saved courses match</div>
             )}
             <button
               onClick={handleManualEntry}
-              className="w-full text-left px-3 py-2 hover:bg-gray-700 border-t border-gray-700 text-sm text-blue-400"
+              className="w-full text-left px-4 py-3 hover:bg-gray-800 rounded-xl border-t border-gray-800 text-sm text-blue-400"
             >
               Use &quot;{query}&quot; without lookup
             </button>
@@ -257,15 +257,15 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
       {/* Tee selector (when course is selected and has tees) */}
       {selectedCourse && selectedCourse.tee_sets?.length > 0 && (
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Tees</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Tees</label>
           <div className="flex flex-wrap gap-1">
             {selectedCourse.tee_sets.map((tee, i) => (
               <button
                 key={i}
                 onClick={() => handleSelectTee(tee)}
-                className={`px-3 ${compact ? 'py-1' : 'py-1.5'} text-xs rounded-lg ${
+                className={`px-3 ${compact ? 'py-1' : 'py-1.5'} text-xs rounded-full ${
                   selectedTee === tee.name
-                    ? 'bg-green-600 text-gray-50'
+                    ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
                     : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                 }`}
               >
@@ -275,7 +275,7 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
             ))}
             <button
               onClick={() => setShowSaveCourse(true)}
-              className={`px-2 ${compact ? 'py-1' : 'py-1.5'} text-xs rounded-lg bg-gray-800 text-gray-500 hover:text-gray-400`}
+              className={`px-2 ${compact ? 'py-1' : 'py-1.5'} text-xs rounded-full bg-gray-800 text-gray-500 hover:text-gray-400`}
             >
               + Tee
             </button>
@@ -311,8 +311,8 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
       )}
 
       {showSaveCourse && (
-        <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-3 space-y-2">
-          <div className="text-xs text-gray-400 font-medium">
+        <div className="bg-gray-900 rounded-2xl p-3 space-y-2">
+          <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">
             {selectedCourse ? `Add tee to ${selectedCourse.name}` : `Save "${query}" to your courses`}
           </div>
           <div className="grid grid-cols-4 gap-2">
@@ -322,7 +322,7 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
                 value={newTeeName}
                 onChange={(e) => setNewTeeName(e.target.value)}
                 placeholder="Tee name"
-                className="w-full px-2 py-1.5 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
@@ -332,7 +332,7 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
                 value={newRating}
                 onChange={(e) => setNewRating(e.target.value)}
                 placeholder="Rating"
-                className="w-full px-2 py-1.5 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
@@ -341,7 +341,7 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
                 value={newSlope}
                 onChange={(e) => setNewSlope(e.target.value)}
                 placeholder="Slope"
-                className="w-full px-2 py-1.5 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
@@ -350,7 +350,7 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
                 value={newPar}
                 onChange={(e) => setNewPar(e.target.value)}
                 placeholder="Par"
-                className="w-full px-2 py-1.5 text-xs bg-gray-900 border border-gray-600 rounded text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
           </div>
@@ -358,13 +358,13 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
             <button
               onClick={selectedCourse ? handleAddTee : handleSaveCourse}
               disabled={!newTeeName || !newRating || !newSlope || saving}
-              className="px-3 py-1 text-xs bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded"
+              className="px-3 py-1 text-xs bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-xl"
             >
               {saving ? 'Saving...' : selectedCourse ? 'Add Tee' : 'Save Course'}
             </button>
             <button
               onClick={() => setShowSaveCourse(false)}
-              className="px-3 py-1 text-xs bg-gray-700 text-gray-300 rounded"
+              className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl"
             >
               Cancel
             </button>

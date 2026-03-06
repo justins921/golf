@@ -52,7 +52,7 @@ export default function BagPage() {
     <AuthGuard>
       <Nav />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <h1 className="text-2xl font-bold text-gray-50 mb-1">Equipment Bag</h1>
+        <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-1">Equipment Bag</h1>
         <p className="text-sm text-gray-500 mb-6">
           Manage the clubs in your bag, track specs, and see carry distances from shot data.
         </p>
@@ -133,17 +133,17 @@ function BagManager() {
   return (
     <div className="space-y-6">
       {/* Bag Summary */}
-      <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+      <div className="bg-gray-900 rounded-2xl p-4">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           <div>
-            <span className="text-xs text-gray-500 uppercase tracking-wide">Clubs</span>
+            <span className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Clubs</span>
             <p className="text-lg font-bold text-gray-50">
               {clubs.length}<span className="text-gray-500 font-normal">/14</span>
             </p>
           </div>
           {distanceCoverage && (
             <div>
-              <span className="text-xs text-gray-500 uppercase tracking-wide">Distance Coverage</span>
+              <span className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Distance Coverage</span>
               <p className="text-lg font-bold text-gray-50">
                 {distanceCoverage.min}<span className="text-gray-500 font-normal"> &ndash; </span>{distanceCoverage.max}
                 <span className="text-sm text-gray-500 font-normal ml-1">yd</span>
@@ -152,7 +152,7 @@ function BagManager() {
           )}
           {hasGaps && (
             <div>
-              <span className="text-xs text-gray-500 uppercase tracking-wide">Gaps</span>
+              <span className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Gaps</span>
               <p className="text-sm">
                 <Link href="/gapping" className="text-green-400 hover:text-green-300 underline underline-offset-2">
                   Gaps detected &rarr;
@@ -167,7 +167,7 @@ function BagManager() {
       <div>
         <button
           onClick={() => setShowAddForm(v => !v)}
-          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors"
+          className="px-4 py-2 bg-green-500 hover:bg-green-400 text-white text-sm font-medium rounded-2xl active:scale-[0.98] transition-colors"
         >
           {showAddForm ? 'Cancel' : '+ Add Club'}
         </button>
@@ -187,9 +187,9 @@ function BagManager() {
 
       {/* Club cards grouped by category */}
       {clubs.length === 0 && !showAddForm && (
-        <div className="text-center text-gray-600 py-12">
-          <div className="text-sm mb-2">No clubs in your bag yet</div>
-          <div className="text-xs text-gray-700">Click &ldquo;+ Add Club&rdquo; to start building your bag.</div>
+        <div className="text-center py-16 text-[15px] text-gray-400">
+          <div className="mb-2">No clubs in your bag yet</div>
+          <div className="text-xs text-gray-500">Click &ldquo;+ Add Club&rdquo; to start building your bag.</div>
         </div>
       )}
 
@@ -198,7 +198,7 @@ function BagManager() {
         if (!catClubs || catClubs.length === 0) return null;
         return (
           <div key={cat}>
-            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{cat}</h2>
+            <h2 className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">{cat}</h2>
             <div className="space-y-2">
               {catClubs.map(club => (
                 <ClubCard
@@ -275,7 +275,7 @@ function ClubCard({
   };
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
+    <div className="bg-gray-900 rounded-2xl overflow-hidden">
       {/* Collapsed header */}
       <button
         onClick={onToggle}
@@ -312,64 +312,64 @@ function ClubCard({
 
       {/* Expanded edit form */}
       {expanded && (
-        <div className="border-t border-gray-800 px-4 py-4 space-y-3">
+        <div className="border-t border-gray-800/60 px-4 py-4 space-y-3">
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div className="col-span-2 sm:col-span-1">
-              <label className="text-xs text-gray-500 block mb-1">Club Name</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Club Name</label>
               <input
                 type="text"
                 value={editName}
                 onChange={e => setEditName(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-gray-50 focus:outline-none focus:border-green-600"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 block mb-1">Brand</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Brand</label>
               <input
                 type="text"
                 value={editBrand}
                 onChange={e => setEditBrand(e.target.value)}
                 placeholder="e.g. Titleist"
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-gray-50 placeholder-gray-600 focus:outline-none focus:border-green-600"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 block mb-1">Model</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Model</label>
               <input
                 type="text"
                 value={editModel}
                 onChange={e => setEditModel(e.target.value)}
                 placeholder="e.g. T200"
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-gray-50 placeholder-gray-600 focus:outline-none focus:border-green-600"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 block mb-1">Loft (&deg;)</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Loft (&deg;)</label>
               <input
                 type="number"
                 step="0.5"
                 value={editLoft}
                 onChange={e => setEditLoft(e.target.value)}
                 placeholder="e.g. 10.5"
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-gray-50 placeholder-gray-600 focus:outline-none focus:border-green-600"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 block mb-1">Shaft</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Shaft</label>
               <input
                 type="text"
                 value={editShaft}
                 onChange={e => setEditShaft(e.target.value)}
                 placeholder="e.g. Project X 6.0"
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-gray-50 placeholder-gray-600 focus:outline-none focus:border-green-600"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 block mb-1">Flex</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Flex</label>
               <select
                 value={editFlex}
                 onChange={e => setEditFlex(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-gray-50 focus:outline-none focus:border-green-600"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               >
                 <option value="">--</option>
                 <option value="X">X (Extra Stiff)</option>
@@ -381,13 +381,13 @@ function ClubCard({
             </div>
           </div>
           <div>
-            <label className="text-xs text-gray-500 block mb-1">Notes</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Notes</label>
             <textarea
               value={editNotes}
               onChange={e => setEditNotes(e.target.value)}
               rows={2}
               placeholder="Any notes about this club..."
-              className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-gray-50 placeholder-gray-600 focus:outline-none focus:border-green-600 resize-none"
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40 resize-none"
             />
           </div>
           <div className="flex items-center justify-between pt-1">
@@ -395,7 +395,7 @@ function ClubCard({
               {!confirmDelete ? (
                 <button
                   onClick={() => setConfirmDelete(true)}
-                  className="text-xs text-red-500 hover:text-red-400 transition-colors"
+                  className="text-xs text-gray-500 hover:text-red-400 transition-colors"
                 >
                   Remove from bag
                 </button>
@@ -428,7 +428,7 @@ function ClubCard({
               <button
                 onClick={handleSave}
                 disabled={saving || !editName.trim()}
-                className="px-4 py-1.5 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-xs font-medium rounded transition-colors"
+                className="px-4 py-1.5 bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white text-xs font-medium rounded-xl transition-colors"
               >
                 {saving ? 'Saving...' : 'Save'}
               </button>
@@ -485,27 +485,27 @@ function AddClubForm({
   };
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 space-y-3">
+    <div className="bg-gray-900 rounded-2xl p-4 space-y-3">
       <h3 className="text-sm font-semibold text-gray-50">Add a Club</h3>
 
       {/* Club name with suggestions */}
       <div className="relative">
-        <label className="text-xs text-gray-500 block mb-1">Club Name *</label>
+        <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Club Name *</label>
         <input
           type="text"
           value={clubName}
           onChange={e => { setClubName(e.target.value); setShowSuggestions(true); }}
           onFocus={() => setShowSuggestions(true)}
           placeholder="e.g. 7 Iron"
-          className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-gray-50 placeholder-gray-600 focus:outline-none focus:border-green-600"
+          className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
         />
         {showSuggestions && filteredSuggestions.length > 0 && (
-          <div className="absolute z-10 mt-1 w-full max-h-48 overflow-y-auto bg-gray-800 border border-gray-700 rounded shadow-lg">
+          <div className="absolute z-10 mt-1 w-full max-h-48 overflow-y-auto bg-gray-800 rounded-xl shadow-lg">
             {filteredSuggestions.map(suggestion => (
               <button
                 key={suggestion}
                 onClick={() => { setClubName(suggestion); setShowSuggestions(false); }}
-                className="w-full text-left px-3 py-1.5 text-sm text-gray-300 hover:bg-gray-700 hover:text-gray-50 transition-colors"
+                className="w-full text-left px-3 py-1.5 text-sm text-gray-300 hover:bg-gray-700 hover:text-gray-50 transition-colors first:rounded-t-xl last:rounded-b-xl"
               >
                 {suggestion}
               </button>
@@ -516,52 +516,52 @@ function AddClubForm({
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <div>
-          <label className="text-xs text-gray-500 block mb-1">Brand</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Brand</label>
           <input
             type="text"
             value={brand}
             onChange={e => setBrand(e.target.value)}
             placeholder="e.g. Callaway"
-            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-gray-50 placeholder-gray-600 focus:outline-none focus:border-green-600"
+            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
         </div>
         <div>
-          <label className="text-xs text-gray-500 block mb-1">Model</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Model</label>
           <input
             type="text"
             value={model}
             onChange={e => setModel(e.target.value)}
             placeholder="e.g. Paradym"
-            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-gray-50 placeholder-gray-600 focus:outline-none focus:border-green-600"
+            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
         </div>
         <div>
-          <label className="text-xs text-gray-500 block mb-1">Loft (&deg;)</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Loft (&deg;)</label>
           <input
             type="number"
             step="0.5"
             value={loft}
             onChange={e => setLoft(e.target.value)}
             placeholder="e.g. 28"
-            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-gray-50 placeholder-gray-600 focus:outline-none focus:border-green-600"
+            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
         </div>
         <div>
-          <label className="text-xs text-gray-500 block mb-1">Shaft</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Shaft</label>
           <input
             type="text"
             value={shaft}
             onChange={e => setShaft(e.target.value)}
             placeholder="e.g. KBS Tour 120"
-            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-gray-50 placeholder-gray-600 focus:outline-none focus:border-green-600"
+            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
         </div>
         <div>
-          <label className="text-xs text-gray-500 block mb-1">Flex</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Flex</label>
           <select
             value={flex}
             onChange={e => setFlex(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-sm text-gray-50 focus:outline-none focus:border-green-600"
+            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           >
             <option value="">--</option>
             <option value="X">X (Extra Stiff)</option>
@@ -583,7 +583,7 @@ function AddClubForm({
         <button
           onClick={handleSubmit}
           disabled={saving || !clubName.trim()}
-          className="px-4 py-1.5 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-xs font-medium rounded transition-colors"
+          className="px-4 py-1.5 bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white text-xs font-medium rounded-xl transition-colors"
         >
           {saving ? 'Adding...' : 'Add to Bag'}
         </button>
