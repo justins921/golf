@@ -39,7 +39,7 @@ function WedgesLab() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-gray-50 mb-6">Wedge Lab</h1>
+      <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-6">Wedge Lab</h1>
 
       {/* Tabs */}
       <div className="flex flex-wrap gap-1 mb-6">
@@ -52,8 +52,8 @@ function WedgesLab() {
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`px-3 sm:px-4 py-2 text-sm rounded-md font-medium ${
-              tab === t.key ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+            className={`px-3 sm:px-4 py-2 text-sm rounded-full font-medium transition-colors ${
+              tab === t.key ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
             }`}
           >
             {t.label}
@@ -136,7 +136,7 @@ function BagManager({
         <p className="text-sm text-gray-400">{clubs.length}/14 clubs</p>
         <button
           onClick={() => { setEditing(null); setShowForm(true); }}
-          className="px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-gray-50 rounded-md"
+          className="px-4 py-2 text-sm bg-green-500 hover:bg-green-400 text-white rounded-2xl active:scale-[0.98] transition-colors"
         >
           + Add Club
         </button>
@@ -154,10 +154,10 @@ function BagManager({
       {sorted.length === 0 ? (
         <p className="text-gray-500">No clubs in your bag yet. Add your 14 clubs to get started.</p>
       ) : (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto rounded-2xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-800 text-gray-500 text-left">
+              <tr className="text-xs font-semibold text-gray-500 uppercase tracking-wider text-left">
                 <th className="py-2 px-2">Club</th>
                 <th className="py-2 px-2">Brand</th>
                 <th className="py-2 px-2 hidden sm:table-cell">Model</th>
@@ -167,9 +167,9 @@ function BagManager({
                 <th className="py-2 px-2" />
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-800/60">
               {sorted.map((c) => (
-                <tr key={c.id} className="border-b border-gray-800/50 text-gray-300">
+                <tr key={c.id} className="text-gray-300">
                   <td className="py-1.5 px-2 font-medium text-gray-50">{c.club_name}</td>
                   <td className="py-1.5 px-2">{c.brand ?? '—'}</td>
                   <td className="py-1.5 px-2 hidden sm:table-cell">{c.model ?? '—'}</td>
@@ -246,14 +246,15 @@ function BagClubForm({
     setSaving(false);
   };
 
-  const inputCls = 'w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50 placeholder-gray-500 focus:outline-none focus:border-green-500';
+  const inputCls = 'w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500/40';
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
-      <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-700 rounded-t-lg sm:rounded-lg p-5 sm:p-6 w-full sm:max-w-md space-y-3 max-h-[90vh] overflow-y-auto">
+      <form onSubmit={handleSubmit} className="bg-gray-900 rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 w-full sm:max-w-md space-y-3 max-h-[90vh] overflow-y-auto">
+        <div className="w-9 h-1 rounded-full bg-gray-700 mx-auto mb-3 sm:hidden" />
         <h2 className="text-lg font-semibold text-gray-50 mb-2">{club ? 'Edit Club' : 'Add Club'}</h2>
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Club *</label>
+          <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Club *</label>
           <select
             value={clubName}
             onChange={(e) => setClubName(e.target.value)}
@@ -275,8 +276,8 @@ function BagClubForm({
         <input className={inputCls} placeholder="Flex (e.g., Stiff, Regular)" value={flex} onChange={(e) => setFlex(e.target.value)} />
         <textarea className={inputCls + ' h-16'} placeholder="Notes" value={notes} onChange={(e) => setNotes(e.target.value)} />
         <div className="flex justify-end gap-2 pt-2">
-          <button type="button" onClick={onCancel} className="px-4 py-2 text-sm bg-gray-800 text-gray-400 rounded hover:bg-gray-700">Cancel</button>
-          <button type="submit" disabled={saving} className="px-4 py-2 text-sm bg-green-600 text-gray-50 rounded hover:bg-green-700 disabled:opacity-50">
+          <button type="button" onClick={onCancel} className="px-4 py-2 text-sm bg-gray-800 text-gray-400 rounded-2xl hover:bg-gray-700 transition-colors">Cancel</button>
+          <button type="submit" disabled={saving} className="px-4 py-2 text-sm bg-green-500 hover:bg-green-400 text-white rounded-2xl active:scale-[0.98] disabled:opacity-50 transition-colors">
             {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
@@ -360,22 +361,22 @@ function WedgeMatrixConfig({
     setWedgeClubs(wedgeClubs.filter((c) => c !== club));
   };
 
-  const inputCls = 'w-full px-2 py-1.5 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50 text-center focus:outline-none focus:border-green-500';
+  const inputCls = 'w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 text-center focus:outline-none focus:ring-2 focus:ring-green-500/40';
 
   return (
     <div className="space-y-6">
       {/* System selector */}
       <div>
-        <label className="block text-xs text-gray-500 mb-2">Swing System</label>
+        <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Swing System</label>
         <div className="flex flex-wrap gap-2">
           {(Object.entries(SWING_SYSTEM_LABELS) as [SwingSystem, string][]).map(([key, label]) => (
             <button
               key={key}
               onClick={() => handleSystemChange(key)}
-              className={`px-3 py-1.5 text-sm rounded-md border ${
+              className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
                 system === key
-                  ? 'border-green-500 bg-green-600/20 text-gray-50'
-                  : 'border-gray-700 bg-gray-800 text-gray-400 hover:bg-gray-700'
+                  ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
+                  : 'bg-gray-800 text-gray-400'
               }`}
             >
               {label}
@@ -393,10 +394,10 @@ function WedgeMatrixConfig({
 
       {/* Swing labels editor */}
       <div>
-        <label className="block text-xs text-gray-500 mb-2">Swing Lengths</label>
+        <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Swing Lengths</label>
         <div className="flex flex-wrap gap-2 mb-2">
           {swingLabels.map((label) => (
-            <div key={label} className="flex items-center gap-1 bg-gray-800 border border-gray-700 rounded-md px-2 py-1">
+            <div key={label} className="flex items-center gap-1 bg-gray-800 rounded-full px-3 py-1">
               <span className="text-sm text-gray-300">{label}</span>
               <button
                 onClick={() => removeLabel(label)}
@@ -413,9 +414,9 @@ function WedgeMatrixConfig({
             onChange={(e) => setCustomLabel(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomLabel(); } }}
             placeholder="Add custom label..."
-            className="px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50 placeholder-gray-600 w-40"
+            className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 w-40 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
-          <button onClick={addCustomLabel} className="px-2 py-1 text-xs bg-gray-700 text-gray-300 rounded hover:bg-gray-600">
+          <button onClick={addCustomLabel} className="px-3 py-1.5 text-xs bg-gray-800 text-gray-300 rounded-full hover:bg-gray-700 transition-colors">
             Add
           </button>
         </div>
@@ -423,10 +424,10 @@ function WedgeMatrixConfig({
 
       {/* Wedge clubs editor */}
       <div>
-        <label className="block text-xs text-gray-500 mb-2">Wedge Clubs</label>
+        <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Wedge Clubs</label>
         <div className="flex flex-wrap gap-2 mb-2">
           {wedgeClubs.map((club) => (
-            <div key={club} className="flex items-center gap-1 bg-gray-800 border border-gray-700 rounded-md px-2 py-1">
+            <div key={club} className="flex items-center gap-1 bg-gray-800 rounded-full px-3 py-1">
               <span className="text-sm text-gray-300">{club}</span>
               <button
                 onClick={() => removeClub(club)}
@@ -443,9 +444,9 @@ function WedgeMatrixConfig({
             onChange={(e) => setCustomClub(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomClub(); } }}
             placeholder="Add club (e.g., 52°)..."
-            className="px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50 placeholder-gray-600 w-40"
+            className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 w-40 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
-          <button onClick={addCustomClub} className="px-2 py-1 text-xs bg-gray-700 text-gray-300 rounded hover:bg-gray-600">
+          <button onClick={addCustomClub} className="px-3 py-1.5 text-xs bg-gray-800 text-gray-300 rounded-full hover:bg-gray-700 transition-colors">
             Add
           </button>
         </div>
@@ -454,7 +455,7 @@ function WedgeMatrixConfig({
       {/* Distance matrix grid */}
       {swingLabels.length > 0 && wedgeClubs.length > 0 && (
         <div>
-          <label className="block text-xs text-gray-500 mb-2">Carry Distances (yards)</label>
+          <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Carry Distances (yards)</label>
           <div className="overflow-x-auto">
             <table className="text-sm">
               <thead>
@@ -469,7 +470,7 @@ function WedgeMatrixConfig({
               </thead>
               <tbody>
                 {swingLabels.map((label) => (
-                  <tr key={label} className="border-t border-gray-800/50">
+                  <tr key={label} className="border-t border-gray-800/60">
                     <td className="py-2 px-2 text-gray-400 font-medium">{label}</td>
                     {wedgeClubs.map((club) => {
                       const key = `${club}|${label}`;
@@ -497,7 +498,7 @@ function WedgeMatrixConfig({
       <button
         onClick={handleSave}
         disabled={saving}
-        className="px-5 py-2 text-sm bg-green-600 text-gray-50 rounded-md hover:bg-green-700 disabled:opacity-50"
+        className="px-5 py-2 text-sm bg-green-500 hover:bg-green-400 text-white rounded-2xl active:scale-[0.98] disabled:opacity-50 transition-colors"
       >
         {saving ? 'Saving...' : 'Save Matrix'}
       </button>
@@ -583,26 +584,26 @@ function WedgePractice({
       {/* Range config */}
       <div className="flex flex-wrap items-end gap-4">
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Min (yds)</label>
+          <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Min (yds)</label>
           <input
             type="number"
             value={minRange}
             onChange={(e) => setMinRange(parseInt(e.target.value) || 20)}
-            className="w-20 px-2 py-1.5 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
+            className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Max (yds)</label>
+          <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Max (yds)</label>
           <input
             type="number"
             value={maxRange}
             onChange={(e) => setMaxRange(parseInt(e.target.value) || 120)}
-            className="w-20 px-2 py-1.5 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
+            className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
         </div>
         <button
           onClick={() => { setResults([]); generateTarget(); }}
-          className="px-4 py-1.5 text-sm bg-purple-600 hover:bg-purple-500 text-gray-50 rounded-md"
+          className="px-4 py-1.5 text-sm bg-green-500 hover:bg-green-400 text-white rounded-2xl active:scale-[0.98] transition-colors"
         >
           {results.length > 0 ? 'Reset & New Session' : 'Start Session'}
         </button>
@@ -610,7 +611,7 @@ function WedgePractice({
 
       {/* Target display */}
       {targetYards != null && (
-        <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 text-center space-y-4">
+        <div className="bg-gray-900 rounded-2xl p-6 text-center space-y-4">
           <div>
             <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Target Distance</p>
             <p className="text-6xl font-bold text-green-400">{targetYards}</p>
@@ -618,7 +619,7 @@ function WedgePractice({
           </div>
 
           {closestEntry && (
-            <div className="bg-gray-800/50 rounded-lg p-3 inline-block">
+            <div className="bg-gray-800/50 rounded-2xl p-3 inline-block">
               <p className="text-xs text-gray-500 mb-1">Closest in your matrix</p>
               <p className="text-sm text-gray-50">
                 <span className="font-medium">{closestEntry.club}</span>
@@ -633,27 +634,27 @@ function WedgePractice({
 
           <div className="flex items-center gap-3 justify-center">
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Actual carry (yds)</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Actual carry (yds)</label>
               <input
                 type="number"
                 value={resultYards}
                 onChange={(e) => setResultYards(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') logResult(); }}
                 placeholder="Enter result..."
-                className="w-32 px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50 text-center placeholder-gray-600"
+                className="w-32 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 text-center placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                 autoFocus
               />
             </div>
             <button
               onClick={logResult}
               disabled={!resultYards}
-              className="px-4 py-2 text-sm bg-green-600 hover:bg-green-500 text-gray-50 rounded-md disabled:opacity-50 mt-5"
+              className="px-4 py-2 text-sm bg-green-500 hover:bg-green-400 text-white rounded-2xl active:scale-[0.98] disabled:opacity-50 mt-5 transition-colors"
             >
               Log & Next
             </button>
             <button
               onClick={generateTarget}
-              className="px-4 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-md border border-gray-600 mt-5"
+              className="px-4 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-2xl mt-5 transition-colors"
             >
               Skip
             </button>
@@ -664,15 +665,15 @@ function WedgePractice({
       {/* Score & results */}
       {score && (
         <div className="grid grid-cols-3 gap-4 text-center">
-          <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
+          <div className="bg-gray-900 rounded-2xl p-4">
             <div className="text-2xl font-bold text-gray-50">{score.score}</div>
             <div className="text-[10px] text-gray-500">Score (out of 10)</div>
           </div>
-          <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
+          <div className="bg-gray-900 rounded-2xl p-4">
             <div className="text-2xl font-bold text-gray-50">{score.avgError} yds</div>
             <div className="text-[10px] text-gray-500">Avg Error</div>
           </div>
-          <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
+          <div className="bg-gray-900 rounded-2xl p-4">
             <div className="text-2xl font-bold text-gray-50">{score.total}</div>
             <div className="text-[10px] text-gray-500">Shots</div>
           </div>
@@ -682,19 +683,19 @@ function WedgePractice({
       {results.length > 0 && (
         <div>
           <h3 className="text-sm font-medium text-gray-400 mb-2">Shot Log</h3>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-2xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-800 text-gray-500 text-left">
+                <tr className="text-xs font-semibold text-gray-500 uppercase tracking-wider text-left">
                   <th className="py-2 px-2">#</th>
                   <th className="py-2 px-2">Target</th>
                   <th className="py-2 px-2">Actual</th>
                   <th className="py-2 px-2">Error</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-gray-800/60">
                 {results.map((r, i) => (
-                  <tr key={i} className="border-b border-gray-800/50 text-gray-300">
+                  <tr key={i} className="text-gray-300">
                     <td className="py-1.5 px-2 text-gray-500">{results.length - i}</td>
                     <td className="py-1.5 px-2">{r.target} yds</td>
                     <td className="py-1.5 px-2">{r.actual} yds</td>
@@ -812,11 +813,11 @@ function WedgeCalibrate({
         </p>
         <div className="flex gap-2">
           <button onClick={() => setView('sessions')}
-            className={`px-3 py-1.5 text-sm rounded ${view === 'sessions' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}>
+            className={`px-3 py-1.5 text-sm rounded-full transition-colors ${view === 'sessions' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}>
             Sessions
           </button>
           <button onClick={() => setView('averages')}
-            className={`px-3 py-1.5 text-sm rounded ${view === 'averages' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}>
+            className={`px-3 py-1.5 text-sm rounded-full transition-colors ${view === 'averages' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}>
             Averages
           </button>
         </div>
@@ -837,52 +838,52 @@ function WedgeCalibrate({
           {/* Session list */}
           <div className="space-y-3">
             <button onClick={() => setShowNewSession(true)}
-              className="w-full px-4 py-2 bg-green-600 hover:bg-green-500 text-gray-50 text-sm rounded-lg">
+              className="w-full px-4 py-2 bg-green-500 hover:bg-green-400 text-white text-sm rounded-2xl active:scale-[0.98] transition-colors">
               + New Calibration Session
             </button>
 
             {showNewSession && (
-              <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
+              <div className="bg-gray-900 rounded-2xl p-4 space-y-3">
                 <h3 className="text-sm font-medium text-gray-50">New Calibration Session</h3>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Date</label>
+                  <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Date</label>
                   <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)}
-                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
+                    className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Wedge Clubs</label>
+                  <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Wedge Clubs</label>
                   <div className="flex flex-wrap gap-1">
                     {[...WEDGE_CLUB_PRESETS, '48°', '50°', '52°', '54°', '56°', '58°', '60°', '62°'].filter((c, i, arr) => arr.indexOf(c) === i).map((c) => (
                       <button key={c}
                         onClick={() => setNewClubs(newClubs.includes(c) ? newClubs.filter((x) => x !== c) : [...newClubs, c])}
-                        className={`px-2 py-1 text-xs rounded ${newClubs.includes(c) ? 'bg-green-600 text-gray-50' : 'bg-gray-700 text-gray-400'}`}>
+                        className={`px-2 py-1 text-xs rounded-full transition-colors ${newClubs.includes(c) ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}>
                         {c}
                       </button>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Swing Lengths</label>
+                  <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Swing Lengths</label>
                   <div className="flex flex-wrap gap-1">
                     {(matrix?.swing_labels?.length ? matrix.swing_labels : ['7:30', '9:00', '10:30', 'Full']).map((l) => (
                       <button key={l}
                         onClick={() => setNewLabels(newLabels.includes(l) ? newLabels.filter((x) => x !== l) : [...newLabels, l])}
-                        className={`px-2 py-1 text-xs rounded ${newLabels.includes(l) ? 'bg-green-600 text-gray-50' : 'bg-gray-700 text-gray-400'}`}>
+                        className={`px-2 py-1 text-xs rounded-full transition-colors ${newLabels.includes(l) ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}>
                         {l}
                       </button>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Notes</label>
+                  <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Notes</label>
                   <textarea value={newNotes} onChange={(e) => setNewNotes(e.target.value)} rows={2}
-                    className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
+                    className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
                 </div>
                 <div className="flex gap-2">
                   <button onClick={createSession} disabled={newClubs.length === 0 || newLabels.length === 0}
-                    className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded">Create</button>
+                    className="px-3 py-1.5 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white rounded-2xl active:scale-[0.98] transition-colors">Create</button>
                   <button onClick={() => setShowNewSession(false)}
-                    className="px-3 py-1 text-sm bg-gray-700 text-gray-300 rounded">Cancel</button>
+                    className="px-3 py-1.5 text-sm bg-gray-800 text-gray-300 rounded-2xl transition-colors">Cancel</button>
                 </div>
               </div>
             )}
@@ -895,10 +896,10 @@ function WedgeCalibrate({
 
             {sessions.map((s) => (
               <button key={s.id} onClick={() => setSelectedId(s.id)}
-                className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
+                className={`w-full text-left px-4 py-3 rounded-2xl transition-colors ${
                   selectedId === s.id
-                    ? 'bg-gray-800 border-green-600/50 text-gray-50'
-                    : 'bg-gray-900 border-gray-800 text-gray-400 hover:border-gray-700'
+                    ? 'bg-gray-800 ring-1 ring-green-500/30 text-gray-50'
+                    : 'bg-gray-900 text-gray-400'
                 }`}>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">{s.session_date}</span>
@@ -1017,7 +1018,7 @@ function CalibrationDetail({
           </thead>
           <tbody>
             {session.swing_labels.map((label) => (
-              <tr key={label} className="border-t border-gray-800/50">
+              <tr key={label} className="border-t border-gray-800/60">
                 <td className="p-1.5 text-gray-400 text-xs font-medium">{label}</td>
                 {session.clubs.map((club) => {
                   const key = `${club}|${label}`;
@@ -1028,12 +1029,12 @@ function CalibrationDetail({
                     <td key={club} className="p-1.5">
                       <button
                         onClick={() => { setActiveClub(club); setActiveLabel(label); }}
-                        className={`w-full px-2 py-1.5 text-xs rounded border transition-colors ${
+                        className={`w-full px-2 py-1.5 text-xs rounded-xl transition-colors ${
                           isActive
-                            ? 'border-green-500 bg-green-600/20 text-gray-50'
+                            ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
                             : count > 0
-                              ? 'border-gray-700 bg-gray-800 text-green-400'
-                              : 'border-gray-800 bg-gray-900 text-gray-600'
+                              ? 'bg-gray-800 text-green-400'
+                              : 'bg-gray-900 text-gray-600'
                         }`}
                       >
                         {avg != null ? `${avg}` : '—'}
@@ -1049,7 +1050,7 @@ function CalibrationDetail({
       </div>
 
       {/* Active combo entry */}
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+      <div className="bg-gray-900 rounded-2xl p-4">
         <div className="flex items-center gap-3 mb-3">
           <span className="text-sm font-medium text-gray-50">{activeClub}</span>
           <span className="text-sm text-gray-500">@</span>
@@ -1061,7 +1062,7 @@ function CalibrationDetail({
 
         <div className="flex flex-wrap gap-3 items-end">
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Carry (yds)</label>
+            <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Carry (yds)</label>
             <input
               type="number"
               step="0.5"
@@ -1070,11 +1071,11 @@ function CalibrationDetail({
               onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
               placeholder="85"
               autoFocus
-              className="w-24 px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
+              className="w-24 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Offline (yds)</label>
+            <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Offline (yds)</label>
             <input
               type="number"
               step="0.5"
@@ -1082,11 +1083,11 @@ function CalibrationDetail({
               onChange={(e) => setLateralInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
               placeholder="+R / -L"
-              className="w-24 px-2 py-1.5 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
+              className="w-24 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
           </div>
           <button onClick={handleAdd} disabled={!carryInput}
-            className="px-4 py-1.5 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded">
+            className="px-4 py-1.5 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white rounded-2xl active:scale-[0.98] transition-colors">
             Add Shot
           </button>
         </div>
@@ -1096,7 +1097,7 @@ function CalibrationDetail({
           <div className="mt-3 space-y-1">
             {comboShots.map((s, i) => (
               <div key={s.id}
-                className={`flex items-center justify-between px-3 py-1 rounded text-xs ${s.excluded ? 'bg-gray-900/50 line-through text-gray-600' : 'bg-gray-900 text-gray-300'}`}>
+                className={`flex items-center justify-between px-3 py-1.5 rounded-xl text-xs ${s.excluded ? 'bg-gray-900/50 line-through text-gray-600' : 'bg-gray-800/50 text-gray-300'}`}>
                 <span>
                   #{s.shot_number}: <span className="font-medium text-gray-50">{s.carry_yards} yds</span>
                   {s.lateral_yards != null && (
@@ -1179,7 +1180,7 @@ function AveragesView({
           </thead>
           <tbody>
             {allLabels.map((label) => (
-              <tr key={label} className="border-t border-gray-800/50">
+              <tr key={label} className="border-t border-gray-800/60">
                 <td className="p-2 text-gray-400 font-medium">{label}</td>
                 {allClubs.map((club) => {
                   const key = `${club}|${label}`;
@@ -1214,7 +1215,7 @@ function AveragesView({
 
       <div className="flex items-center gap-4">
         <button onClick={handleApply} disabled={applying}
-          className="px-5 py-2 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded-lg">
+          className="px-5 py-2 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white rounded-2xl active:scale-[0.98] transition-colors">
           {applying ? 'Updating...' : 'Apply Averages to Wedge Matrix'}
         </button>
         <p className="text-xs text-gray-500">

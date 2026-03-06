@@ -395,7 +395,7 @@ function ClubCard({
               {!confirmDelete ? (
                 <button
                   onClick={() => setConfirmDelete(true)}
-                  className="text-xs text-gray-500 hover:text-red-400 transition-colors"
+                  className="text-xs text-red-500 hover:text-red-400 transition-colors"
                 >
                   Remove from bag
                 </button>
@@ -428,7 +428,7 @@ function ClubCard({
               <button
                 onClick={handleSave}
                 disabled={saving || !editName.trim()}
-                className="px-4 py-1.5 bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white text-xs font-medium rounded-xl transition-colors"
+                className="px-4 py-1.5 bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white text-xs font-medium rounded-2xl active:scale-[0.98] transition-colors"
               >
                 {saving ? 'Saving...' : 'Save'}
               </button>
@@ -583,7 +583,7 @@ function AddClubForm({
         <button
           onClick={handleSubmit}
           disabled={saving || !clubName.trim()}
-          className="px-4 py-1.5 bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white text-xs font-medium rounded-xl transition-colors"
+          className="px-4 py-1.5 bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white text-xs font-medium rounded-2xl active:scale-[0.98] transition-colors"
         >
           {saving ? 'Adding...' : 'Add to Bag'}
         </button>

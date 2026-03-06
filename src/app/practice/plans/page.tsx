@@ -396,7 +396,7 @@ function PlanView({ plan, onReset }: { plan: PracticePlan; onReset: () => void }
         </div>
 
         {/* Category breakdown bar */}
-        <div className="h-3 bg-gray-900 rounded-full overflow-hidden flex">
+        <div className="h-3 bg-gray-800 rounded-full overflow-hidden flex">
           {weekBreakdown.map(([cat, mins]) => (
             <div
               key={cat}
