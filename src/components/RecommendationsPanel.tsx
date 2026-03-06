@@ -28,23 +28,23 @@ export default function RecommendationsPanel({ clubStats }: Props) {
     <div className="space-y-4">
       <div className="flex gap-4 items-end">
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Current Handicap</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Current Handicap</label>
           <input
             type="number"
             step="0.1"
             value={handicap}
             onChange={(e) => setHandicap(parseFloat(e.target.value) || 0)}
-            className="w-20 px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
+            className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Goal Handicap</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Goal Handicap</label>
           <input
             type="number"
             step="0.1"
             value={goalHandicap}
             onChange={(e) => setGoalHandicap(parseFloat(e.target.value) || 0)}
-            className="w-20 px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50"
+            className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
         </div>
       </div>
@@ -55,9 +55,9 @@ export default function RecommendationsPanel({ clubStats }: Props) {
         </div>
       ) : (
         <div className="space-y-3">
-          <h3 className="text-sm font-medium text-gray-300">Top Recommendations</h3>
+          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Top Recommendations</h3>
           {top5.map((rec, i) => (
-            <div key={i} className="bg-gray-800/50 border border-gray-700 rounded-lg p-3">
+            <div key={i} className="bg-gray-900 rounded-2xl p-3">
               <div className="flex items-start gap-2">
                 <span className="text-green-400 font-bold text-sm mt-0.5">#{i + 1}</span>
                 <div>
@@ -74,7 +74,7 @@ export default function RecommendationsPanel({ clubStats }: Props) {
       )}
 
       {practicePlan && (
-        <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+        <div className="bg-gray-900 rounded-2xl p-4">
           <h3 className="text-sm font-medium text-green-400 mb-2">{practicePlan.title}</h3>
           <div className="space-y-2">
             {practicePlan.drills.map((drill, i) => (

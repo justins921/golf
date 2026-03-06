@@ -44,19 +44,23 @@ function FitnessTracker() {
   }, [logs]);
 
   if (loading) {
-    return <div className="max-w-7xl mx-auto px-4 py-8 text-gray-500">Loading...</div>;
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="animate-pulse bg-gray-900 rounded-2xl h-32" />
+      </div>
+    );
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-50">Golf Fitness</h1>
+        <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Golf Fitness</h1>
         <div className="flex gap-2">
           {(['log', 'library', 'stats'] as const).map((v) => (
             <button
               key={v}
               onClick={() => setView(v)}
-              className={`px-3 py-1.5 text-sm rounded capitalize ${view === v ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
+              className={`px-4 py-2 text-sm rounded-full capitalize ${view === v ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
             >
               {v === 'log' ? 'Workout Log' : v === 'library' ? 'Exercises' : 'Stats'}
             </button>
@@ -70,7 +74,7 @@ function FitnessTracker() {
         <div className="space-y-4">
           <button
             onClick={() => setShowNewWorkout(true)}
-            className="px-4 py-2 bg-green-600 hover:bg-green-500 text-gray-50 text-sm rounded-lg"
+            className="px-4 py-2 bg-green-500 hover:bg-green-400 text-gray-50 text-sm rounded-xl active:scale-[0.98]"
           >
             + Log Workout
           </button>
@@ -86,7 +90,7 @@ function FitnessTracker() {
           )}
 
           {logs.length === 0 && !showNewWorkout && (
-            <div className="text-center text-gray-600 py-16 text-sm">
+            <div className="text-center text-gray-400 py-16 text-[15px]">
               No workouts logged yet. Start by logging your first workout above.
             </div>
           )}
@@ -94,11 +98,11 @@ function FitnessTracker() {
           {/* Workout history */}
           <div className="space-y-3">
             {logs.map((log) => (
-              <div key={log.id} className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+              <div key={log.id} className="bg-gray-900 rounded-2xl p-4">
                 <div className="flex items-center justify-between mb-2">
                   <div>
                     <span className="text-sm font-medium text-gray-50">{log.workout_name}</span>
-                    <span className="ml-2 px-2 py-0.5 text-xs rounded bg-gray-700 text-gray-400 capitalize">{log.workout_type}</span>
+                    <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-gray-800 text-gray-400 capitalize">{log.workout_type}</span>
                     {log.program && <span className="ml-2 text-xs text-gray-500">{log.program}</span>}
                   </div>
                   <div className="flex items-center gap-3">
@@ -109,7 +113,7 @@ function FitnessTracker() {
                         {'★'.repeat(log.rating)}{'☆'.repeat(5 - log.rating)}
                       </span>
                     )}
-                    <button onClick={() => deleteLog(log.id)} className="text-xs text-gray-600 hover:text-red-400">
+                    <button onClick={() => deleteLog(log.id)} className="text-xs text-gray-500 hover:text-red-400">
                       Delete
                     </button>
                   </div>
@@ -199,28 +203,28 @@ function WorkoutForm({
   };
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
+    <div className="bg-gray-900 rounded-2xl p-5 space-y-4">
       <h3 className="text-sm font-medium text-gray-50">Log Workout</h3>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Date</label>
+          <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Date</label>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
-            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
+            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Type</label>
+          <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Type</label>
           <select value={type} onChange={(e) => setType(e.target.value)}
-            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50">
+            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40">
             {WORKOUT_TYPES.map((t) => (
               <option key={t} value={t} className="capitalize">{t}</option>
             ))}
           </select>
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Program</label>
+          <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Program</label>
           <select value={program} onChange={(e) => setProgram(e.target.value)}
-            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50">
+            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40">
             <option value="">—</option>
             {WORKOUT_PROGRAMS.map((p) => (
               <option key={p} value={p}>{p}</option>
@@ -228,23 +232,23 @@ function WorkoutForm({
           </select>
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Duration (min)</label>
+          <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Duration (min)</label>
           <input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="45"
-            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
+            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
         </div>
       </div>
 
       <div>
-        <label className="block text-xs text-gray-500 mb-1">Workout Name</label>
+        <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Workout Name</label>
         <input type="text" value={name} onChange={(e) => setName(e.target.value)}
           placeholder="e.g., Upper Body Push, Pre-Round Warmup, Mobility Flow"
-          className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
+          className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
       </div>
 
       {/* Exercise builder */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="text-xs text-gray-500">Exercises ({exercises.length})</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider px-1">Exercises ({exercises.length})</label>
           <button onClick={() => setShowExercisePicker(!showExercisePicker)}
             className="text-xs text-green-400 hover:text-green-300">
             {showExercisePicker ? 'Close Library' : 'Browse Library'}
@@ -252,14 +256,14 @@ function WorkoutForm({
         </div>
 
         {showExercisePicker && (
-          <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 mb-3 max-h-48 overflow-y-auto">
+          <div className="bg-gray-800 rounded-2xl p-3 mb-3 max-h-48 overflow-y-auto">
             {Object.entries(GOLF_EXERCISES).map(([category, exs]) => (
               <div key={category} className="mb-2">
-                <div className="text-xs font-medium text-gray-400 mb-1">{category}</div>
+                <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">{category}</div>
                 <div className="flex flex-wrap gap-1">
                   {exs.map((ex) => (
                     <button key={ex} onClick={() => pickExercise(ex)}
-                      className="px-2 py-0.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded">
+                      className="px-2 py-0.5 text-xs bg-gray-900 hover:bg-gray-700 text-gray-300 rounded-full">
                       {ex}
                     </button>
                   ))}
@@ -273,25 +277,25 @@ function WorkoutForm({
           <div className="col-span-2">
             <input type="text" value={exName} onChange={(e) => setExName(e.target.value)}
               placeholder="Exercise name"
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
           </div>
           <div>
             <label className="block text-[10px] text-gray-600">Sets</label>
             <input type="number" value={exSets} onChange={(e) => setExSets(e.target.value)}
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
           </div>
           <div>
             <label className="block text-[10px] text-gray-600">Reps</label>
             <input type="number" value={exReps} onChange={(e) => setExReps(e.target.value)}
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
           </div>
           <div>
             <label className="block text-[10px] text-gray-600">Weight</label>
             <input type="text" value={exWeight} onChange={(e) => setExWeight(e.target.value)} placeholder="25lb"
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
           </div>
           <button onClick={addExercise} disabled={!exName}
-            className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded">
+            className="px-3 py-3 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-xl active:scale-[0.98]">
             Add
           </button>
         </div>
@@ -299,14 +303,14 @@ function WorkoutForm({
         {exercises.length > 0 && (
           <div className="space-y-1">
             {exercises.map((ex, i) => (
-              <div key={i} className="flex items-center justify-between bg-gray-900 rounded px-3 py-1.5">
+              <div key={i} className="flex items-center justify-between bg-gray-800 rounded-xl px-3 py-1.5">
                 <div className="text-xs text-gray-300">
                   <span className="font-medium">{ex.name}</span>
                   {ex.sets && ex.reps && <span className="ml-2 text-gray-500">{ex.sets}x{ex.reps}</span>}
                   {ex.weight && <span className="ml-2 text-gray-500">@ {ex.weight}</span>}
                   {ex.duration_sec && <span className="ml-2 text-gray-500">{ex.duration_sec}s</span>}
                 </div>
-                <button onClick={() => removeExercise(i)} className="text-xs text-gray-600 hover:text-red-400">Remove</button>
+                <button onClick={() => removeExercise(i)} className="text-xs text-gray-500 hover:text-red-400">Remove</button>
               </div>
             ))}
           </div>
@@ -316,31 +320,31 @@ function WorkoutForm({
       {/* Rating + notes */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Difficulty (1-5)</label>
+          <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Difficulty (1-5)</label>
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((n) => (
               <button key={n} onClick={() => setRating(rating === n ? 0 : n)}
-                className={`w-8 h-8 rounded text-sm ${n <= rating ? 'bg-yellow-500 text-black' : 'bg-gray-700 text-gray-500'}`}>
+                className={`w-8 h-8 rounded-xl text-sm ${n <= rating ? 'bg-yellow-500 text-black' : 'bg-gray-800 text-gray-500'}`}>
                 {n}
               </button>
             ))}
           </div>
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1">Notes</label>
+          <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Notes</label>
           <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)}
             placeholder="How did it feel?"
-            className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50" />
+            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
         </div>
       </div>
 
       <div className="flex gap-2">
         <button onClick={handleSave} disabled={!name}
-          className="px-4 py-1.5 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded">
+          className="px-4 py-2 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-xl active:scale-[0.98]">
           Save Workout
         </button>
         <button onClick={onCancel}
-          className="px-4 py-1.5 text-sm bg-gray-700 text-gray-300 rounded">
+          className="px-4 py-2 text-sm bg-gray-700 text-gray-300 rounded-xl">
           Cancel
         </button>
       </div>
@@ -368,14 +372,14 @@ function ExerciseLibrary() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search exercises..."
-        className="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded-lg text-gray-50"
+        className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
       />
       {Object.entries(filtered).map(([category, exs]) => (
         <div key={category}>
           <h3 className="text-sm font-medium text-green-400 mb-2">{category}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
             {exs.map((ex) => (
-              <div key={ex} className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2">
+              <div key={ex} className="bg-gray-900 rounded-2xl px-3 py-2">
                 <span className="text-sm text-gray-200">{ex}</span>
               </div>
             ))}
@@ -389,7 +393,7 @@ function ExerciseLibrary() {
 function StatsView({ stats }: { stats: { last30: number; last7: number; totalMin: number; byType: Record<string, number>; streak: number; total: number } | null }) {
   if (!stats) {
     return (
-      <div className="text-center text-gray-600 py-16 text-sm">
+      <div className="text-center text-gray-400 py-16 text-[15px]">
         No workouts logged yet. Start logging to see your fitness stats.
       </div>
     );
@@ -398,30 +402,30 @@ function StatsView({ stats }: { stats: { last30: number; last7: number; totalMin
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="text-xs text-gray-500">This Week</div>
+        <div className="bg-gray-900 rounded-2xl p-4">
+          <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">This Week</div>
           <div className="text-2xl font-bold text-green-400">{stats.last7}</div>
           <div className="text-xs text-gray-500">workouts</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="text-xs text-gray-500">Last 30 Days</div>
+        <div className="bg-gray-900 rounded-2xl p-4">
+          <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Last 30 Days</div>
           <div className="text-2xl font-bold text-gray-50">{stats.last30}</div>
           <div className="text-xs text-gray-500">workouts</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="text-xs text-gray-500">Time (30d)</div>
+        <div className="bg-gray-900 rounded-2xl p-4">
+          <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Time (30d)</div>
           <div className="text-2xl font-bold text-gray-50">{Math.round(stats.totalMin / 60)}h {stats.totalMin % 60}m</div>
           <div className="text-xs text-gray-500">total</div>
         </div>
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className="text-xs text-gray-500">Current Streak</div>
+        <div className="bg-gray-900 rounded-2xl p-4">
+          <div className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Current Streak</div>
           <div className="text-2xl font-bold text-yellow-400">{stats.streak}</div>
           <div className="text-xs text-gray-500">days</div>
         </div>
       </div>
 
       {/* Type breakdown */}
-      <div className="bg-gray-800 rounded-lg p-4">
+      <div className="bg-gray-900 rounded-2xl p-4">
         <h3 className="text-sm font-medium text-gray-50 mb-3">Workout Type Breakdown (30 days)</h3>
         <div className="space-y-2">
           {Object.entries(stats.byType)
@@ -431,8 +435,8 @@ function StatsView({ stats }: { stats: { last30: number; last7: number; totalMin
               return (
                 <div key={type} className="flex items-center gap-3">
                   <span className="text-xs text-gray-400 w-20 capitalize">{type}</span>
-                  <div className="flex-1 h-4 bg-gray-900 rounded overflow-hidden">
-                    <div className="h-full bg-green-600 rounded" style={{ width: `${pct}%` }} />
+                  <div className="flex-1 h-4 bg-gray-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-green-500 rounded-full" style={{ width: `${pct}%` }} />
                   </div>
                   <span className="text-xs text-gray-400 w-8 text-right">{count}</span>
                 </div>

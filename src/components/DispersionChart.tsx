@@ -317,8 +317,8 @@ export default function DispersionChart({
         <div className="flex flex-wrap gap-2 mb-3">
           <button
             onClick={() => setSelectedClub(null)}
-            className={`px-2 py-1 text-xs rounded ${
-              !selectedClub ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+            className={`px-2 py-1 text-xs rounded-full ${
+              !selectedClub ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
             }`}
           >
             All Clubs
@@ -327,8 +327,8 @@ export default function DispersionChart({
             <button
               key={c}
               onClick={() => setSelectedClub(c)}
-              className={`px-2 py-1 text-xs rounded ${
-                selectedClub === c ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+              className={`px-2 py-1 text-xs rounded-full ${
+                selectedClub === c ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
               }`}
             >
               {c}
@@ -337,11 +337,11 @@ export default function DispersionChart({
         </div>
       )}
 
-      <div className="relative overflow-x-auto">
+      <div className="bg-gray-900 rounded-2xl p-4 overflow-x-auto">
         <svg ref={svgRef} />
         <div
           ref={tooltipRef}
-          className="absolute pointer-events-none bg-gray-800 border border-gray-600 rounded px-2 py-1 shadow-lg"
+          className="absolute pointer-events-none bg-gray-900/95 backdrop-blur border border-gray-800 rounded-xl px-2 py-1 shadow-lg"
           style={{ display: 'none' }}
         />
       </div>
@@ -355,14 +355,14 @@ export default function DispersionChart({
                 .call(zoomRef.current.transform, d3.zoomIdentity);
             }
           }}
-          className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
+          className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded-xl text-gray-300"
         >
           Reset Zoom
         </button>
-        <button onClick={handleExportPng} className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300">
+        <button onClick={handleExportPng} className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded-xl text-gray-300">
           Export PNG
         </button>
-        <button onClick={handleExportSvg} className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300">
+        <button onClick={handleExportSvg} className="px-3 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded-xl text-gray-300">
           Export SVG
         </button>
       </div>

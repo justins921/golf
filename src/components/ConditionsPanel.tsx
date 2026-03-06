@@ -27,7 +27,7 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
 
   if (!editing && !conditions) {
     return (
-      <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-3">
+      <div className="bg-gray-900 rounded-2xl p-3">
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-500">No environment data set</span>
           {editable && (
@@ -45,40 +45,40 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
 
   if (editing) {
     return (
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3">
-        <h3 className="text-sm font-medium text-gray-300">Environment Conditions</h3>
+      <div className="bg-gray-900 rounded-2xl p-4 space-y-3">
+        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Environment Conditions</h3>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Elevation (ft)</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Elevation (ft)</label>
             <input
               type="number"
               value={values.elevationFt}
               onChange={(e) => setValues({ ...values, elevationFt: parseFloat(e.target.value) || 0 })}
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Temperature (°F)</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Temperature (&deg;F)</label>
             <input
               type="number"
               value={values.temperatureF}
               onChange={(e) => setValues({ ...values, temperatureF: parseFloat(e.target.value) || 59 })}
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Humidity (%)</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Humidity (%)</label>
             <input
               type="number"
               min="0"
               max="100"
               value={values.relativeHumidityPct}
               onChange={(e) => setValues({ ...values, relativeHumidityPct: parseFloat(e.target.value) || 50 })}
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-500 mb-1">Pressure (inHg, optional)</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Pressure (inHg, optional)</label>
             <input
               type="number"
               step="0.01"
@@ -87,15 +87,15 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
                 setValues({ ...values, pressureInHg: e.target.value ? parseFloat(e.target.value) : undefined })
               }
               placeholder="auto from elevation"
-              className="w-full px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
+              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
           </div>
         </div>
         <div className="flex gap-2">
-          <button onClick={handleSave} className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 text-gray-50 rounded">
+          <button onClick={handleSave} className="px-3 py-1 text-sm bg-green-500 hover:bg-green-400 text-gray-50 rounded-xl">
             Save
           </button>
-          <button onClick={() => setEditing(false)} className="px-3 py-1 text-sm bg-gray-700 hover:bg-gray-600 text-gray-300 rounded">
+          <button onClick={() => setEditing(false)} className="px-3 py-1 text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl">
             Cancel
           </button>
         </div>
@@ -104,9 +104,9 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
   }
 
   return (
-    <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-3">
+    <div className="bg-gray-900 rounded-2xl p-3">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-medium text-gray-300">Environment</h3>
+        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Environment</h3>
         {editable && (
           <button onClick={() => { setValues(conditions!); setEditing(true); }} className="text-xs text-green-400 hover:text-green-300">
             Edit
@@ -117,7 +117,7 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
         <div className="text-gray-500">Elevation</div>
         <div className="text-gray-300">{conditions!.elevationFt.toLocaleString()} ft</div>
         <div className="text-gray-500">Temperature</div>
-        <div className="text-gray-300">{conditions!.temperatureF}°F</div>
+        <div className="text-gray-300">{conditions!.temperatureF}&deg;F</div>
         <div className="text-gray-500">Humidity</div>
         <div className="text-gray-300">{conditions!.relativeHumidityPct}%</div>
         {conditions!.pressureInHg && (
@@ -130,7 +130,7 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
           <>
             <div className="text-gray-500">Air Density</div>
             <div className="text-gray-300">
-              {rho.toFixed(4)} kg/m³
+              {rho.toFixed(4)} kg/m&sup3;
               <span className="text-gray-600 ml-1">
                 ({((rho / rhoStd - 1) * 100).toFixed(1)}% vs std)
               </span>
@@ -145,7 +145,7 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
         )}
       </div>
       <p className="text-[10px] text-gray-600 mt-2">
-        Carry model: adjusted = observed × (ρ_obs / ρ_target)^{DEFAULT_K}. This is an estimate.
+        Carry model: adjusted = observed &times; (&rho;_obs / &rho;_target)^{DEFAULT_K}. This is an estimate.
       </p>
     </div>
   );
