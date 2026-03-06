@@ -115,7 +115,15 @@ html.dark {
   input, select, textarea {
     font-size: 16px !important;
   }
+
+  /* Bottom padding for mobile tab bar */
+  body {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
 }
+
+/* Ensure nav stays sticky above everything */
+.nav-top { position: sticky; top: 0; z-index: 40; }
 
 /* Touch-friendly tap targets */
 @media (pointer: coarse) {
@@ -163,6 +171,12 @@ html.dark {
   border-radius: 9px;
   padding: 2px;
   gap: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.segmented-control::-webkit-scrollbar {
+  display: none;
 }
 .segmented-control button {
   padding: 6px 16px;
@@ -175,6 +189,8 @@ html.dark {
   cursor: pointer;
   position: relative;
   z-index: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .segmented-control button[data-active="true"] {
   background: var(--color-gray-700);

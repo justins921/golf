@@ -1011,7 +1011,7 @@ export default function DebriefPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Post-Round Debrief</h1>
           <p className="text-sm text-gray-400">

@@ -53,7 +53,7 @@ function FitnessTracker() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Golf Fitness</h1>
         <div className="segmented-control">
           {(['log', 'library', 'stats'] as const).map((v) => (

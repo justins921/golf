@@ -117,9 +117,9 @@ function RoundTracker() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Rounds</h1>
-        <div className="segmented-control">
+        <div className="segmented-control overflow-x-auto">
           {(['rounds', 'stats', 'analysis', 'handicap'] as const).map((v) => (
             <button key={v} onClick={() => setView(v)}
               data-active={view === v ? "true" : "false"}>
@@ -187,11 +187,11 @@ function RoundTracker() {
                 </div>
                 <div className="flex gap-2">
                   <button onClick={createRound} disabled={!newCourse}
-                    className="px-3 py-1 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-2xl active:scale-[0.98]">
+                    className="px-3 py-1.5 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-2xl active:scale-[0.98]">
                     Create
                   </button>
                   <button onClick={() => setShowNewRound(false)}
-                    className="px-3 py-1 text-sm bg-gray-800 text-gray-300 rounded-2xl">Cancel</button>
+                    className="px-3 py-1.5 text-sm bg-gray-800 text-gray-300 rounded-2xl">Cancel</button>
                 </div>
               </div>
             )}

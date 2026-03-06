@@ -267,7 +267,7 @@ function YardageBuilder() {
             <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">
               Clubs {includedClubs.length > 0 ? `(${includedClubs.length} selected)` : '(all)'}
             </label>
-            <div className="segmented-control">
+            <div className="segmented-control overflow-x-auto">
               {allClubs.map((c) => (
                 <button
                   key={c}

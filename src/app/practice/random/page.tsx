@@ -146,7 +146,7 @@ function RandomPracticeGenerator() {
       {minutes && location && !generatedPlan && (
         <button
           onClick={handleGenerate}
-          className="px-5 py-3 text-sm bg-green-500 text-gray-50 rounded-2xl hover:bg-green-400 mb-6 active:scale-[0.98] transition-all"
+          className="px-4 py-3 text-sm bg-green-500 text-gray-50 rounded-2xl hover:bg-green-400 mb-6 active:scale-[0.98] transition-all"
         >
           Generate Plan
         </button>
@@ -194,7 +194,7 @@ function RandomPracticeGenerator() {
             <button
               onClick={handleStart}
               disabled={starting}
-              className="flex-1 px-5 py-3 text-sm bg-green-500 text-gray-50 rounded-2xl hover:bg-green-400 disabled:opacity-50 active:scale-[0.98] transition-all"
+              className="flex-1 px-4 py-3 text-sm bg-green-500 text-gray-50 rounded-2xl hover:bg-green-400 disabled:opacity-50 active:scale-[0.98] transition-all"
             >
               {starting ? 'Starting...' : 'Start This Plan'}
             </button>

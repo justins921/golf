@@ -195,7 +195,7 @@ function DrillByTime() {
         <button
           onClick={handleStart}
           disabled={starting}
-          className="w-full px-5 py-3 text-sm bg-green-500 text-gray-50 rounded-2xl hover:bg-green-400 disabled:opacity-50 active:scale-[0.98] transition-all"
+          className="w-full px-4 py-3 text-sm bg-green-500 text-gray-50 rounded-2xl hover:bg-green-400 disabled:opacity-50 active:scale-[0.98] transition-all"
         >
           {starting ? 'Starting...' : `Start ${minutes}-Min ${selectedDrill.name}`}
         </button>

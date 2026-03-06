@@ -39,24 +39,26 @@ function WedgesLab() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-6">Wedge Lab</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+        <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Wedge Lab</h1>
 
-      {/* Tabs */}
-      <div className="segmented-control">
-        {([
-          { key: 'bag', label: 'My Bag' },
-          { key: 'matrix', label: 'Wedge Matrix' },
-          { key: 'calibrate', label: 'Calibrate' },
-          { key: 'practice', label: 'Practice' },
-        ] as const).map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            data-active={tab === t.key ? "true" : "false"}
-          >
-            {t.label}
-          </button>
-        ))}
+        {/* Tabs */}
+        <div className="segmented-control overflow-x-auto">
+          {([
+            { key: 'bag', label: 'My Bag' },
+            { key: 'matrix', label: 'Wedge Matrix' },
+            { key: 'calibrate', label: 'Calibrate' },
+            { key: 'practice', label: 'Practice' },
+          ] as const).map((t) => (
+            <button
+              key={t.key}
+              onClick={() => setTab(t.key)}
+              data-active={tab === t.key ? "true" : "false"}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {tab === 'bag' && (
