@@ -136,7 +136,7 @@ function ScoringSettings() {
             />
             <div>
               <span className="text-sm text-gray-300">Accuracy-only mode</span>
-              <p className="text-xs text-gray-500">Only distance error counts — lateral misses are ignored.</p>
+              <p className="text-xs text-gray-500">Only distance error counts -- lateral misses are ignored.</p>
             </div>
           </label>
         </div>
@@ -161,7 +161,7 @@ function ScoringSettings() {
         <div className="flex gap-3">
           <button
             onClick={resetSettings}
-            className="px-4 py-3 text-sm bg-gray-800 text-gray-400 rounded-2xl hover:bg-gray-700 transition-colors"
+            className="px-4 py-3 text-sm bg-gray-900 text-gray-400 rounded-2xl hover:bg-gray-800"
           >
             Reset to Defaults
           </button>

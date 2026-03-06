@@ -96,14 +96,14 @@ function PracticeInsights() {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-4">
-        <div className="h-8 w-48 bg-gray-800 rounded-2xl animate-pulse" />
+        <div className="h-8 w-52 bg-gray-800 rounded-2xl animate-pulse" />
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="h-20 bg-gray-800 rounded-2xl animate-pulse" />
           <div className="h-20 bg-gray-800 rounded-2xl animate-pulse" />
           <div className="h-20 bg-gray-800 rounded-2xl animate-pulse" />
           <div className="h-20 bg-gray-800 rounded-2xl animate-pulse" />
         </div>
-        <div className="h-40 bg-gray-800 rounded-2xl animate-pulse" />
+        <div className="h-48 bg-gray-800 rounded-2xl animate-pulse" />
       </div>
     );
   }
@@ -162,25 +162,25 @@ function PracticeInsights() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-800/60 text-gray-500 text-left">
-                  <th className="py-2 px-4">Club</th>
-                  <th className="py-2 px-4 text-center">Shots</th>
-                  <th className="py-2 px-4 text-center">Avg Points</th>
-                  <th className="py-2 px-4 text-center">Avg Error</th>
-                  <th className="py-2 px-4">Performance</th>
+                  <th className="py-2.5 px-4">Club</th>
+                  <th className="py-2.5 px-3 text-center">Shots</th>
+                  <th className="py-2.5 px-3 text-center">Avg Points</th>
+                  <th className="py-2.5 px-3 text-center">Avg Error</th>
+                  <th className="py-2.5 px-3">Performance</th>
                 </tr>
               </thead>
               <tbody>
                 {stats.clubBreakdown.map((c) => (
-                  <tr key={c.club} className="border-b border-gray-800/40">
-                    <td className="py-2 px-4 text-gray-50 font-medium">{c.club}</td>
-                    <td className="py-2 px-4 text-center text-gray-400">{c.shots}</td>
-                    <td className="py-2 px-4 text-center">
+                  <tr key={c.club} className="border-b border-gray-800/40 last:border-0">
+                    <td className="py-2.5 px-4 text-gray-50 font-medium">{c.club}</td>
+                    <td className="py-2.5 px-3 text-center text-gray-400">{c.shots}</td>
+                    <td className="py-2.5 px-3 text-center">
                       <span className={c.avgPoints >= 150 ? 'text-green-400' : c.avgPoints >= 100 ? 'text-yellow-400' : 'text-red-400'}>
                         {c.avgPoints}
                       </span>
                     </td>
-                    <td className="py-2 px-4 text-center text-gray-400">{c.avgError} yds</td>
-                    <td className="py-2 px-4">
+                    <td className="py-2.5 px-3 text-center text-gray-400">{c.avgError} yds</td>
+                    <td className="py-2.5 px-3">
                       <div className="w-full bg-gray-800 rounded-full h-2">
                         <div
                           className={`h-2 rounded-full ${c.avgPoints >= 150 ? 'bg-green-500' : c.avgPoints >= 100 ? 'bg-yellow-500' : 'bg-red-500'}`}

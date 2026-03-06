@@ -20,7 +20,18 @@ function PracticeHome() {
   const { sessions, loading, deleteSession } = usePracticeSessions();
 
   if (loading) {
-    return <div className="max-w-7xl mx-auto px-4 py-8 text-gray-500">Loading...</div>;
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-4">
+        <div className="h-8 w-40 bg-gray-800 rounded-2xl animate-pulse" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="h-28 bg-gray-800 rounded-2xl animate-pulse" />
+          <div className="h-28 bg-gray-800 rounded-2xl animate-pulse" />
+          <div className="h-28 bg-gray-800 rounded-2xl animate-pulse" />
+        </div>
+        <div className="h-20 bg-gray-800 rounded-2xl animate-pulse" />
+        <div className="h-20 bg-gray-800 rounded-2xl animate-pulse" />
+      </div>
+    );
   }
 
   const recentSessions = sessions.slice(0, 5);
@@ -28,13 +39,13 @@ function PracticeHome() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-gray-50 mb-8">Practice</h1>
+      <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-8">Practice</h1>
 
       {/* Continue incomplete session */}
       {incomplete && (
         <Link
           href={`/practice/session/${incomplete.id}`}
-          className="block mb-6 bg-yellow-600/10 border border-yellow-600/30 rounded-lg p-4 hover:bg-yellow-600/20 transition-colors"
+          className="block mb-6 bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-4 hover:bg-yellow-500/15 transition-colors"
         >
           <div className="flex items-center justify-between">
             <div>
@@ -66,7 +77,7 @@ function PracticeHome() {
         <ActionCard
           href="/practice/timed"
           title="Drill By Time"
-          description="Pick a category and time — get a focused workout"
+          description="Pick a category and time -- get a focused workout"
           color="blue"
         />
       </div>
@@ -75,13 +86,13 @@ function PracticeHome() {
       <div className="flex flex-wrap gap-2 mb-8">
         <Link
           href="/practice/insights"
-          className="px-4 py-2 text-sm bg-gray-800 text-gray-400 rounded-md hover:bg-gray-700 hover:text-gray-50"
+          className="px-4 py-2 text-sm bg-gray-900 text-gray-400 rounded-full hover:bg-gray-800 hover:text-gray-50 transition-colors"
         >
           Insights
         </Link>
         <Link
           href="/practice/settings"
-          className="px-4 py-2 text-sm bg-gray-800 text-gray-400 rounded-md hover:bg-gray-700 hover:text-gray-50"
+          className="px-4 py-2 text-sm bg-gray-900 text-gray-400 rounded-full hover:bg-gray-800 hover:text-gray-50 transition-colors"
         >
           Scoring Settings
         </Link>
@@ -89,11 +100,13 @@ function PracticeHome() {
 
       {/* Recent sessions */}
       <div>
-        <h2 className="text-sm font-medium text-gray-400 mb-3">Recent Sessions</h2>
+        <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Recent Sessions</h2>
         {recentSessions.length === 0 ? (
-          <p className="text-gray-600 text-sm">No practice sessions yet. Start one above!</p>
+          <div className="py-16 text-center">
+            <p className="text-[15px] text-gray-400">No practice sessions yet. Start one above!</p>
+          </div>
         ) : (
-          <div className="space-y-2">
+          <div className="bg-gray-900 rounded-2xl divide-y divide-gray-800/60">
             {recentSessions.map((s) => (
               <SessionRow key={s.id} session={s} onDelete={deleteSession} />
             ))}
@@ -116,9 +129,9 @@ function ActionCard({
   color: 'green' | 'purple' | 'blue';
 }) {
   const colors = {
-    green: 'border-green-600/40 hover:border-green-500 hover:bg-green-600/10',
-    purple: 'border-purple-600/40 hover:border-purple-500 hover:bg-purple-600/10',
-    blue: 'border-blue-600/40 hover:border-blue-500 hover:bg-blue-600/10',
+    green: 'bg-green-500/5 hover:bg-green-500/10',
+    purple: 'bg-purple-500/5 hover:bg-purple-500/10',
+    blue: 'bg-blue-500/5 hover:bg-blue-500/10',
   };
   const titleColors = {
     green: 'text-green-400',
@@ -129,7 +142,7 @@ function ActionCard({
   return (
     <Link
       href={href}
-      className={`block bg-gray-900 border rounded-lg p-5 transition-colors ${colors[color]}`}
+      className={`block bg-gray-900 rounded-2xl p-5 transition-colors ${colors[color]}`}
     >
       <h3 className={`font-semibold mb-1 ${titleColors[color]}`}>{title}</h3>
       <p className="text-xs text-gray-500">{description}</p>
@@ -144,9 +157,9 @@ function SessionRow({ session, onDelete }: { session: PracticeSession; onDelete:
   const isComplete = !!session.completed_at;
 
   return (
-    <div className="flex items-center justify-between bg-gray-900 border border-gray-800 rounded-lg px-4 py-3">
+    <div className="flex items-center justify-between px-4 py-3.5">
       <div className="flex items-center gap-3">
-        <span className={`w-2 h-2 rounded-full ${isComplete ? 'bg-green-500' : 'bg-yellow-500'}`} />
+        <span className={`w-2.5 h-2.5 rounded-full ${isComplete ? 'bg-green-500' : 'bg-yellow-500'}`} />
         <div>
           <Link
             href={`/practice/session/${session.id}`}

@@ -236,7 +236,7 @@ function SessionLogger() {
   if (isComplete && shots.length > 0) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-2xl font-bold text-gray-50 mb-2">Session Complete</h1>
+        <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-2">Session Complete</h1>
         <p className="text-sm text-gray-500 mb-6">
           {plan?.title ?? session.mode} &middot; {formatTime(elapsed)} &middot; {shots.length} shots
         </p>
@@ -251,7 +251,7 @@ function SessionLogger() {
 
         {/* Shot log */}
         <div>
-          <h3 className="text-sm font-medium text-gray-400 mb-2">Shot Log</h3>
+          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Shot Log</h3>
           <ShotLogTable shots={scoredShots} onToggleMishit={toggleMishit} />
         </div>
 
@@ -259,14 +259,14 @@ function SessionLogger() {
           {!session.completed_at && (
             <button
               onClick={handleComplete}
-              className="px-5 py-2 text-sm bg-green-600 text-gray-50 rounded-md hover:bg-green-700"
+              className="px-5 py-2 text-sm bg-green-500 text-gray-50 rounded-2xl hover:bg-green-400 active:scale-[0.98] transition-all"
             >
               Save & Finish
             </button>
           )}
           <button
             onClick={() => router.push('/practice')}
-            className="px-5 py-2 text-sm bg-gray-800 text-gray-400 rounded-md hover:bg-gray-700"
+            className="px-5 py-2 text-sm bg-gray-800 text-gray-400 rounded-2xl hover:bg-gray-700"
           >
             Back to Practice
           </button>
@@ -288,7 +288,7 @@ function SessionLogger() {
           <button
             onClick={handleUndo}
             disabled={shots.length === 0}
-            className="px-3 py-1.5 text-xs bg-gray-800 text-gray-400 rounded hover:bg-gray-700 disabled:opacity-30"
+            className="px-3 py-1.5 text-xs bg-gray-800 text-gray-400 rounded-full hover:bg-gray-700 disabled:opacity-30"
           >
             Undo
           </button>
