@@ -82,12 +82,12 @@ export default function Nav() {
   const activeGroup = navGroups.find((g) => g.items.some((item) => isActive(item.href)));
 
   return (
-    <nav className="bg-gray-900/95 backdrop-blur-lg border-b border-gray-800">
+    <nav className="bg-gray-900/80 backdrop-blur-xl backdrop-saturate-150 border-b border-gray-800/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14">
+        <div className="flex items-center justify-between h-12">
           {/* Left: logo + nav groups */}
           <div className="flex items-center gap-1" ref={dropdownRef}>
-            <Link href="/" className="text-green-400 font-bold text-lg mr-4 shrink-0">
+            <Link href="/" className="text-green-400 font-semibold text-[15px] mr-4 shrink-0 tracking-tight">
               Golf OS
             </Link>
 
@@ -101,10 +101,10 @@ export default function Nav() {
                   <div key={group.label} className="relative">
                     <button
                       onClick={() => setOpenGroup(isOpen ? null : group.label)}
-                      className={`px-3 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-1 ${
+                      className={`px-3 py-1.5 rounded-lg text-[13px] font-medium flex items-center gap-1 ${
                         isGroupActive
-                          ? 'bg-gray-800 text-gray-50'
-                          : 'text-gray-400 hover:text-gray-50 hover:bg-gray-800'
+                          ? 'bg-gray-800/60 text-gray-50'
+                          : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/40'
                       }`}
                     >
                       {group.label}
@@ -120,26 +120,26 @@ export default function Nav() {
 
                     {/* Dropdown */}
                     {isOpen && (
-                      <div className="absolute top-full left-0 mt-1 w-56 bg-gray-900/95 backdrop-blur-lg border border-gray-800 rounded-2xl shadow-xl z-50 py-2 px-1">
+                      <div className="absolute top-full left-0 mt-1.5 w-60 bg-gray-900/90 backdrop-blur-xl backdrop-saturate-150 rounded-xl shadow-2xl shadow-black/30 z-50 py-1 ring-1 ring-white/[0.08]">
                         {group.items.map((item) => (
                           <Link
                             key={item.href}
                             href={item.href}
-                            className={`block px-4 py-3 rounded-xl transition-colors ${
+                            className={`block mx-1 px-3 py-2.5 rounded-lg ${
                               isActive(item.href)
-                                ? 'bg-gray-800 text-gray-50'
-                                : 'text-gray-300 hover:bg-gray-800 hover:text-gray-50'
+                                ? 'bg-green-500/15 text-gray-50'
+                                : 'text-gray-300 hover:bg-white/[0.06]'
                             }`}
                           >
                             <div className="flex items-center gap-2">
-                              <span className="text-sm font-medium">{item.label}</span>
+                              <span className="text-[13px] font-medium">{item.label}</span>
                               {item.lm && (
-                                <span className="text-xs font-medium px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 whitespace-nowrap">
+                                <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 whitespace-nowrap">
                                   LM
                                 </span>
                               )}
                             </div>
-                            <div className="text-xs text-gray-500">{item.desc}</div>
+                            <div className="text-[11px] text-gray-500 mt-0.5">{item.desc}</div>
                           </Link>
                         ))}
                       </div>
@@ -154,7 +154,7 @@ export default function Nav() {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleTheme}
-              className="p-2 text-gray-400 hover:text-gray-100 transition-colors rounded-xl hover:bg-gray-800"
+              className="p-1.5 text-gray-400 hover:text-gray-100 rounded-lg hover:bg-gray-800/40"
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
               title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             >
@@ -194,34 +194,38 @@ export default function Nav() {
 
       {/* Mobile menu — grouped */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-gray-800/50 px-4 pb-3 pt-2">
+        <div className="md:hidden border-t border-gray-800/30 px-4 pb-3 pt-2">
           {navGroups.map((group) => (
-            <div key={group.label} className="mb-2">
-              <div className="text-[13px] font-semibold text-gray-500 uppercase tracking-wider px-3 py-1">
+            <div key={group.label} className="mb-3">
+              <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest px-3 py-1.5">
                 {group.label}
               </div>
-              {group.items.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                    isActive(item.href)
-                      ? 'bg-gray-800 text-gray-50'
-                      : 'text-gray-400 hover:text-gray-50 hover:bg-gray-800'
-                  }`}
-                >
-                  {item.label}
-                  {item.lm && (
-                    <span className="text-xs font-medium px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                      LM
-                    </span>
-                  )}
-                </Link>
-              ))}
+              <div className="bg-gray-800/30 rounded-xl overflow-hidden">
+                {group.items.map((item, idx) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`flex items-center gap-2 px-4 py-2.5 text-[15px] font-normal ${
+                      idx > 0 ? 'border-t border-gray-800/30' : ''
+                    } ${
+                      isActive(item.href)
+                        ? 'bg-green-500/10 text-gray-50'
+                        : 'text-gray-300 active:bg-gray-700/30'
+                    }`}
+                  >
+                    {item.label}
+                    {item.lm && (
+                      <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400">
+                        LM
+                      </span>
+                    )}
+                  </Link>
+                ))}
+              </div>
             </div>
           ))}
-          <div className="border-t border-gray-800/50 pt-2 mt-2 flex items-center justify-between">
+          <div className="border-t border-gray-800/30 pt-2 mt-2 flex items-center justify-between">
             <span className="text-sm text-gray-500 truncate">{user.email}</span>
             <div className="flex items-center gap-2">
               <button

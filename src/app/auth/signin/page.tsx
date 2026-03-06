@@ -42,30 +42,31 @@ export default function SignInPage() {
         <div className="bg-gray-900 rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm p-3">
+              <div className="bg-red-500/10 rounded-xl text-red-400 text-[13px] p-3">
                 {error}
               </div>
             )}
 
             <div>
-              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Email</label>
+              <label className="text-[13px] font-medium text-gray-400 mb-1.5 block">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3.5 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30 placeholder:text-gray-600"
+                placeholder="you@example.com"
               />
             </div>
 
             <div>
-              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Password</label>
+              <label className="text-[13px] font-medium text-gray-400 mb-1.5 block">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3.5 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
 

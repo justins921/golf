@@ -143,7 +143,7 @@ function ProgramConfig({ programId }: { programId: string }) {
             onChange={(e) => setCustomClub(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addClub(); } }}
             placeholder="Add club..."
-            className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 w-32 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 w-32 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           />
           <button onClick={addClub} className="px-3 py-2 text-xs bg-gray-800 text-gray-300 rounded-xl hover:bg-gray-700">Add</button>
         </div>
@@ -167,7 +167,7 @@ function ProgramConfig({ programId }: { programId: string }) {
             onChange={(e) => setCustomTarget(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTarget(); } }}
             placeholder="Add target..."
-            className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 w-32 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 w-32 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           />
           <button onClick={addTarget} className="px-3 py-2 text-xs bg-gray-800 text-gray-300 rounded-xl hover:bg-gray-700">Add</button>
         </div>
@@ -182,7 +182,7 @@ function ProgramConfig({ programId }: { programId: string }) {
           max={10}
           value={shotsPerTarget}
           onChange={(e) => setShotsPerTarget(parseInt(e.target.value) || 3)}
-          className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 text-center focus:outline-none focus:ring-2 focus:ring-green-500/40"
+          className="w-20 bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 text-center focus:outline-none focus:ring-2 focus:ring-green-500/30"
         />
       </div>
 

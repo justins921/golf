@@ -151,14 +151,12 @@ function MentalGameTracker() {
       </div>
 
       {/* View tabs */}
-      <div className="flex gap-1 mb-6">
+      <div className="segmented-control mb-6">
         {(['journal', 'trends', 'routine'] as const).map((v) => (
           <button
             key={v}
             onClick={() => setView(v)}
-            className={`px-3 py-1.5 text-sm transition-colors ${
-              view === v ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30 rounded-full' : 'bg-gray-800 text-gray-400 rounded-full'
-            }`}
+            data-active={view === v ? "true" : "false"}
           >
             {v === 'journal' ? 'Journal' : v === 'trends' ? 'Trends' : 'My Routine'}
           </button>
@@ -177,7 +175,7 @@ function MentalGameTracker() {
                 type="date"
                 value={logDate}
                 onChange={(e) => setLogDate(e.target.value)}
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
@@ -185,7 +183,7 @@ function MentalGameTracker() {
               <select
                 value={logType}
                 onChange={(e) => setLogType(e.target.value)}
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               >
                 {MENTAL_LOG_TYPES.map((t) => (
                   <option key={t} value={t}>{MENTAL_LOG_TYPE_LABELS[t]}</option>
@@ -198,7 +196,7 @@ function MentalGameTracker() {
                 <select
                   value={roundId}
                   onChange={(e) => setRoundId(e.target.value)}
-                  className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                  className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                 >
                   <option value="">None</option>
                   {rounds.slice(0, 10).map((r) => (
@@ -227,7 +225,7 @@ function MentalGameTracker() {
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
               placeholder="How you felt, what you learned..."
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
             />
           </div>
 
@@ -291,7 +289,7 @@ function MentalGameTracker() {
                   onChange={(e) => setPreShotRoutine(e.target.value)}
                   rows={2}
                   placeholder="Deep breath, pick target, one practice swing, step in, go"
-                  className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                  className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                 />
               </div>
             </div>

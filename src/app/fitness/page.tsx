@@ -55,12 +55,12 @@ function FitnessTracker() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Golf Fitness</h1>
-        <div className="flex gap-2">
+        <div className="segmented-control">
           {(['log', 'library', 'stats'] as const).map((v) => (
             <button
               key={v}
               onClick={() => setView(v)}
-              className={`px-4 py-2 text-sm rounded-full capitalize ${view === v ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
+              data-active={view === v ? "true" : "false"}
             >
               {v === 'log' ? 'Workout Log' : v === 'library' ? 'Exercises' : 'Stats'}
             </button>
@@ -210,12 +210,12 @@ function WorkoutForm({
         <div>
           <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Date</label>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
-            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
+            className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30" />
         </div>
         <div>
           <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Type</label>
           <select value={type} onChange={(e) => setType(e.target.value)}
-            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40">
+            className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30">
             {WORKOUT_TYPES.map((t) => (
               <option key={t} value={t} className="capitalize">{t}</option>
             ))}
@@ -224,7 +224,7 @@ function WorkoutForm({
         <div>
           <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Program</label>
           <select value={program} onChange={(e) => setProgram(e.target.value)}
-            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40">
+            className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30">
             <option value="">—</option>
             {WORKOUT_PROGRAMS.map((p) => (
               <option key={p} value={p}>{p}</option>
@@ -234,7 +234,7 @@ function WorkoutForm({
         <div>
           <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Duration (min)</label>
           <input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="45"
-            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
+            className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30" />
         </div>
       </div>
 
@@ -242,7 +242,7 @@ function WorkoutForm({
         <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Workout Name</label>
         <input type="text" value={name} onChange={(e) => setName(e.target.value)}
           placeholder="e.g., Upper Body Push, Pre-Round Warmup, Mobility Flow"
-          className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
+          className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30" />
       </div>
 
       {/* Exercise builder */}
@@ -277,22 +277,22 @@ function WorkoutForm({
           <div className="col-span-2">
             <input type="text" value={exName} onChange={(e) => setExName(e.target.value)}
               placeholder="Exercise name"
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30" />
           </div>
           <div>
             <label className="block text-[10px] text-gray-600">Sets</label>
             <input type="number" value={exSets} onChange={(e) => setExSets(e.target.value)}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30" />
           </div>
           <div>
             <label className="block text-[10px] text-gray-600">Reps</label>
             <input type="number" value={exReps} onChange={(e) => setExReps(e.target.value)}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30" />
           </div>
           <div>
             <label className="block text-[10px] text-gray-600">Weight</label>
             <input type="text" value={exWeight} onChange={(e) => setExWeight(e.target.value)} placeholder="25lb"
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30" />
           </div>
           <button onClick={addExercise} disabled={!exName}
             className="px-3 py-3 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-xl active:scale-[0.98]">
@@ -334,7 +334,7 @@ function WorkoutForm({
           <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Notes</label>
           <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)}
             placeholder="How did it feel?"
-            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
+            className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30" />
         </div>
       </div>
 
@@ -372,7 +372,7 @@ function ExerciseLibrary() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search exercises..."
-        className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+        className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
       />
       {Object.entries(filtered).map(([category, exs]) => (
         <div key={category}>

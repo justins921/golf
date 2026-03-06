@@ -268,7 +268,7 @@ export default function SharedChallengePage() {
                   type="text" required value={participantName}
                   onChange={(e) => setParticipantName(e.target.value)}
                   placeholder="Enter your name"
-                  className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                  className="w-full bg-gray-800/60 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -278,7 +278,7 @@ export default function SharedChallengePage() {
                     type="number" required step="any" value={value}
                     onChange={(e) => setValue(e.target.value)}
                     placeholder="0"
-                    className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                    className="w-full bg-gray-800/60 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   />
                 </div>
                 <div>
@@ -286,7 +286,7 @@ export default function SharedChallengePage() {
                   <input
                     type="date" required value={entryDate}
                     onChange={(e) => setEntryDate(e.target.value)}
-                    className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                    className="w-full bg-gray-800/60 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   />
                 </div>
               </div>
@@ -296,7 +296,7 @@ export default function SharedChallengePage() {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   rows={2} placeholder="Optional notes..."
-                  className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40 resize-none"
+                  className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30 resize-none"
                 />
               </div>
             </form>

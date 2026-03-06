@@ -127,7 +127,7 @@ function BagManager() {
   }, [clubs, clubDistances]);
 
   if (loading || shotsLoading) {
-    return <div className="text-center text-gray-600 py-12 text-sm">Loading bag data...</div>;
+    return <div className="text-center text-gray-500 py-8 text-[13px]">Loading bag data...</div>;
   }
 
   return (
@@ -136,14 +136,14 @@ function BagManager() {
       <div className="bg-gray-900 rounded-2xl p-4">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           <div>
-            <span className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Clubs</span>
+            <span className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest">Clubs</span>
             <p className="text-lg font-bold text-gray-50">
               {clubs.length}<span className="text-gray-500 font-normal">/14</span>
             </p>
           </div>
           {distanceCoverage && (
             <div>
-              <span className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Distance Coverage</span>
+              <span className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest">Distance Coverage</span>
               <p className="text-lg font-bold text-gray-50">
                 {distanceCoverage.min}<span className="text-gray-500 font-normal"> &ndash; </span>{distanceCoverage.max}
                 <span className="text-sm text-gray-500 font-normal ml-1">yd</span>
@@ -152,7 +152,7 @@ function BagManager() {
           )}
           {hasGaps && (
             <div>
-              <span className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider">Gaps</span>
+              <span className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest">Gaps</span>
               <p className="text-sm">
                 <Link href="/gapping" className="text-green-400 hover:text-green-300 underline underline-offset-2">
                   Gaps detected &rarr;
@@ -167,7 +167,7 @@ function BagManager() {
       <div>
         <button
           onClick={() => setShowAddForm(v => !v)}
-          className="px-4 py-2 bg-green-500 hover:bg-green-400 text-white text-sm font-medium rounded-2xl active:scale-[0.98] transition-colors"
+          className="px-4 py-2 bg-green-500 hover:bg-green-400 text-white text-[15px] font-medium rounded-2xl active:scale-[0.98] transition-colors"
         >
           {showAddForm ? 'Cancel' : '+ Add Club'}
         </button>
@@ -198,7 +198,7 @@ function BagManager() {
         if (!catClubs || catClubs.length === 0) return null;
         return (
           <div key={cat}>
-            <h2 className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">{cat}</h2>
+            <h2 className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2">{cat}</h2>
             <div className="space-y-2">
               {catClubs.map(club => (
                 <ClubCard
@@ -315,61 +315,61 @@ function ClubCard({
         <div className="border-t border-gray-800/60 px-4 py-4 space-y-3">
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div className="col-span-2 sm:col-span-1">
-              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Club Name</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Club Name</label>
               <input
                 type="text"
                 value={editName}
                 onChange={e => setEditName(e.target.value)}
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
-              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Brand</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Brand</label>
               <input
                 type="text"
                 value={editBrand}
                 onChange={e => setEditBrand(e.target.value)}
                 placeholder="e.g. Titleist"
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
-              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Model</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Model</label>
               <input
                 type="text"
                 value={editModel}
                 onChange={e => setEditModel(e.target.value)}
                 placeholder="e.g. T200"
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
-              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Loft (&deg;)</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Loft (&deg;)</label>
               <input
                 type="number"
                 step="0.5"
                 value={editLoft}
                 onChange={e => setEditLoft(e.target.value)}
                 placeholder="e.g. 10.5"
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
-              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Shaft</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Shaft</label>
               <input
                 type="text"
                 value={editShaft}
                 onChange={e => setEditShaft(e.target.value)}
                 placeholder="e.g. Project X 6.0"
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
-              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Flex</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Flex</label>
               <select
                 value={editFlex}
                 onChange={e => setEditFlex(e.target.value)}
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               >
                 <option value="">--</option>
                 <option value="X">X (Extra Stiff)</option>
@@ -381,13 +381,13 @@ function ClubCard({
             </div>
           </div>
           <div>
-            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Notes</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Notes</label>
             <textarea
               value={editNotes}
               onChange={e => setEditNotes(e.target.value)}
               rows={2}
               placeholder="Any notes about this club..."
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40 resize-none"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30 resize-none"
             />
           </div>
           <div className="flex items-center justify-between pt-1">
@@ -490,14 +490,14 @@ function AddClubForm({
 
       {/* Club name with suggestions */}
       <div className="relative">
-        <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Club Name *</label>
+        <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Club Name *</label>
         <input
           type="text"
           value={clubName}
           onChange={e => { setClubName(e.target.value); setShowSuggestions(true); }}
           onFocus={() => setShowSuggestions(true)}
           placeholder="e.g. 7 Iron"
-          className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+          className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
         />
         {showSuggestions && filteredSuggestions.length > 0 && (
           <div className="absolute z-10 mt-1 w-full max-h-48 overflow-y-auto bg-gray-800 rounded-xl shadow-lg">
@@ -516,52 +516,52 @@ function AddClubForm({
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <div>
-          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Brand</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Brand</label>
           <input
             type="text"
             value={brand}
             onChange={e => setBrand(e.target.value)}
             placeholder="e.g. Callaway"
-            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           />
         </div>
         <div>
-          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Model</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Model</label>
           <input
             type="text"
             value={model}
             onChange={e => setModel(e.target.value)}
             placeholder="e.g. Paradym"
-            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           />
         </div>
         <div>
-          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Loft (&deg;)</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Loft (&deg;)</label>
           <input
             type="number"
             step="0.5"
             value={loft}
             onChange={e => setLoft(e.target.value)}
             placeholder="e.g. 28"
-            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           />
         </div>
         <div>
-          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Shaft</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Shaft</label>
           <input
             type="text"
             value={shaft}
             onChange={e => setShaft(e.target.value)}
             placeholder="e.g. KBS Tour 120"
-            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           />
         </div>
         <div>
-          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Flex</label>
+          <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Flex</label>
           <select
             value={flex}
             onChange={e => setFlex(e.target.value)}
-            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           >
             <option value="">--</option>
             <option value="X">X (Extra Stiff)</option>

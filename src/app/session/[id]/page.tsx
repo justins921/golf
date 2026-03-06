@@ -107,32 +107,32 @@ function SessionDetail({ sessionId }: { sessionId: string }) {
       <div className="flex flex-wrap items-center gap-4 mb-4">
         <FilterBar filter={filter} onChange={setFilter} clubs={clubs} />
 
-        <div className="flex gap-1 ml-auto">
+        <div className="segmented-control ml-auto">
           <button
             onClick={() => setMode('carry')}
-            className={`px-4 py-2 text-xs rounded-full ${mode === 'carry' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
+            data-active={mode === 'carry' ? "true" : "false"}
           >
             Carry
           </button>
           <button
             onClick={() => setMode('total')}
-            className={`px-4 py-2 text-xs rounded-full ${mode === 'total' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
+            data-active={mode === 'total' ? "true" : "false"}
           >
             Total
           </button>
         </div>
 
         {session?.environment && (
-          <div className="flex gap-1">
+          <div className="segmented-control">
             <button
               onClick={() => setDistanceMode('observed')}
-              className={`px-4 py-2 text-xs rounded-full ${distanceMode === 'observed' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
+              data-active={distanceMode === 'observed' ? "true" : "false"}
             >
               Observed
             </button>
             <button
               onClick={() => setDistanceMode('normalized')}
-              className={`px-4 py-2 text-xs rounded-full ${distanceMode === 'normalized' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
+              data-active={distanceMode === 'normalized' ? "true" : "false"}
             >
               Normalized
             </button>
@@ -144,14 +144,12 @@ function SessionDetail({ sessionId }: { sessionId: string }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           {/* Tabs */}
-          <div className="flex gap-1 mb-4">
+          <div className="segmented-control mb-4">
             {(['chart', 'table', 'recommendations'] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className={`px-4 py-2 text-sm rounded-full ${
-                  tab === t ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-                }`}
+                data-active={tab === t ? "true" : "false"}
               >
                 {t === 'chart' ? 'Dispersion Chart' : t === 'table' ? 'Shot Table' : 'Recommendations'}
               </button>

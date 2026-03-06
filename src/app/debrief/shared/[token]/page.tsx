@@ -166,14 +166,14 @@ export default function SharedDebriefPage() {
               value={authorName}
               onChange={e => setAuthorName(e.target.value)}
               placeholder="Your name"
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
             />
             <textarea
               value={noteText}
               onChange={e => setNoteText(e.target.value)}
               placeholder="Add a note for the golfer..."
               rows={3}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 resize-none focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 resize-none focus:outline-none focus:ring-2 focus:ring-green-500/30"
             />
             <button onClick={handleSubmitNote} disabled={submitting || !authorName.trim() || !noteText.trim()}
               className="px-4 py-2 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white rounded-xl transition-colors">

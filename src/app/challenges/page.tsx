@@ -224,7 +224,7 @@ function ChallengesContent() {
           <>
             {active.length > 0 && (
               <div className="mb-6">
-                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Active</h2>
+                <h2 className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-2 px-1">Active</h2>
                 <div className="bg-gray-900 rounded-2xl overflow-hidden divide-y divide-gray-800/60">
                   {active.map(challenge => {
                     const icon = CHALLENGE_ICONS[challenge.challenge_type] ?? '\u2B50';
@@ -266,7 +266,7 @@ function ChallengesContent() {
 
             {ended.length > 0 && (
               <div className="mb-6">
-                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Ended</h2>
+                <h2 className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-2 px-1">Ended</h2>
                 <div className="bg-gray-900 rounded-2xl overflow-hidden divide-y divide-gray-800/60">
                   {ended.map(challenge => {
                     const icon = CHALLENGE_ICONS[challenge.challenge_type] ?? '\u2B50';
@@ -373,32 +373,32 @@ function ChallengesContent() {
 
               {selectedChallenge.end_date >= today && (
                 <div className="bg-gray-800/50 rounded-2xl p-4">
-                  <h3 className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Log Entry</h3>
+                  <h3 className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-3">Log Entry</h3>
                   <form onSubmit={handleLogEntry} className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
                       <input
                         type="text" required value={participantName}
                         onChange={(e) => setParticipantName(e.target.value)}
                         placeholder="Your name"
-                        className="col-span-2 bg-gray-900 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                        className="col-span-2 bg-gray-900/60 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                       />
                       <input
                         type="number" required step="any" value={entryValue}
                         onChange={(e) => setEntryValue(e.target.value === '' ? '' : Number(e.target.value))}
                         placeholder={`Value (${selectedChallenge.unit})`}
-                        className="bg-gray-900 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                        className="bg-gray-900/60 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                       />
                       <input
                         type="date" value={entryDate}
                         onChange={(e) => setEntryDate(e.target.value)}
-                        className="bg-gray-900 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                        className="bg-gray-900/60 rounded-xl px-4 py-3 text-[15px] text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                       />
                     </div>
                     <input
                       type="text" value={entryNotes}
                       onChange={(e) => setEntryNotes(e.target.value)}
                       placeholder="Notes (optional)"
-                      className="w-full bg-gray-900 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                      className="w-full bg-gray-900/60 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                     />
                     <button
                       type="submit"
@@ -412,11 +412,11 @@ function ChallengesContent() {
               )}
 
               <div>
-                <h3 className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Recent Entries</h3>
+                <h3 className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 px-1">Recent Entries</h3>
                 {entriesLoading ? (
                   <div className="animate-pulse bg-gray-800 rounded-2xl h-20" />
                 ) : entries.length === 0 ? (
-                  <p className="text-center text-sm text-gray-500 py-6">No entries yet</p>
+                  <p className="text-center text-gray-500 py-8 text-[13px]">No entries yet</p>
                 ) : (
                   <div className="bg-gray-800/50 rounded-2xl overflow-hidden divide-y divide-gray-800">
                     {entries.slice(0, 20).map((entry) => (
@@ -469,7 +469,7 @@ function ChallengesContent() {
 
             <form onSubmit={handleSubmit} className="px-5 pb-10 pt-4 space-y-5">
               <div>
-                <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block px-1">Type</label>
+                <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block px-1">Type</label>
                 <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
                   {challengeTypes.map(t => (
                     <button
@@ -489,61 +489,61 @@ function ChallengesContent() {
               </div>
 
               <div>
-                <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block px-1">Title</label>
+                <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block px-1">Title</label>
                 <input
                   type="text" required value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. 30-Day Putting Challenge"
-                  className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                  className="w-full bg-gray-800/60 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block px-1">Target</label>
+                  <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block px-1">Target</label>
                   <input
                     type="number" required min={0} step="any" value={targetValue}
                     onChange={(e) => setTargetValue(e.target.value === '' ? '' : Number(e.target.value))}
                     placeholder="100"
-                    className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                    className="w-full bg-gray-800/60 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   />
                 </div>
                 <div>
-                  <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block px-1">Unit</label>
+                  <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block px-1">Unit</label>
                   <input
                     type="text" value={unit}
                     onChange={(e) => setUnit(e.target.value)}
                     readOnly={challengeType !== 'custom'}
-                    className={`w-full bg-gray-800 border-0 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40 ${challengeType !== 'custom' ? 'opacity-50' : ''}`}
+                    className={`w-full bg-gray-800/60 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30 ${challengeType !== 'custom' ? 'opacity-50' : ''}`}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block px-1">Description</label>
+                <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block px-1">Description</label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={2} placeholder="Rules, instructions, or details..."
-                  className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40 resize-none"
+                  className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30 resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block px-1">Start</label>
+                  <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block px-1">Start</label>
                   <input
                     type="date" value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                    className="w-full bg-gray-800/60 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   />
                 </div>
                 <div>
-                  <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block px-1">End</label>
+                  <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block px-1">End</label>
                   <input
                     type="date" value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                    className="w-full bg-gray-800/60 rounded-xl px-4 py-3.5 text-[15px] text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   />
                 </div>
               </div>

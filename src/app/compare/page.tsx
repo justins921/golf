@@ -172,7 +172,7 @@ function Compare() {
           {/* Mode selector */}
           <div>
             <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Compare Mode</label>
-            <div className="flex flex-row lg:flex-col gap-1 flex-wrap">
+            <div className="segmented-control">
               {([
                 { value: 'all-time' as CompareMode, label: 'All-time average' },
                 { value: 'rolling' as CompareMode, label: 'Rolling last N' },
@@ -181,9 +181,7 @@ function Compare() {
                 <button
                   key={m.value}
                   onClick={() => setMode(m.value)}
-                  className={`px-4 py-2 text-sm rounded-full text-left ${
-                    mode === m.value ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-                  }`}
+                  data-active={mode === m.value ? "true" : "false"}
                 >
                   {m.label}
                 </button>
@@ -200,7 +198,7 @@ function Compare() {
                 max={50}
                 value={rollingN}
                 onChange={(e) => setRollingN(parseInt(e.target.value) || 5)}
-                className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-20 bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
               {rollingInfo && (
                 <p className="text-[10px] text-gray-600 mt-1">
@@ -251,16 +249,16 @@ function Compare() {
           {/* Distance mode */}
           <div>
             <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Distance</label>
-            <div className="flex gap-1">
+            <div className="segmented-control">
               <button
                 onClick={() => setDistanceMode('observed')}
-                className={`px-4 py-2 text-xs rounded-full ${distanceMode === 'observed' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
+                data-active={distanceMode === 'observed' ? "true" : "false"}
               >
                 Observed
               </button>
               <button
                 onClick={() => setDistanceMode('normalized')}
-                className={`px-4 py-2 text-xs rounded-full ${distanceMode === 'normalized' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
+                data-active={distanceMode === 'normalized' ? "true" : "false"}
               >
                 Normalized
               </button>
@@ -272,16 +270,16 @@ function Compare() {
         <div className="lg:col-span-3">
           <FilterBar filter={filter} onChange={setFilter} />
 
-          <div className="flex gap-1 mb-4">
+          <div className="segmented-control mb-4">
             <button
               onClick={() => setChartMode('carry')}
-              className={`px-4 py-2 text-xs rounded-full ${chartMode === 'carry' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
+              data-active={chartMode === 'carry' ? "true" : "false"}
             >
               Carry
             </button>
             <button
               onClick={() => setChartMode('total')}
-              className={`px-4 py-2 text-xs rounded-full ${chartMode === 'total' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
+              data-active={chartMode === 'total' ? "true" : "false"}
             >
               Total
             </button>

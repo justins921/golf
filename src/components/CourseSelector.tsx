@@ -213,12 +213,12 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
           }}
           onFocus={() => setShowDropdown(true)}
           placeholder="Search or enter course name"
-          className={`w-full px-3 ${py} ${textSize} bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40`}
+          className={`w-full px-3 ${py} ${textSize} bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30`}
         />
 
         {/* Dropdown */}
         {showDropdown && query.length > 0 && (
-          <div className="absolute z-20 w-full mt-1 bg-gray-900/95 backdrop-blur-lg rounded-2xl border border-gray-800 shadow-lg overflow-hidden max-h-60 overflow-y-auto">
+          <div className="absolute z-20 w-full mt-1.5 bg-gray-900/90 backdrop-blur-xl backdrop-saturate-150 rounded-xl shadow-2xl shadow-black/30 ring-1 ring-white/[0.08] overflow-hidden max-h-60 overflow-y-auto">
             {filtered.length > 0 ? (
               filtered.map((c) => (
                 <button
@@ -322,7 +322,7 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
                 value={newTeeName}
                 onChange={(e) => setNewTeeName(e.target.value)}
                 placeholder="Tee name"
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
@@ -332,7 +332,7 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
                 value={newRating}
                 onChange={(e) => setNewRating(e.target.value)}
                 placeholder="Rating"
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
@@ -341,7 +341,7 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
                 value={newSlope}
                 onChange={(e) => setNewSlope(e.target.value)}
                 placeholder="Slope"
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
@@ -350,7 +350,7 @@ export default function CourseSelector({ onSelect, initialCourse, initialTees, c
                 value={newPar}
                 onChange={(e) => setNewPar(e.target.value)}
                 placeholder="Par"
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
           </div>

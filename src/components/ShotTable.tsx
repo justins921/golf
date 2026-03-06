@@ -137,21 +137,21 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                 value={bulkTarget}
                 onChange={(e) => setBulkTarget(e.target.value)}
                 placeholder="e.g., 150"
-                className="w-24 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-24 bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
               <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Type</label>
-              <div className="flex gap-1">
+              <div className="segmented-control">
                 <button
                   onClick={() => setBulkFullShot(true)}
-                  className={`px-2 py-1 text-xs rounded-full ${bulkFullShot === true ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
+                  data-active={bulkFullShot === true ? "true" : "false"}
                 >
                   Full
                 </button>
                 <button
                   onClick={() => setBulkFullShot(false)}
-                  className={`px-2 py-1 text-xs rounded-full ${bulkFullShot === false ? 'bg-yellow-500/20 text-yellow-400 ring-1 ring-yellow-500/30' : 'bg-gray-800 text-gray-400'}`}
+                  data-active={bulkFullShot === false ? "true" : "false"}
                 >
                   Partial
                 </button>
@@ -162,7 +162,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
               <select
                 value={bulkTag}
                 onChange={(e) => setBulkTag(e.target.value)}
-                className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               >
                 <option value="">&mdash;</option>
                 {TAG_PRESETS.map((t) => (
@@ -284,7 +284,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                             target_distance_yd: e.target.value ? parseFloat(e.target.value) : null,
                           })
                         }
-                        className="w-16 bg-gray-800 border-0 rounded-xl px-2 py-1 text-sm text-gray-50 text-right focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                        className="w-16 bg-gray-800 border-0 rounded-xl px-2 py-1 text-sm text-gray-50 text-right focus:outline-none focus:ring-2 focus:ring-green-500/30"
                       />
                     </td>
                     <td className="p-2 hidden lg:table-cell">
@@ -297,7 +297,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                             tags: e.target.value.split(',').map((t) => t.trim()).filter(Boolean),
                           })
                         }
-                        className="w-24 bg-gray-800 border-0 rounded-xl px-2 py-1 text-sm text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                        className="w-24 bg-gray-800 border-0 rounded-xl px-2 py-1 text-sm text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                         placeholder="tag1, tag2"
                       />
                     </td>
@@ -306,7 +306,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                         type="text"
                         value={editValues.notes ?? ''}
                         onChange={(e) => setEditValues({ ...editValues, notes: e.target.value || null })}
-                        className="w-24 bg-gray-800 border-0 rounded-xl px-2 py-1 text-sm text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                        className="w-24 bg-gray-800 border-0 rounded-xl px-2 py-1 text-sm text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                       />
                     </td>
                     <td className="p-2 text-center">

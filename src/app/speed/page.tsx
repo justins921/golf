@@ -86,16 +86,16 @@ function SpeedTraining() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Speed Training</h1>
-        <div className="flex gap-2">
+        <div className="segmented-control">
           <button
             onClick={() => setView('log')}
-            className={`px-4 py-2 text-sm rounded-full ${view === 'log' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
+            data-active={view === 'log' ? "true" : "false"}
           >
             Training Log
           </button>
           <button
             onClick={() => setView('progress')}
-            className={`px-4 py-2 text-sm rounded-full ${view === 'progress' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
+            data-active={view === 'progress' ? "true" : "false"}
           >
             Progress
           </button>
@@ -126,7 +126,7 @@ function SpeedTraining() {
                     type="date"
                     value={newDate}
                     onChange={(e) => setNewDate(e.target.value)}
-                    className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                    className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   />
                 </div>
                 <div>
@@ -150,7 +150,7 @@ function SpeedTraining() {
                     value={newProgram}
                     onChange={(e) => setNewProgram(e.target.value)}
                     placeholder="e.g., Speed 1, Distance"
-                    className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                    className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   />
                 </div>
                 <div>
@@ -159,7 +159,7 @@ function SpeedTraining() {
                     value={newNotes}
                     onChange={(e) => setNewNotes(e.target.value)}
                     rows={2}
-                    className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                    className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   />
                 </div>
                 <div className="flex gap-2">
@@ -286,7 +286,7 @@ function SessionDetail({ sessionId, onDelete }: { sessionId: string; onDelete: (
             <select
               value={club}
               onChange={(e) => setClub(e.target.value)}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
             >
               {SPEED_CLUBS.map((c) => (
                 <option key={c} value={c}>{c}</option>
@@ -302,7 +302,7 @@ function SessionDetail({ sessionId, onDelete }: { sessionId: string; onDelete: (
               onChange={(e) => setSpeed(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
               placeholder="115.2"
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
             />
           </div>
           <div>
@@ -314,7 +314,7 @@ function SessionDetail({ sessionId, onDelete }: { sessionId: string; onDelete: (
               onChange={(e) => setBallSpeed(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
               placeholder="optional"
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
             />
           </div>
           <div className="flex gap-2">
@@ -325,7 +325,7 @@ function SessionDetail({ sessionId, onDelete }: { sessionId: string; onDelete: (
                 min={1}
                 value={setNum}
                 onChange={(e) => setSetNum(parseInt(e.target.value) || 1)}
-                className="w-16 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-16 bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
@@ -335,7 +335,7 @@ function SessionDetail({ sessionId, onDelete }: { sessionId: string; onDelete: (
                 min={1}
                 value={repNum}
                 onChange={(e) => setRepNum(parseInt(e.target.value) || 1)}
-                className="w-16 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-16 bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
           </div>

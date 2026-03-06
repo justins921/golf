@@ -382,23 +382,19 @@ export default function HeatmapPage() {
         </div>
         <div className="flex items-center gap-2">
           {/* View toggle */}
-          <div className="flex gap-1">
+          <div className="segmented-control">
             {(['heatmap', 'tendencies'] as const).map((v) => (
               <button key={v} onClick={() => setView(v)}
-                className={`px-4 py-2 text-xs rounded-full transition-colors ${
-                  view === v ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-                }`}>
+                data-active={view === v ? "true" : "false"}>
                 {v === 'heatmap' ? 'Density Map' : 'Miss Tendencies'}
               </button>
             ))}
           </div>
           {/* Mode toggle */}
-          <div className="flex gap-1">
+          <div className="segmented-control">
             {(['carry', 'total'] as const).map((m) => (
               <button key={m} onClick={() => setMode(m)}
-                className={`px-4 py-2 text-xs rounded-full transition-colors ${
-                  mode === m ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-                }`}>
+                data-active={mode === m ? "true" : "false"}>
                 {m === 'carry' ? 'Carry' : 'Total'}
               </button>
             ))}
@@ -451,21 +447,15 @@ export default function HeatmapPage() {
       {view === 'heatmap' && (
         <div className="space-y-4">
           {/* Club filter */}
-          <div className="flex flex-wrap gap-1.5">
+          <div className="segmented-control">
             <button
               onClick={() => setSelectedClub(null)}
-              className={`px-3 py-1 text-xs rounded-full transition-colors ${
-                selectedClub === null ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-              }`}>
+              data-active={selectedClub === null ? "true" : "false"}>
               All Clubs
             </button>
             {clubs.map((club, i) => (
               <button key={club} onClick={() => setSelectedClub(club)}
-                className={`px-3 py-1 text-xs rounded-full transition-colors ${
-                  selectedClub === club
-                    ? 'text-gray-50'
-                    : 'bg-gray-800 text-gray-400'
-                }`}
+                data-active={selectedClub === club ? "true" : "false"}
                 style={selectedClub === club ? { backgroundColor: CLUB_COLORS[i % CLUB_COLORS.length] } : {}}>
                 {club}
               </button>

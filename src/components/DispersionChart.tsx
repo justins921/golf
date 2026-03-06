@@ -314,12 +314,10 @@ export default function DispersionChart({
   return (
     <div className="bg-gray-900 rounded-2xl p-4" ref={containerRef}>
       {clubs.length > 1 && (
-        <div className="flex flex-wrap gap-2 mb-3">
+        <div className="segmented-control">
           <button
             onClick={() => setSelectedClub(null)}
-            className={`px-2 py-1 text-xs rounded-full ${
-              !selectedClub ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-            }`}
+            data-active={!selectedClub ? "true" : "false"}
           >
             All Clubs
           </button>
@@ -327,9 +325,7 @@ export default function DispersionChart({
             <button
               key={c}
               onClick={() => setSelectedClub(c)}
-              className={`px-2 py-1 text-xs rounded-full ${
-                selectedClub === c ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-              }`}
+              data-active={selectedClub === c ? "true" : "false"}
             >
               {c}
             </button>
@@ -341,7 +337,7 @@ export default function DispersionChart({
         <svg ref={svgRef} />
         <div
           ref={tooltipRef}
-          className="absolute pointer-events-none bg-gray-900/95 backdrop-blur border border-gray-800 rounded-xl px-2 py-1 shadow-lg"
+          className="absolute pointer-events-none bg-gray-900/95 backdrop-blur rounded-xl px-2 py-1 shadow-lg"
           style={{ display: 'none' }}
         />
       </div>

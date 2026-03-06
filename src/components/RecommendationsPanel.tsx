@@ -34,7 +34,7 @@ export default function RecommendationsPanel({ clubStats }: Props) {
             step="0.1"
             value={handicap}
             onChange={(e) => setHandicap(parseFloat(e.target.value) || 0)}
-            className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="w-20 bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           />
         </div>
         <div>
@@ -44,7 +44,7 @@ export default function RecommendationsPanel({ clubStats }: Props) {
             step="0.1"
             value={goalHandicap}
             onChange={(e) => setGoalHandicap(parseFloat(e.target.value) || 0)}
-            className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="w-20 bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           />
         </div>
       </div>

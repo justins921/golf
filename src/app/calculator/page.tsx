@@ -45,63 +45,63 @@ function PlaysLikeCalculator() {
         {/* Inputs */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Actual Yardage</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Actual Yardage</label>
             <input
               type="number"
               value={yardage}
               onChange={(e) => setYardage(parseFloat(e.target.value) || 0)}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-green-500/40 text-gray-50 text-lg font-medium"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-green-500/30 text-gray-50 text-lg font-medium"
             />
           </div>
           <div>
-            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Elevation Change (ft)</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Elevation Change (ft)</label>
             <input
               type="number"
               value={elevationChange}
               onChange={(e) => setElevationChange(parseFloat(e.target.value) || 0)}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-green-500/40 text-gray-50"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-green-500/30 text-gray-50"
               placeholder="+ uphill, - downhill"
             />
             <p className="text-[10px] text-gray-600 mt-0.5">Positive = uphill, negative = downhill</p>
           </div>
           <div>
-            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Wind (mph)</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Wind (mph)</label>
             <input
               type="number"
               value={wind}
               onChange={(e) => setWind(parseFloat(e.target.value) || 0)}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-green-500/40 text-gray-50"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-green-500/30 text-gray-50"
               placeholder="+ headwind, - tailwind"
             />
             <p className="text-[10px] text-gray-600 mt-0.5">Positive = headwind, negative = tailwind</p>
           </div>
           <div>
-            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Temperature (°F)</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Temperature (°F)</label>
             <input
               type="number"
               value={temperature}
               onChange={(e) => setTemperature(parseFloat(e.target.value) || 72)}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-green-500/40 text-gray-50"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-green-500/30 text-gray-50"
             />
           </div>
           <div>
-            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Humidity (%)</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Humidity (%)</label>
             <input
               type="number"
               min="0"
               max="100"
               value={humidity}
               onChange={(e) => setHumidity(parseFloat(e.target.value) || 50)}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-green-500/40 text-gray-50"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-green-500/30 text-gray-50"
             />
           </div>
           <div>
-            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Course Elevation (ft)</label>
+            <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2 block">Course Elevation (ft)</label>
             <input
               type="number"
               value={elevation}
               onChange={(e) => setElevation(parseFloat(e.target.value) || 0)}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-green-500/40 text-gray-50"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-green-500/30 text-gray-50"
             />
           </div>
         </div>

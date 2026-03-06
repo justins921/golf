@@ -194,12 +194,10 @@ function ConfigForm({ onGenerate, weaknesses, goals }: {
       {/* Weekly hours */}
       <div>
         <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Weekly Practice Time</label>
-        <div className="flex flex-wrap gap-2">
+        <div className="segmented-control">
           {([2, 3, 5, 7, 10] as WeeklyHours[]).map((h) => (
             <button key={h} onClick={() => setHours(h)}
-              className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
-                hours === h ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-              }`}>
+              data-active={hours === h ? "true" : "false"}>
               {h}h/week
             </button>
           ))}
@@ -209,12 +207,10 @@ function ConfigForm({ onGenerate, weaknesses, goals }: {
       {/* Plan length */}
       <div>
         <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Plan Duration</label>
-        <div className="flex gap-2">
+        <div className="segmented-control">
           {([1, 2, 4] as PlanLength[]).map((l) => (
             <button key={l} onClick={() => setLength(l)}
-              className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
-                length === l ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-              }`}>
+              data-active={length === l ? "true" : "false"}>
               {l} week{l > 1 ? 's' : ''}
             </button>
           ))}
@@ -224,12 +220,10 @@ function ConfigForm({ onGenerate, weaknesses, goals }: {
       {/* Skill level */}
       <div>
         <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Skill Level</label>
-        <div className="flex gap-2">
+        <div className="segmented-control">
           {(['beginner', 'intermediate', 'advanced'] as SkillLevel[]).map((l) => (
             <button key={l} onClick={() => setLevel(l)}
-              className={`px-3 py-1.5 text-sm rounded-full capitalize transition-colors ${
-                level === l ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-              }`}>
+              data-active={level === l ? "true" : "false"}>
               {l}
             </button>
           ))}
@@ -240,16 +234,12 @@ function ConfigForm({ onGenerate, weaknesses, goals }: {
       {goals.filter(g => !g.achieved_at).length > 0 && (
         <div>
           <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Your Goals (select to prioritize)</label>
-          <div className="flex flex-wrap gap-2">
+          <div className="segmented-control">
             {goals.filter(g => !g.achieved_at).map((g) => (
               <button
                 key={g.id}
                 onClick={() => toggleGoal(g.id)}
-                className={`text-xs px-2.5 py-1.5 rounded-full transition-colors ${
-                  selectedGoalIds.includes(g.id)
-                    ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
-                    : 'bg-gray-800 text-gray-400'
-                }`}
+                data-active={selectedGoalIds.includes(g.id) ? "true" : "false"}
               >
                 {g.title}
                 <span className="text-gray-500 ml-1">({GOAL_METRIC_LABELS[g.metric as GoalMetric] || g.metric})</span>
@@ -372,12 +362,10 @@ function PlanView({ plan, onReset }: { plan: PracticePlan; onReset: () => void }
 
       {/* Week tabs */}
       {plan.weeks.length > 1 && (
-        <div className="flex gap-2">
+        <div className="segmented-control">
           {plan.weeks.map((w, i) => (
             <button key={i} onClick={() => setActiveWeek(i)}
-              className={`px-3 py-1.5 text-sm rounded-full transition-colors ${
-                activeWeek === i ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-              }`}>
+              data-active={activeWeek === i ? "true" : "false"}>
               Week {w.weekNumber}
             </button>
           ))}

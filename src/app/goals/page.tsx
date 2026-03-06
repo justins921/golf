@@ -145,14 +145,14 @@ function SeasonGoals() {
           <select
             value={season}
             onChange={(e) => setSeason(e.target.value)}
-            className="px-4 py-3 text-[15px] bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="px-4 py-3 text-[15px] bg-gray-800/60 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           >
             <option value="2026">2026</option>
             <option value="2025">2025</option>
           </select>
           <button
             onClick={() => setShowNewGoal(true)}
-            className="px-4 py-1.5 text-sm bg-green-500 hover:bg-green-400 text-white rounded-xl"
+            className="px-4 py-1.5 text-[15px] font-medium bg-green-500 hover:bg-green-400 text-white rounded-xl active:scale-[0.98]"
           >
             + New Goal
           </button>
@@ -180,21 +180,21 @@ function SeasonGoals() {
       {/* New goal form */}
       {showNewGoal && (
         <div className="bg-gray-900 rounded-2xl p-5 mb-6 space-y-4">
-          <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">New Goal</h2>
+          <h2 className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-2 px-1">New Goal</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Goal Title</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Goal Title</label>
               <input
                 type="text"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 placeholder="Break 90"
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
-              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Metric</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Metric</label>
               <select
                 value={newMetric}
                 onChange={(e) => {
@@ -204,7 +204,7 @@ function SeasonGoals() {
                   const cv = currentValues[m];
                   if (cv != null) setNewStartValue(cv.toFixed(1));
                 }}
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               >
                 {(Object.keys(GOAL_METRIC_LABELS) as GoalMetric[]).map((m) => (
                   <option key={m} value={m}>{GOAL_METRIC_LABELS[m]}</option>
@@ -215,7 +215,7 @@ function SeasonGoals() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2">
                 Target {GOAL_METRIC_DIRECTION[newMetric] === 'lower' ? '(lower is better)' : '(higher is better)'}
               </label>
               <input
@@ -224,18 +224,18 @@ function SeasonGoals() {
                 value={newTarget}
                 onChange={(e) => setNewTarget(e.target.value)}
                 placeholder={GOAL_METRIC_DIRECTION[newMetric] === 'lower' ? '89' : '50'}
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
-              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Starting Value</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Starting Value</label>
               <input
                 type="number"
                 step="0.1"
                 value={newStartValue}
                 onChange={(e) => setNewStartValue(e.target.value)}
                 placeholder="Current"
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
           </div>
@@ -247,12 +247,12 @@ function SeasonGoals() {
           )}
 
           <div>
-            <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Notes (optional)</label>
+            <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Notes (optional)</label>
             <textarea
               value={newNotes}
               onChange={(e) => setNewNotes(e.target.value)}
               rows={2}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 resize-none focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 resize-none focus:outline-none focus:ring-2 focus:ring-green-500/30"
             />
           </div>
 
@@ -260,7 +260,7 @@ function SeasonGoals() {
             <button
               onClick={handleCreateGoal}
               disabled={!newTitle || !newTarget}
-              className="px-4 py-1.5 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white rounded-xl"
+              className="px-4 py-1.5 text-[15px] font-medium bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white rounded-xl active:scale-[0.98]"
             >
               Create Goal
             </button>
@@ -274,7 +274,7 @@ function SeasonGoals() {
 
           {/* Preset suggestions */}
           <div>
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Quick presets</div>
+            <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-2">Quick presets</div>
             <div className="flex flex-wrap gap-1">
               {PRESETS.map((p) => (
                 <button
@@ -302,7 +302,7 @@ function SeasonGoals() {
           <div className="text-[15px] text-gray-400 mb-4">No goals set for {season} yet.</div>
           <button
             onClick={() => setShowNewGoal(true)}
-            className="px-4 py-2 text-sm bg-green-500 hover:bg-green-400 text-white rounded-xl"
+            className="px-4 py-2 text-[15px] font-medium bg-green-500 hover:bg-green-400 text-white rounded-xl active:scale-[0.98]"
           >
             Set Your First Goal
           </button>
@@ -479,7 +479,7 @@ function GoalCard({
           {/* Related lessons */}
           {relatedLessons.length > 0 && (
             <div className="border-t border-gray-800 pt-2 mt-2">
-              <div className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-1.5">
+              <div className="text-[11px] uppercase tracking-widest text-gray-500 font-semibold mb-1.5">
                 Related Lessons
               </div>
               <div className="space-y-1">
@@ -504,7 +504,7 @@ function GoalCard({
           {/* Suggested focus areas for next lesson */}
           {!achieved && relevantFocusAreas.length > 0 && (
             <div className="border-t border-gray-800 pt-2 mt-2">
-              <div className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-1">
+              <div className="text-[11px] uppercase tracking-widest text-gray-500 font-semibold mb-1">
                 Suggested lesson focus
               </div>
               <div className="flex flex-wrap gap-1">

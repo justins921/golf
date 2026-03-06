@@ -12,46 +12,49 @@ export default function FilterBar({ filter, onChange, clubs }: Props) {
   const update = (patch: Partial<ShotFilter>) => onChange({ ...filter, ...patch });
 
   return (
-    <div className="flex flex-wrap items-center gap-3 py-2">
-      <label className="flex items-center gap-1.5 text-xs text-gray-400">
-        <input
-          type="checkbox"
-          checked={filter.fullShotsOnly}
-          onChange={(e) => update({ fullShotsOnly: e.target.checked, includePartials: !e.target.checked })}
-          className="accent-green-500"
+    <div className="flex flex-wrap items-center gap-4 py-2">
+      <label className="flex items-center gap-2.5 text-[13px] text-gray-300 cursor-pointer">
+        <button
+          type="button"
+          className="toggle-switch"
+          data-on={filter.fullShotsOnly ? "true" : "false"}
+          onClick={() => update({ fullShotsOnly: !filter.fullShotsOnly, includePartials: filter.fullShotsOnly })}
+          aria-label="Full shots only"
         />
         Full shots only
       </label>
 
-      <label className="flex items-center gap-1.5 text-xs text-gray-400">
-        <input
-          type="checkbox"
-          checked={filter.includePartials}
-          onChange={(e) => update({ includePartials: e.target.checked, fullShotsOnly: !e.target.checked })}
-          className="accent-green-500"
+      <label className="flex items-center gap-2.5 text-[13px] text-gray-300 cursor-pointer">
+        <button
+          type="button"
+          className="toggle-switch"
+          data-on={filter.includePartials ? "true" : "false"}
+          onClick={() => update({ includePartials: !filter.includePartials, fullShotsOnly: filter.includePartials })}
+          aria-label="Include partials"
         />
         Include partials
       </label>
 
-      <label className="flex items-center gap-1.5 text-xs text-gray-400">
-        <input
-          type="checkbox"
-          checked={filter.onlyWithTargets}
-          onChange={(e) => update({ onlyWithTargets: e.target.checked })}
-          className="accent-green-500"
+      <label className="flex items-center gap-2.5 text-[13px] text-gray-300 cursor-pointer">
+        <button
+          type="button"
+          className="toggle-switch"
+          data-on={filter.onlyWithTargets ? "true" : "false"}
+          onClick={() => update({ onlyWithTargets: !filter.onlyWithTargets })}
+          aria-label="With targets only"
         />
         With targets only
       </label>
 
       {filter.onlyWithTargets && (
-        <div className="flex items-center gap-1.5 text-xs text-gray-400">
+        <div className="flex items-center gap-1.5 text-[13px] text-gray-400">
           <span>&plusmn;</span>
           <input
             type="number"
             value={filter.targetWindow ?? ''}
             onChange={(e) => update({ targetWindow: e.target.value ? parseFloat(e.target.value) : null })}
             placeholder="any"
-            className="w-14 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="w-16 bg-gray-800/60 rounded-lg px-3 py-1.5 text-[13px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           />
           <span>yd window</span>
         </div>
@@ -61,7 +64,8 @@ export default function FilterBar({ filter, onChange, clubs }: Props) {
         <select
           value={filter.clubNames?.[0] ?? ''}
           onChange={(e) => update({ clubNames: e.target.value ? [e.target.value] : undefined })}
-          className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+          className="bg-gray-800/60 rounded-lg px-3 py-1.5 text-[13px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30 appearance-none pr-7"
+          style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
         >
           <option value="">All clubs</option>
           {clubs.map((c) => (

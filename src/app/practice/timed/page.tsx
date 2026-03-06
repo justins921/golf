@@ -183,7 +183,7 @@ function DrillByTime() {
               onChange={(e) => setCustomClub(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addClub(); } }}
               placeholder="Add club..."
-              className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 w-32 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 w-32 focus:outline-none focus:ring-2 focus:ring-green-500/30"
             />
             <button onClick={addClub} className="px-3 py-2 text-xs bg-gray-800 text-gray-300 rounded-xl hover:bg-gray-700">Add</button>
           </div>

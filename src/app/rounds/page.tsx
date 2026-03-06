@@ -119,10 +119,10 @@ function RoundTracker() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Rounds</h1>
-        <div className="flex gap-2">
+        <div className="segmented-control">
           {(['rounds', 'stats', 'analysis', 'handicap'] as const).map((v) => (
             <button key={v} onClick={() => setView(v)}
-              className={`px-4 py-2 text-sm ${view === v ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30 rounded-full' : 'bg-gray-800 text-gray-400 rounded-full'}`}>
+              data-active={view === v ? "true" : "false"}>
               {v === 'rounds' ? 'Scorecards' : v === 'stats' ? 'Stats' : v === 'analysis' ? 'Analysis' : 'Handicap'}
             </button>
           ))}
@@ -156,7 +156,7 @@ function RoundTracker() {
                 <div>
                   <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Date</label>
                   <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)}
-                    className="w-full px-4 py-3 text-[15px] bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
+                    className="w-full px-4 py-3 text-[15px] bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30" />
                 </div>
                 <CourseSelector
                   compact
@@ -171,10 +171,10 @@ function RoundTracker() {
                 />
                 <div>
                   <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Holes</label>
-                  <div className="flex gap-1">
+                  <div className="segmented-control">
                     {[9, 18].map((n) => (
                       <button key={n} onClick={() => setNewHoles(n)}
-                        className={`px-4 py-2 text-xs rounded-full ${newHoles === n ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}>
+                        data-active={newHoles === n ? "true" : "false"}>
                         {n}
                       </button>
                     ))}
@@ -183,7 +183,7 @@ function RoundTracker() {
                 <div>
                   <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Notes</label>
                   <textarea value={newNotes} onChange={(e) => setNewNotes(e.target.value)} rows={2}
-                    className="w-full px-4 py-3 text-[15px] bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
+                    className="w-full px-4 py-3 text-[15px] bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30" />
                 </div>
                 <div className="flex gap-2">
                   <button onClick={createRound} disabled={!newCourse}
@@ -435,7 +435,7 @@ function Scorecard({
                     <td className="p-1.5 text-center text-gray-400 font-medium">{idx + 1}</td>
                     <td className="p-1.5 text-center">
                       <select value={hole.par ?? 4} onChange={(e) => updateHole(idx, 'par', parseInt(e.target.value))}
-                        className="w-12 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/40">
+                        className="w-12 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/30">
                         <option value={3}>3</option>
                         <option value={4}>4</option>
                         <option value={5}>5</option>
@@ -445,13 +445,13 @@ function Scorecard({
                       <input type="number" min={1} max={15}
                         value={(hole.score as number) ?? ''}
                         onChange={(e) => updateHole(idx, 'score', e.target.value ? parseInt(e.target.value) : null)}
-                        className={`w-12 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/40 ${scoreColor}`} />
+                        className={`w-12 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/30 ${scoreColor}`} />
                     </td>
                     <td className="p-1.5 text-center">
                       <input type="number" min={0} max={10}
                         value={(hole.putts as number) ?? ''}
                         onChange={(e) => updateHole(idx, 'putts', e.target.value ? parseInt(e.target.value) : null)}
-                        className="w-12 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
+                        className="w-12 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/30" />
                     </td>
                     <td className="p-1.5 text-center">
                       {par >= 4 ? (
@@ -483,7 +483,7 @@ function Scorecard({
                             const field = hole.fairway_hit === false ? 'tee_miss_direction' : 'approach_miss_direction';
                             updateHole(idx, field, e.target.value || null);
                           }}
-                          className="w-14 px-0.5 py-0.5 text-xs bg-gray-800 border-0 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/40">
+                          className="w-14 px-0.5 py-0.5 text-xs bg-gray-800 border-0 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/30">
                           <option value="">—</option>
                           <option value="left">L</option>
                           <option value="right">R</option>
@@ -496,7 +496,7 @@ function Scorecard({
                       <input type="number" min={0} max={5}
                         value={(hole.penalty_strokes as number) ?? 0}
                         onChange={(e) => updateHole(idx, 'penalty_strokes', parseInt(e.target.value) || 0)}
-                        className="w-10 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/40" />
+                        className="w-10 px-1 py-0.5 text-sm text-center bg-gray-800 border-0 rounded-xl text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/30" />
                     </td>
                   </tr>
                 );

@@ -395,7 +395,7 @@ function SessionLogger() {
                   onChange={(e) => setCarryInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleLogShot(); }}
                   placeholder="Enter carry..."
-                  className="w-28 bg-gray-800 border-0 rounded-xl px-4 py-3 text-lg text-gray-50 text-center placeholder-gray-600 font-mono focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                  className="w-28 bg-gray-800/60 rounded-xl px-4 py-3 text-lg text-gray-50 text-center placeholder-gray-600 font-mono focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   autoFocus={!voice.supported}
                 />
               </div>
@@ -407,7 +407,7 @@ function SessionLogger() {
                   onChange={(e) => setLateralInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleLogShot(); }}
                   placeholder="±"
-                  className="w-20 bg-gray-800 border-0 rounded-xl px-2 py-3 text-lg text-gray-50 text-center placeholder-gray-600 font-mono focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                  className="w-20 bg-gray-800 border-0 rounded-xl px-2 py-3 text-lg text-gray-50 text-center placeholder-gray-600 font-mono focus:outline-none focus:ring-2 focus:ring-green-500/30"
                 />
               </div>
               <button

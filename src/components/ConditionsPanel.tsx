@@ -54,7 +54,7 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
               type="number"
               value={values.elevationFt}
               onChange={(e) => setValues({ ...values, elevationFt: parseFloat(e.target.value) || 0 })}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
             />
           </div>
           <div>
@@ -63,7 +63,7 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
               type="number"
               value={values.temperatureF}
               onChange={(e) => setValues({ ...values, temperatureF: parseFloat(e.target.value) || 59 })}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
             />
           </div>
           <div>
@@ -74,7 +74,7 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
               max="100"
               value={values.relativeHumidityPct}
               onChange={(e) => setValues({ ...values, relativeHumidityPct: parseFloat(e.target.value) || 50 })}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
             />
           </div>
           <div>
@@ -87,7 +87,7 @@ export default function ConditionsPanel({ conditions, onSave, editable = true }:
                 setValues({ ...values, pressureInHg: e.target.value ? parseFloat(e.target.value) : undefined })
               }
               placeholder="auto from elevation"
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
             />
           </div>
         </div>

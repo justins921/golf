@@ -113,7 +113,7 @@ function ShotDashboard() {
             Upload Garmin Approach R50 &quot;DrivingRange-*.csv&quot; exports. You can select multiple files.
           </p>
 
-          <label className="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-400 text-white font-medium rounded-xl cursor-pointer transition-colors">
+          <label className="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-400 text-white text-[15px] font-medium rounded-xl cursor-pointer transition-colors active:scale-[0.98]">
             {uploading ? 'Uploading...' : 'Choose CSV Files'}
             <input
               type="file"
@@ -154,7 +154,7 @@ function ShotDashboard() {
         {loading ? (
           <div className="text-gray-500">Loading sessions...</div>
         ) : sessions.length === 0 ? (
-          <div className="text-center py-16 text-[15px] text-gray-400 bg-gray-900 rounded-2xl">
+          <div className="text-center text-gray-500 py-8 text-[13px] bg-gray-900 rounded-2xl">
             No sessions yet. Upload a CSV to get started.
           </div>
         ) : (

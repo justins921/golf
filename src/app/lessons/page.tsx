@@ -182,14 +182,12 @@ function LessonsTracker() {
       </div>
 
       {/* View tabs */}
-      <div className="flex gap-1 mb-6">
+      <div className="segmented-control mb-6">
         {(['list', 'feels', 'stats'] as const).map((v) => (
           <button
             key={v}
             onClick={() => setView(v)}
-            className={`px-3 py-1.5 text-sm transition-colors ${
-              view === v ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30 rounded-full' : 'bg-gray-800 text-gray-400 rounded-full'
-            }`}
+            data-active={view === v ? "true" : "false"}
           >
             {v === 'list' ? 'Lessons' : v === 'feels' ? 'Swing Feels' : 'Stats'}
           </button>
@@ -211,7 +209,7 @@ function LessonsTracker() {
                 type="date"
                 value={lessonDate}
                 onChange={(e) => setLessonDate(e.target.value)}
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
@@ -221,7 +219,7 @@ function LessonsTracker() {
                 value={coachName}
                 onChange={(e) => setCoachName(e.target.value)}
                 placeholder="Coach name"
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
@@ -229,7 +227,7 @@ function LessonsTracker() {
               <select
                 value={lessonType}
                 onChange={(e) => setLessonType(e.target.value)}
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               >
                 {LESSON_TYPES.map((t) => (
                   <option key={t} value={t}>{LESSON_TYPE_LABELS[t]}</option>
@@ -242,7 +240,7 @@ function LessonsTracker() {
                 type="number"
                 value={durationMin}
                 onChange={(e) => setDurationMin(e.target.value)}
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
           </div>
@@ -314,7 +312,7 @@ function LessonsTracker() {
                 onChange={(e) => setNotes(e.target.value)}
                 rows={2}
                 placeholder="Key takeaways..."
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
           </div>
@@ -342,7 +340,7 @@ function LessonsTracker() {
                     onChange={(e) => setNewFeel(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && addFeel()}
                     placeholder='e.g. "Feel left hip clear first"'
-                    className="flex-1 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                    className="flex-1 bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   />
                   <button onClick={addFeel} className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-50 text-sm rounded-xl">
                     Add
@@ -380,14 +378,14 @@ function LessonsTracker() {
                     value={drillName}
                     onChange={(e) => setDrillName(e.target.value)}
                     placeholder="Drill name"
-                    className="flex-1 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                    className="flex-1 bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   />
                   <input
                     type="text"
                     value={drillReps}
                     onChange={(e) => setDrillReps(e.target.value)}
                     placeholder="Reps"
-                    className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                    className="w-20 bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   />
                   <button onClick={addDrill} className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-50 text-sm rounded-xl">
                     Add
@@ -403,7 +401,7 @@ function LessonsTracker() {
                   value={nextGoals}
                   onChange={(e) => setNextGoals(e.target.value)}
                   placeholder="What to work on next time"
-                  className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                  className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                 />
               </div>
             </div>

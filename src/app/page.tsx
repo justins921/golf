@@ -114,8 +114,8 @@ function Dashboard() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-50">Dashboard</h1>
-        <p className="text-sm text-gray-500">Your game at a glance</p>
+        <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Dashboard</h1>
+        <p className="text-[15px] text-gray-500 mt-0.5">Your game at a glance</p>
       </div>
 
       {loading ? (
@@ -163,10 +163,10 @@ function Dashboard() {
 
           {/* Middle row: Scoring trend + Practice recommendation */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-            <div className="bg-gray-900 rounded-lg border border-gray-800 p-4">
+            <div className="bg-gray-900 rounded-2xl p-4">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-medium text-gray-50">Recent Scores</h2>
-                <Link href="/rounds" className="text-xs text-green-400 hover:text-green-300">
+                <h2 className="text-[15px] font-semibold text-gray-50">Recent Scores</h2>
+                <Link href="/rounds" className="text-[13px] text-green-400 hover:text-green-300">
                   View all
                 </Link>
               </div>
@@ -183,7 +183,7 @@ function Dashboard() {
 
           {/* Quick actions */}
           <div>
-            <h2 className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">Quick Actions</h2>
+            <h2 className="text-[11px] uppercase tracking-widest text-gray-500 font-semibold mb-3 px-1">Quick Actions</h2>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
               <QuickAction href="/play" label="Play" icon="flag" color="text-green-400" />
               <QuickAction href="/warmup" label="Warmup" icon="sun" color="text-yellow-400" />
@@ -242,16 +242,16 @@ function StatCard({
 }) {
   const content = (
     <div className="bg-gray-900 rounded-2xl p-4">
-      <div className="text-[13px] text-gray-500 uppercase tracking-wider">{label}</div>
-      <div className={`text-2xl font-bold ${color} mt-1`}>
-        {value}<span className="text-sm font-normal text-gray-500">{unit}</span>
+      <div className="text-[13px] text-gray-500 font-medium">{label}</div>
+      <div className={`text-[22px] font-semibold ${color} mt-1 tracking-tight`}>
+        {value}<span className="text-[13px] font-normal text-gray-500">{unit}</span>
       </div>
-      <div className="text-[13px] text-gray-500 mt-1 truncate">{sub}</div>
+      <div className="text-[12px] text-gray-500 mt-1.5 truncate">{sub}</div>
     </div>
   );
 
   if (href) {
-    return <Link href={href} className="block hover:ring-1 hover:ring-gray-700 rounded-2xl transition-all">{content}</Link>;
+    return <Link href={href} className="block hover:bg-gray-800/50 rounded-2xl transition-colors">{content}</Link>;
   }
   return content;
 }
@@ -316,10 +316,10 @@ function PracticeRecommendationCard({
   }, [latestRound, holes, handicap]);
 
   return (
-    <div className="bg-gray-900 rounded-lg border border-gray-800 p-4">
+    <div className="bg-gray-900 rounded-2xl p-4">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-medium text-gray-50">What to Practice</h2>
-        <Link href="/practice" className="text-xs text-green-400 hover:text-green-300">
+        <h2 className="text-[15px] font-semibold text-gray-50">What to Practice</h2>
+        <Link href="/practice" className="text-[13px] text-green-400 hover:text-green-300">
           Start session
         </Link>
       </div>
@@ -349,7 +349,7 @@ function PracticeRecommendationCard({
           ))}
           <Link
             href="/rounds"
-            className="block text-center text-xs text-gray-500 hover:text-gray-300 mt-2 pt-2 border-t border-gray-800"
+            className="block text-center text-[13px] text-gray-500 hover:text-gray-300 mt-3 pt-2.5 border-t border-gray-800/30"
           >
             Full analysis
           </Link>

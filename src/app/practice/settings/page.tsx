@@ -21,7 +21,7 @@ function ScoringSettings() {
     setSettings({ ...settings, [key]: value });
   };
 
-  const inputCls = 'w-24 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 text-center focus:outline-none focus:ring-2 focus:ring-green-500/40';
+  const inputCls = 'w-24 bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 text-center focus:outline-none focus:ring-2 focus:ring-green-500/30';
 
   // Preview scoring for reference
   const previewDistances = [30, 50, 75, 100, 150];

@@ -22,20 +22,16 @@ export default function GappingPage() {
         </p>
 
         {/* Tab toggle */}
-        <div className="flex gap-1 mb-6">
+        <div className="segmented-control mb-6">
           <button
             onClick={() => setTab('actual')}
-            className={`px-4 py-2 text-sm rounded-full transition-colors ${
-              tab === 'actual' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-            }`}
+            data-active={tab === 'actual' ? "true" : "false"}
           >
             Actual Gapping
           </button>
           <button
             onClick={() => setTab('simulator')}
-            className={`px-4 py-2 text-sm rounded-full transition-colors ${
-              tab === 'simulator' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-            }`}
+            data-active={tab === 'simulator' ? "true" : "false"}
           >
             Bag Simulator
           </button>
@@ -119,7 +115,7 @@ function GappingAnalysis() {
           <select
             value={minShots}
             onChange={(e) => setMinShots(parseInt(e.target.value))}
-            className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           >
             <option value={1}>1</option>
             <option value={3}>3</option>
@@ -502,7 +498,7 @@ function BagSimulator() {
                   type="number"
                   value={club.carry}
                   onChange={(e) => updateCarry(realIdx, parseInt(e.target.value) || 0)}
-                  className="w-20 bg-gray-800 border-0 rounded-xl px-2 py-1 text-sm text-gray-50 text-center focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                  className="w-20 bg-gray-800 border-0 rounded-xl px-2 py-1 text-sm text-gray-50 text-center focus:outline-none focus:ring-2 focus:ring-green-500/30"
                 />
                 <span className={`w-16 text-center text-xs font-mono ${gapColor}`}>
                   {club.gap != null ? `${club.gap}` : '—'}

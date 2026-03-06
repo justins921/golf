@@ -308,7 +308,7 @@ function ReflectionSection({ roundId }: { roundId: string }) {
               onChange={e => update(q, e.target.value)}
               placeholder="Type your answer..."
               rows={2}
-              className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 resize-none focus:outline-none focus:ring-2 focus:ring-green-500/40"
+              className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 resize-none focus:outline-none focus:ring-2 focus:ring-green-500/30"
             />
           </div>
         ))}
@@ -348,7 +348,7 @@ function CoachNotesSection({ roundId }: { roundId: string }) {
         onChange={e => update(e.target.value)}
         placeholder="e.g., Coach said to focus on ball position with irons..."
         rows={4}
-        className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 resize-none focus:outline-none focus:ring-2 focus:ring-green-500/40"
+        className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 resize-none focus:outline-none focus:ring-2 focus:ring-green-500/30"
       />
     </div>
   );
@@ -546,7 +546,7 @@ function ShareExportSection({ debrief, roundId }: { debrief: RoundDebrief; round
             value={coachName}
             onChange={e => setCoachName(e.target.value)}
             placeholder="Coach name (optional)"
-            className="flex-1 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="flex-1 bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           />
           <button onClick={handleCreateShare} disabled={shareCreating}
             className="px-3 py-1.5 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white rounded-xl transition-colors">
@@ -708,12 +708,10 @@ function TabBar({ tab, setTab }: { tab: string; setTab: (t: 'summary' | 'deep-di
     { key: 'notes' as const, label: 'Notes' },
   ];
   return (
-    <div className="flex gap-2">
+    <div className="segmented-control">
       {tabs.map(t => (
         <button key={t.key} onClick={() => setTab(t.key)}
-          className={`px-4 py-2 text-sm rounded-full transition-colors ${
-            tab === t.key ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-          }`}>
+          data-active={tab === t.key ? "true" : "false"}>
           {t.label}
         </button>
       ))}

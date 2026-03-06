@@ -58,14 +58,12 @@ function PutterLab() {
       </div>
 
       {/* Tabs */}
-      <div className="flex flex-wrap gap-1 mb-6">
+      <div className="segmented-control mb-6">
         {(['specs', 'test', 'results'] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm rounded-full font-medium ${
-              tab === t ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-            }`}
+            data-active={tab === t ? "true" : "false"}
           >
             {t === 'specs' ? 'Specs' : t === 'test' ? 'Log Drills' : 'Results'}
           </button>
@@ -147,7 +145,7 @@ function PutterForm({
     setSaving(false);
   };
 
-  const inputCls = 'w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500/40';
+  const inputCls = 'w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500/30';
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
@@ -347,16 +345,12 @@ function DrillLogger({
       {/* Pick a putter to log for */}
       <div>
         <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Select putter to log drill</label>
-        <div className="flex flex-wrap gap-2">
+        <div className="segmented-control">
           {putters.map((p, i) => (
             <button
               key={p.id}
               onClick={() => setShowTestForm(showTestForm === p.id ? null : p.id)}
-              className={`px-3 py-1.5 text-sm rounded-full ${
-                showTestForm === p.id
-                  ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
+              data-active={showTestForm === p.id ? "true" : "false"}
             >
               <span className="inline-block w-2 h-2 rounded-full mr-2" style={{ backgroundColor: colorFor(i) }} />
               {p.name}
@@ -447,7 +441,7 @@ function DrillLogger({
               <select
                 value={drill}
                 onChange={(e) => setDrill(e.target.value)}
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               >
                 {PUTTER_DRILLS.map((d) => <option key={d} value={d}>{d}</option>)}
               </select>
@@ -459,7 +453,7 @@ function DrillLogger({
                 value={distanceFt}
                 onChange={(e) => setDistanceFt(e.target.value)}
                 placeholder="opt."
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
@@ -470,7 +464,7 @@ function DrillLogger({
                 value={made}
                 onChange={(e) => setMade(e.target.value)}
                 required
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
             <div>
@@ -481,7 +475,7 @@ function DrillLogger({
                 value={attempted}
                 onChange={(e) => setAttempted(e.target.value)}
                 required
-                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
               />
             </div>
           </div>
@@ -492,7 +486,7 @@ function DrillLogger({
             value={testNotes}
             onChange={(e) => setTestNotes(e.target.value)}
             placeholder="Notes (optional)"
-            className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+            className="w-full bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500/30"
           />
           <button
             type="submit"
@@ -634,7 +628,7 @@ function ResultsDashboard({ putters, tests }: { putters: Putter[]; tests: Putter
         <select
           value={drillFilter}
           onChange={(e) => setDrillFilter(e.target.value)}
-          className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+          className="bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
         >
           <option value="all">All Drills</option>
           {drillsUsed.map((d) => <option key={d} value={d}>{d}</option>)}

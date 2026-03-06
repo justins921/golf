@@ -212,7 +212,7 @@ function PlayMode() {
 
           {inProgress.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Resume In Progress</h2>
+              <h2 className="text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Resume In Progress</h2>
               {inProgress.map((r) => (
                 <button
                   key={r.id}
@@ -237,14 +237,14 @@ function PlayMode() {
             />
 
             <div>
-              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Holes</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Holes</label>
               <div className="flex gap-2">
                 {[9, 18].map((n) => (
                   <button
                     key={n}
                     onClick={() => setHolesCount(n)}
                     className={`flex-1 py-2.5 text-base rounded-xl ${
-                      holesCount === n ? 'bg-green-500 hover:bg-green-400 text-gray-50' : 'bg-gray-800 text-gray-400'
+                      holesCount === n ? 'bg-green-500 hover:bg-green-400 text-white' : 'bg-gray-800 text-gray-400'
                     }`}
                   >
                     {n}
@@ -257,24 +257,24 @@ function PlayMode() {
             {!courseRating && !slopeRating && (
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Course Rating</label>
+                  <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Course Rating</label>
                   <input
                     type="number"
                     step="0.1"
                     value={courseRating}
                     onChange={(e) => setCourseRating(e.target.value)}
                     placeholder="72.3"
-                    className="w-full px-4 py-3 text-[15px] bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                    className="w-full px-4 py-3 text-[15px] bg-gray-800/60 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   />
                 </div>
                 <div>
-                  <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Slope</label>
+                  <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Slope</label>
                   <input
                     type="number"
                     value={slopeRating}
                     onChange={(e) => setSlopeRating(e.target.value)}
                     placeholder="131"
-                    className="w-full px-4 py-3 text-[15px] bg-gray-800 border-0 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+                    className="w-full px-4 py-3 text-[15px] bg-gray-800/60 rounded-xl text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/30"
                   />
                 </div>
               </div>
@@ -283,7 +283,7 @@ function PlayMode() {
             <button
               onClick={handleStart}
               disabled={!course}
-              className="w-full py-3 text-lg font-medium bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-2xl active:scale-[0.98]"
+              className="w-full py-3 text-lg font-medium bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white rounded-2xl active:scale-[0.98]"
             >
               Start Round
             </button>
@@ -553,8 +553,8 @@ function PlayMode() {
             onClick={goNext}
             className={`flex-1 py-2.5 text-base font-medium rounded-2xl active:scale-[0.98] ${
               isLast
-                ? 'bg-green-500 hover:bg-green-400 text-gray-50'
-                : 'bg-blue-600 hover:bg-blue-500 text-gray-50'
+                ? 'bg-green-500 hover:bg-green-400 text-white'
+                : 'bg-blue-600 hover:bg-blue-500 text-white'
             }`}
           >
             {isLast ? 'Finish Round' : `Hole ${holeNum + 1} \u2192`}
@@ -633,7 +633,7 @@ function PlayMode() {
 
         {/* Score distribution */}
         <div className="bg-gray-900 rounded-2xl p-4 mb-6">
-          <h3 className="text-xs text-gray-500 uppercase tracking-wider mb-3">Score Distribution</h3>
+          <h3 className="text-[11px] text-gray-500 uppercase tracking-widest mb-3">Score Distribution</h3>
           <div className="flex gap-2 justify-center">
             {[
               { label: 'Eagle+', count: eagles, color: 'bg-yellow-500' },
@@ -655,7 +655,7 @@ function PlayMode() {
 
         {/* Hole-by-hole mini scorecard */}
         <div className="bg-gray-900 rounded-2xl p-4 mb-6">
-          <h3 className="text-xs text-gray-500 uppercase tracking-wider mb-3">Scorecard</h3>
+          <h3 className="text-[11px] text-gray-500 uppercase tracking-widest mb-3">Scorecard</h3>
           <div className="grid grid-cols-9 gap-1 text-center text-xs">
             {holes.slice(0, 9).map((h, i) => (
               <div key={i} className="space-y-0.5">
@@ -699,7 +699,7 @@ function PlayMode() {
               setCourseRating('');
               setSlopeRating('');
             }}
-            className="flex-1 py-3 text-center text-sm bg-green-500 text-gray-50 rounded-2xl active:scale-[0.98] hover:bg-green-400"
+            className="flex-1 py-3 text-center text-[15px] font-medium bg-green-500 text-white rounded-2xl active:scale-[0.98] hover:bg-green-400"
           >
             New Round
           </button>

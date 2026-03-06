@@ -56,7 +56,7 @@ export default function RoundAnalysis({
         <select
           value={handicap}
           onChange={(e) => setHandicap(parseInt(e.target.value))}
-          className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/40"
+          className="bg-gray-800/60 rounded-xl px-4 py-3 text-[15px] text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/30"
         >
           <option value={0}>Scratch (0)</option>
           <option value={5}>5 HI</option>
@@ -70,14 +70,12 @@ export default function RoundAnalysis({
       </div>
 
       {/* Tab bar */}
-      <div className="flex gap-1 pb-1">
+      <div className="segmented-control">
         {(['overview', 'holes', 'practice'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-3 py-1.5 text-sm rounded-full ${
-              activeTab === tab ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
-            }`}
+            data-active={activeTab === tab ? "true" : "false"}
           >
             {tab === 'overview' ? 'SG Overview' : tab === 'holes' ? 'By Hole' : 'Practice Plan'}
           </button>
@@ -236,12 +234,12 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
   return (
     <div className="space-y-4">
       {/* View toggle */}
-      <div className="flex gap-1">
+      <div className="segmented-control">
         {(['total', 'putting', 'teeToGreen'] as const).map((v) => (
           <button
             key={v}
             onClick={() => setSgView(v)}
-            className={`px-2 py-1 text-xs rounded-full ${sgView === v ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
+            data-active={sgView === v ? "true" : "false"}
           >
             {v === 'total' ? 'Total' : v === 'putting' ? 'Putting' : 'Tee-to-Green'}
           </button>
@@ -277,7 +275,7 @@ function SGByHole({ analysis }: { analysis: RoundSGAnalysis }) {
                   )}
                 </div>
                 {/* Tooltip */}
-                <div className="hidden group-hover:block absolute -top-16 left-1/2 -translate-x-1/2 bg-gray-900/95 backdrop-blur border border-gray-800 rounded-xl px-2 py-1 text-xs whitespace-nowrap z-10">
+                <div className="hidden group-hover:block absolute -top-16 left-1/2 -translate-x-1/2 bg-gray-900/95 backdrop-blur rounded-xl px-2 py-1 text-xs whitespace-nowrap z-10">
                   <div className="text-gray-400">Hole {hole.holeNumber} (Par {hole.par})</div>
                   <div className="text-gray-50">Score: {hole.score} | Putts: {hole.putts}</div>
                   <div className={sg >= 0 ? 'text-green-400' : 'text-red-400'}>
