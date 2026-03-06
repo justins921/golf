@@ -125,46 +125,46 @@ export default function ShotTable({ shots, onUpdate }: Props) {
     <div className="space-y-3">
       {/* Bulk actions */}
       {selected.size > 0 && (
-        <div className="bg-gray-800 border border-gray-700 rounded-lg p-3">
+        <div className="bg-gray-900 rounded-2xl p-3">
           <div className="text-sm text-gray-400 mb-2">
             {selected.size} shot{selected.size > 1 ? 's' : ''} selected — Bulk Edit:
           </div>
           <div className="flex flex-wrap gap-3 items-end">
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Target (yd)</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Target (yd)</label>
               <input
                 type="text"
                 value={bulkTarget}
                 onChange={(e) => setBulkTarget(e.target.value)}
                 placeholder="e.g., 150"
-                className="w-24 px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
+                className="w-24 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Type</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Type</label>
               <div className="flex gap-1">
                 <button
                   onClick={() => setBulkFullShot(true)}
-                  className={`px-2 py-1 text-xs rounded ${bulkFullShot === true ? 'bg-green-600 text-gray-50' : 'bg-gray-700 text-gray-400'}`}
+                  className={`px-2 py-1 text-xs rounded-full ${bulkFullShot === true ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
                 >
                   Full
                 </button>
                 <button
                   onClick={() => setBulkFullShot(false)}
-                  className={`px-2 py-1 text-xs rounded ${bulkFullShot === false ? 'bg-yellow-600 text-gray-50' : 'bg-gray-700 text-gray-400'}`}
+                  className={`px-2 py-1 text-xs rounded-full ${bulkFullShot === false ? 'bg-yellow-500/20 text-yellow-400 ring-1 ring-yellow-500/30' : 'bg-gray-800 text-gray-400'}`}
                 >
                   Partial
                 </button>
               </div>
             </div>
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Add Tag</label>
+              <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Add Tag</label>
               <select
                 value={bulkTag}
                 onChange={(e) => setBulkTag(e.target.value)}
-                className="px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
+                className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               >
-                <option value="">—</option>
+                <option value="">&mdash;</option>
                 {TAG_PRESETS.map((t) => (
                   <option key={t} value={t}>{t}</option>
                 ))}
@@ -173,7 +173,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
             <button
               onClick={bulkApply}
               disabled={saving}
-              className="px-3 py-1 text-sm bg-green-600 hover:bg-green-500 disabled:opacity-50 text-gray-50 rounded"
+              className="px-3 py-1 text-sm bg-green-500 hover:bg-green-400 disabled:opacity-50 text-gray-50 rounded-xl"
             >
               Apply
             </button>
@@ -196,7 +196,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
             <button
               key={p.label}
               onClick={p.action}
-              className="px-2 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
+              className="px-2 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded-xl text-gray-300"
             >
               {p.label}
             </button>
@@ -205,10 +205,10 @@ export default function ShotTable({ shots, onUpdate }: Props) {
       )}
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="bg-gray-900 rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-800 text-gray-500 text-xs uppercase">
+            <tr className="text-[13px] text-gray-500 uppercase">
               <th className="p-2 text-left">
                 <input
                   type="checkbox"
@@ -229,11 +229,11 @@ export default function ShotTable({ shots, onUpdate }: Props) {
               <th className="p-2 text-center">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-800/60">
             {shots.map((shot) => (
               <tr
                 key={shot.id}
-                className={`border-b border-gray-800/50 hover:bg-gray-900/50 ${
+                className={`hover:bg-gray-800/40 ${
                   selected.has(shot.id) ? 'bg-gray-800/30' : ''
                 }`}
               >
@@ -249,10 +249,10 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                   <button
                     onClick={() => toggleExcluded(shot)}
                     disabled={saving}
-                    title={shot.excluded_from_card ? 'Excluded from yardage card — click to include' : 'Included in yardage card — click to exclude'}
+                    title={shot.excluded_from_card ? 'Excluded from yardage card \u2014 click to include' : 'Included in yardage card \u2014 click to exclude'}
                     className={`text-xs ${shot.excluded_from_card ? 'text-red-400 hover:text-red-300' : 'text-green-400 hover:text-green-300'}`}
                   >
-                    {shot.excluded_from_card ? '✕' : '✓'}
+                    {shot.excluded_from_card ? '\u2715' : '\u2713'}
                   </button>
                 </td>
                 <td className={`p-2 font-medium ${shot.excluded_from_card ? 'text-gray-500 line-through' : 'text-gray-200'}`}>{shot.club_name}</td>
@@ -284,7 +284,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                             target_distance_yd: e.target.value ? parseFloat(e.target.value) : null,
                           })
                         }
-                        className="w-16 px-1 py-0.5 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50 text-right"
+                        className="w-16 bg-gray-800 border-0 rounded-xl px-2 py-1 text-sm text-gray-50 text-right focus:outline-none focus:ring-2 focus:ring-green-500/40"
                       />
                     </td>
                     <td className="p-2 hidden lg:table-cell">
@@ -297,7 +297,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                             tags: e.target.value.split(',').map((t) => t.trim()).filter(Boolean),
                           })
                         }
-                        className="w-24 px-1 py-0.5 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
+                        className="w-24 bg-gray-800 border-0 rounded-xl px-2 py-1 text-sm text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                         placeholder="tag1, tag2"
                       />
                     </td>
@@ -306,7 +306,7 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                         type="text"
                         value={editValues.notes ?? ''}
                         onChange={(e) => setEditValues({ ...editValues, notes: e.target.value || null })}
-                        className="w-24 px-1 py-0.5 text-sm bg-gray-900 border border-gray-600 rounded text-gray-50"
+                        className="w-24 bg-gray-800 border-0 rounded-xl px-2 py-1 text-sm text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                       />
                     </td>
                     <td className="p-2 text-center">
@@ -328,13 +328,13 @@ export default function ShotTable({ shots, onUpdate }: Props) {
                       )}
                     </td>
                     <td className="p-2 text-right text-gray-400 hidden md:table-cell">
-                      {shot.target_distance_yd ?? '—'}
+                      {shot.target_distance_yd ?? '\u2014'}
                     </td>
                     <td className="p-2 text-gray-500 text-xs hidden lg:table-cell">
-                      {shot.tags.length > 0 ? shot.tags.join(', ') : '—'}
+                      {shot.tags.length > 0 ? shot.tags.join(', ') : '\u2014'}
                     </td>
                     <td className="p-2 text-gray-500 text-xs truncate max-w-[100px] hidden lg:table-cell">
-                      {shot.notes ?? '—'}
+                      {shot.notes ?? '\u2014'}
                     </td>
                     <td className="p-2 text-center">
                       <button

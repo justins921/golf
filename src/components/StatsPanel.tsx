@@ -20,32 +20,32 @@ export default function StatsPanel({ stats, title, mode = 'carry' }: Props) {
 
   return (
     <div>
-      {title && <h3 className="text-sm font-medium text-gray-400 mb-2">{title}</h3>}
-      <div className="overflow-x-auto">
+      {title && <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">{title}</h3>}
+      <div className="bg-gray-900 rounded-2xl overflow-hidden">
         <table className="w-full text-xs">
           <thead>
-            <tr className="border-b border-gray-800 text-gray-500 uppercase">
+            <tr className="text-[13px] text-gray-500 uppercase">
               <th className="p-1.5 text-left">Club</th>
               <th className="p-1.5 text-right">n</th>
               <th className="p-1.5 text-right">Mean</th>
-              <th className="p-1.5 text-right">σ Dist</th>
+              <th className="p-1.5 text-right">&sigma; Dist</th>
               <th className="p-1.5 text-right">Median</th>
               <th className="p-1.5 text-right">Bias</th>
-              <th className="p-1.5 text-right">σ Lat</th>
-              <th className="p-1.5 text-right">Area 1σ</th>
+              <th className="p-1.5 text-right">&sigma; Lat</th>
+              <th className="p-1.5 text-right">Area 1&sigma;</th>
               {sorted.some((s) => s.targetStats) && (
                 <>
                   <th className="p-1.5 text-right">Tgt Err</th>
-                  <th className="p-1.5 text-right">±10 yd</th>
+                  <th className="p-1.5 text-right">&plusmn;10 yd</th>
                 </>
               )}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-800/60">
             {sorted.map((s) => {
               const d = mode === 'carry' ? s.carry : s.total;
               return (
-                <tr key={s.clubName} className="border-b border-gray-800/50 hover:bg-gray-900/50">
+                <tr key={s.clubName} className="hover:bg-gray-800/40">
                   <td className="p-1.5 text-gray-200 font-medium">{s.clubName}</td>
                   <td className="p-1.5 text-right text-gray-400">{s.n}</td>
                   <td className="p-1.5 text-right text-gray-300">{d.meanDistance.toFixed(1)}</td>
@@ -62,10 +62,10 @@ export default function StatsPanel({ stats, title, mode = 'carry' }: Props) {
                   {sorted.some((st) => st.targetStats) && (
                     <>
                       <td className="p-1.5 text-right text-gray-400">
-                        {s.targetStats ? `${s.targetStats.meanError > 0 ? '+' : ''}${s.targetStats.meanError.toFixed(1)}` : '—'}
+                        {s.targetStats ? `${s.targetStats.meanError > 0 ? '+' : ''}${s.targetStats.meanError.toFixed(1)}` : '\u2014'}
                       </td>
                       <td className="p-1.5 text-right text-gray-400">
-                        {s.targetStats ? `${(s.targetStats.pctWithin10 * 100).toFixed(0)}%` : '—'}
+                        {s.targetStats ? `${(s.targetStats.pctWithin10 * 100).toFixed(0)}%` : '\u2014'}
                       </td>
                     </>
                   )}

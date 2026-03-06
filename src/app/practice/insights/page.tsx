@@ -94,37 +94,50 @@ function PracticeInsights() {
   }, [sessions, shots]);
 
   if (loading) {
-    return <div className="max-w-4xl mx-auto px-4 py-8 text-gray-500">Loading...</div>;
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-4">
+        <div className="h-8 w-48 bg-gray-800 rounded-2xl animate-pulse" />
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="h-20 bg-gray-800 rounded-2xl animate-pulse" />
+          <div className="h-20 bg-gray-800 rounded-2xl animate-pulse" />
+          <div className="h-20 bg-gray-800 rounded-2xl animate-pulse" />
+          <div className="h-20 bg-gray-800 rounded-2xl animate-pulse" />
+        </div>
+        <div className="h-40 bg-gray-800 rounded-2xl animate-pulse" />
+      </div>
+    );
   }
 
   if (!stats) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-2xl font-bold text-gray-50 mb-4">Practice Insights</h1>
-        <p className="text-gray-500">No practice data yet. Complete some sessions to see your insights here.</p>
+        <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-4">Practice Insights</h1>
+        <div className="py-16 text-center">
+          <p className="text-[15px] text-gray-400">No practice data yet. Complete some sessions to see your insights here.</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-gray-50 mb-6">Practice Insights</h1>
+      <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-6">Practice Insights</h1>
 
       {/* Overview cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-        <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 text-center">
+        <div className="bg-gray-900 rounded-2xl p-4 text-center">
           <div className="text-2xl font-bold text-gray-50">{stats.totalSessions}</div>
           <div className="text-[10px] text-gray-500">Sessions</div>
         </div>
-        <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 text-center">
+        <div className="bg-gray-900 rounded-2xl p-4 text-center">
           <div className="text-2xl font-bold text-gray-50">{stats.totalShots}</div>
           <div className="text-[10px] text-gray-500">Total Shots</div>
         </div>
-        <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 text-center">
+        <div className="bg-gray-900 rounded-2xl p-4 text-center">
           <div className="text-2xl font-bold text-green-400">{stats.avgPoints}</div>
           <div className="text-[10px] text-gray-500">Avg Points</div>
         </div>
-        <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 text-center">
+        <div className="bg-gray-900 rounded-2xl p-4 text-center">
           <div className="text-2xl font-bold text-gray-50">{stats.avgError} yds</div>
           <div className="text-[10px] text-gray-500">Avg Error</div>
         </div>
@@ -132,10 +145,10 @@ function PracticeInsights() {
 
       {/* Trend */}
       {stats.trend !== null && (
-        <div className={`mb-6 p-3 rounded-lg border text-center text-sm ${
+        <div className={`mb-6 p-3 rounded-2xl text-center text-sm ${
           stats.trend >= 0
-            ? 'bg-green-600/10 border-green-600/30 text-green-400'
-            : 'bg-red-600/10 border-red-600/30 text-red-400'
+            ? 'bg-green-500/10 text-green-400'
+            : 'bg-red-500/10 text-red-400'
         }`}>
           {stats.trend >= 0 ? '+' : ''}{stats.trend} points avg trend (last 5 vs previous 5 sessions)
         </div>
@@ -143,50 +156,52 @@ function PracticeInsights() {
 
       {/* By club */}
       <div className="mb-8">
-        <h2 className="text-sm font-medium text-gray-400 mb-3">Performance by Club</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-800 text-gray-500 text-left">
-                <th className="py-2 px-2">Club</th>
-                <th className="py-2 px-2 text-center">Shots</th>
-                <th className="py-2 px-2 text-center">Avg Points</th>
-                <th className="py-2 px-2 text-center">Avg Error</th>
-                <th className="py-2 px-2">Performance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {stats.clubBreakdown.map((c) => (
-                <tr key={c.club} className="border-b border-gray-800/50">
-                  <td className="py-1.5 px-2 text-gray-50 font-medium">{c.club}</td>
-                  <td className="py-1.5 px-2 text-center text-gray-400">{c.shots}</td>
-                  <td className="py-1.5 px-2 text-center">
-                    <span className={c.avgPoints >= 150 ? 'text-green-400' : c.avgPoints >= 100 ? 'text-yellow-400' : 'text-red-400'}>
-                      {c.avgPoints}
-                    </span>
-                  </td>
-                  <td className="py-1.5 px-2 text-center text-gray-400">{c.avgError} yds</td>
-                  <td className="py-1.5 px-2">
-                    <div className="w-full bg-gray-800 rounded-full h-2">
-                      <div
-                        className={`h-2 rounded-full ${c.avgPoints >= 150 ? 'bg-green-500' : c.avgPoints >= 100 ? 'bg-yellow-500' : 'bg-red-500'}`}
-                        style={{ width: `${Math.min(100, (c.avgPoints / 300) * 100)}%` }}
-                      />
-                    </div>
-                  </td>
+        <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Performance by Club</h2>
+        <div className="bg-gray-900 rounded-2xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-800/60 text-gray-500 text-left">
+                  <th className="py-2 px-4">Club</th>
+                  <th className="py-2 px-4 text-center">Shots</th>
+                  <th className="py-2 px-4 text-center">Avg Points</th>
+                  <th className="py-2 px-4 text-center">Avg Error</th>
+                  <th className="py-2 px-4">Performance</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {stats.clubBreakdown.map((c) => (
+                  <tr key={c.club} className="border-b border-gray-800/40">
+                    <td className="py-2 px-4 text-gray-50 font-medium">{c.club}</td>
+                    <td className="py-2 px-4 text-center text-gray-400">{c.shots}</td>
+                    <td className="py-2 px-4 text-center">
+                      <span className={c.avgPoints >= 150 ? 'text-green-400' : c.avgPoints >= 100 ? 'text-yellow-400' : 'text-red-400'}>
+                        {c.avgPoints}
+                      </span>
+                    </td>
+                    <td className="py-2 px-4 text-center text-gray-400">{c.avgError} yds</td>
+                    <td className="py-2 px-4">
+                      <div className="w-full bg-gray-800 rounded-full h-2">
+                        <div
+                          className={`h-2 rounded-full ${c.avgPoints >= 150 ? 'bg-green-500' : c.avgPoints >= 100 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                          style={{ width: `${Math.min(100, (c.avgPoints / 300) * 100)}%` }}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       {/* By category */}
       <div>
-        <h2 className="text-sm font-medium text-gray-400 mb-3">Practice Distribution</h2>
+        <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Practice Distribution</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {stats.byCategory.map(([cat, data]) => (
-            <div key={cat} className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-center">
+            <div key={cat} className="bg-gray-900 rounded-2xl p-3 text-center">
               <div className="text-lg font-bold text-gray-50">{data.shots}</div>
               <div className="text-[10px] text-gray-500 capitalize">{cat.replace('_', ' ')} shots</div>
               <div className="text-[10px] text-gray-600">{data.sessions} sessions</div>

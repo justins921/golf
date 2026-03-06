@@ -82,7 +82,7 @@ export default function Nav() {
   const activeGroup = navGroups.find((g) => g.items.some((item) => isActive(item.href)));
 
   return (
-    <nav className="bg-gray-900 border-b border-gray-800">
+    <nav className="bg-gray-900/95 backdrop-blur-lg border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14">
           {/* Left: logo + nav groups */}
@@ -101,7 +101,7 @@ export default function Nav() {
                   <div key={group.label} className="relative">
                     <button
                       onClick={() => setOpenGroup(isOpen ? null : group.label)}
-                      className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1 ${
+                      className={`px-3 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-1 ${
                         isGroupActive
                           ? 'bg-gray-800 text-gray-50'
                           : 'text-gray-400 hover:text-gray-50 hover:bg-gray-800'
@@ -120,12 +120,12 @@ export default function Nav() {
 
                     {/* Dropdown */}
                     {isOpen && (
-                      <div className="absolute top-full left-0 mt-1 w-56 bg-gray-900 border border-gray-700 rounded-lg shadow-xl z-50 py-1">
+                      <div className="absolute top-full left-0 mt-1 w-56 bg-gray-900/95 backdrop-blur-lg border border-gray-800 rounded-2xl shadow-xl z-50 py-2 px-1">
                         {group.items.map((item) => (
                           <Link
                             key={item.href}
                             href={item.href}
-                            className={`block px-4 py-2.5 transition-colors ${
+                            className={`block px-4 py-3 rounded-xl transition-colors ${
                               isActive(item.href)
                                 ? 'bg-gray-800 text-gray-50'
                                 : 'text-gray-300 hover:bg-gray-800 hover:text-gray-50'
@@ -134,7 +134,7 @@ export default function Nav() {
                             <div className="flex items-center gap-2">
                               <span className="text-sm font-medium">{item.label}</span>
                               {item.lm && (
-                                <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 whitespace-nowrap">
+                                <span className="text-xs font-medium px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 whitespace-nowrap">
                                   LM
                                 </span>
                               )}
@@ -154,7 +154,7 @@ export default function Nav() {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleTheme}
-              className="p-2 text-gray-400 hover:text-gray-100 transition-colors rounded-md hover:bg-gray-800"
+              className="p-2 text-gray-400 hover:text-gray-100 transition-colors rounded-xl hover:bg-gray-800"
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
               title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             >
@@ -194,10 +194,10 @@ export default function Nav() {
 
       {/* Mobile menu — grouped */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-gray-800 px-4 pb-3 pt-2">
+        <div className="md:hidden border-t border-gray-800/50 px-4 pb-3 pt-2">
           {navGroups.map((group) => (
             <div key={group.label} className="mb-2">
-              <div className="text-xs uppercase tracking-wider text-gray-500 font-semibold px-3 py-1">
+              <div className="text-[13px] font-semibold text-gray-500 uppercase tracking-wider px-3 py-1">
                 {group.label}
               </div>
               {group.items.map((item) => (
@@ -205,7 +205,7 @@ export default function Nav() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
                     isActive(item.href)
                       ? 'bg-gray-800 text-gray-50'
                       : 'text-gray-400 hover:text-gray-50 hover:bg-gray-800'
@@ -213,7 +213,7 @@ export default function Nav() {
                 >
                   {item.label}
                   {item.lm && (
-                    <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    <span className="text-xs font-medium px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
                       LM
                     </span>
                   )}
@@ -221,7 +221,7 @@ export default function Nav() {
               ))}
             </div>
           ))}
-          <div className="border-t border-gray-800 pt-2 mt-2 flex items-center justify-between">
+          <div className="border-t border-gray-800/50 pt-2 mt-2 flex items-center justify-between">
             <span className="text-sm text-gray-500 truncate">{user.email}</span>
             <div className="flex items-center gap-2">
               <button

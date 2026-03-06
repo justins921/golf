@@ -82,23 +82,23 @@ function WarmupGenerator() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-gray-50 mb-6">Pre-Round Warmup</h1>
+      <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-6">Pre-Round Warmup</h1>
 
       {!generated ? (
         <div className="space-y-6">
           {/* Configuration */}
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 space-y-6">
+          <div className="bg-gray-900 rounded-2xl p-6 space-y-6">
             <div>
-              <h2 className="text-sm font-medium text-gray-50 mb-3">How much time do you have?</h2>
+              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">How much time do you have?</h2>
               <div className="grid grid-cols-4 gap-2">
                 {([15, 30, 45, 60] as WarmupDuration[]).map((d) => (
                   <button
                     key={d}
                     onClick={() => setDuration(d)}
-                    className={`px-4 py-3 rounded-lg text-center transition-colors ${
+                    className={`px-4 py-3 rounded-2xl text-center transition-colors ${
                       duration === d
-                        ? 'bg-green-600 text-gray-50'
-                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                        ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
+                        : 'bg-gray-800 text-gray-400 rounded-2xl hover:bg-gray-700'
                     }`}
                   >
                     <div className="text-lg font-bold">{d}</div>
@@ -109,7 +109,7 @@ function WarmupGenerator() {
             </div>
 
             <div>
-              <h2 className="text-sm font-medium text-gray-50 mb-3">What&apos;s available at the course?</h2>
+              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">What&apos;s available at the course?</h2>
               <div className="grid grid-cols-2 gap-2">
                 {([
                   { value: 'full', label: 'Full Facility', desc: 'Range + putting green + short game area' },
@@ -120,10 +120,10 @@ function WarmupGenerator() {
                   <button
                     key={f.value}
                     onClick={() => setFacility(f.value)}
-                    className={`px-4 py-3 rounded-lg text-left transition-colors ${
+                    className={`px-4 py-3 rounded-2xl text-left transition-colors ${
                       facility === f.value
-                        ? 'bg-green-600 text-gray-50'
-                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                        ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
+                        : 'bg-gray-800 text-gray-400 rounded-2xl hover:bg-gray-700'
                     }`}
                   >
                     <div className="text-sm font-medium">{f.label}</div>
@@ -135,8 +135,8 @@ function WarmupGenerator() {
 
             {/* Data insights */}
             {sgReport && (
-              <div className="bg-gray-800 rounded-lg p-4">
-                <h3 className="text-xs text-gray-500 uppercase tracking-wider mb-2">Based on your last round</h3>
+              <div className="bg-gray-900 rounded-2xl p-5">
+                <h3 className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Based on your last round</h3>
                 <div className="flex items-center gap-4">
                   <div>
                     <span className="text-gray-50 font-medium">{sgReport.courseName}</span>
@@ -159,7 +159,7 @@ function WarmupGenerator() {
             )}
 
             {!sgReport && rounds.length === 0 && (
-              <div className="bg-gray-800 rounded-lg p-4 text-sm text-gray-500">
+              <div className="bg-gray-900 rounded-2xl p-5 text-[15px] text-gray-400">
                 No round data yet. Add rounds with scorecards for personalized warmup recommendations.
               </div>
             )}
@@ -167,7 +167,7 @@ function WarmupGenerator() {
 
           <button
             onClick={() => { setGenerated(true); setActivePhase(0); setCompletedActivities(new Set()); }}
-            className="w-full px-6 py-3 bg-green-600 hover:bg-green-500 text-gray-50 font-medium rounded-lg text-lg transition-colors"
+            className="w-full px-6 py-3 bg-green-500 hover:bg-green-400 text-gray-50 font-medium rounded-2xl text-lg transition-colors active:scale-[0.98]"
           >
             Generate Warmup
           </button>
@@ -181,7 +181,7 @@ function WarmupGenerator() {
               {routine.personalizations.length > 0 && (
                 <div className="flex flex-wrap gap-1 mt-1">
                   {routine.personalizations.map((p, i) => (
-                    <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400">
                       {p}
                     </span>
                   ))}
@@ -190,7 +190,7 @@ function WarmupGenerator() {
             </div>
             <button
               onClick={() => setGenerated(false)}
-              className="px-3 py-1.5 text-sm bg-gray-800 text-gray-400 rounded hover:bg-gray-700"
+              className="px-3 py-1.5 text-sm bg-gray-800 text-gray-400 rounded-xl hover:bg-gray-700"
             >
               Customize
             </button>
@@ -217,11 +217,11 @@ function WarmupGenerator() {
                 <button
                   key={i}
                   onClick={() => setActivePhase(i)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm whitespace-nowrap transition-colors ${
                     activePhase === i
-                      ? 'bg-green-600 text-gray-50'
+                      ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
                       : phaseComplete
-                      ? 'bg-green-500/10 text-green-400 border border-green-500/20'
+                      ? 'bg-green-500/10 text-green-400'
                       : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                   }`}
                 >
@@ -247,7 +247,7 @@ function WarmupGenerator() {
 
           {/* Completion */}
           {progress === 100 && (
-            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-6 text-center">
+            <div className="bg-green-500/10 rounded-2xl p-6 text-center">
               <div className="text-2xl mb-2">&#9971;</div>
               <div className="text-lg font-bold text-green-400">Warmup Complete!</div>
               <div className="text-sm text-gray-400 mt-1">
@@ -285,7 +285,7 @@ function PhaseCard({
   );
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
+    <div className="bg-gray-900 rounded-2xl overflow-hidden">
       <div className="p-4 border-b border-gray-800 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <PhaseIcon icon={phase.icon} />
@@ -293,7 +293,7 @@ function PhaseCard({
           <span className="text-xs text-gray-500">{phase.minutes} min</span>
         </div>
         {allComplete && (
-          <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20">
+          <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/10 text-green-400">
             Complete
           </span>
         )}
@@ -310,9 +310,9 @@ function PhaseCard({
             >
               <button
                 onClick={() => onToggle(id)}
-                className={`mt-0.5 w-5 h-5 rounded flex-shrink-0 border flex items-center justify-center transition-colors ${
+                className={`mt-0.5 w-6 h-6 rounded-lg flex-shrink-0 border flex items-center justify-center transition-colors ${
                   done
-                    ? 'bg-green-600 border-green-600 text-gray-50'
+                    ? 'bg-green-500 border-green-500 text-gray-50'
                     : 'border-gray-600 hover:border-gray-500'
                 }`}
               >
@@ -327,7 +327,7 @@ function PhaseCard({
                   <span className={`text-sm font-medium ${done ? 'text-gray-500 line-through' : 'text-gray-50'}`}>
                     {activity.name}
                   </span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-500">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-800 text-gray-500">
                     {activity.duration}
                   </span>
                 </div>
@@ -349,7 +349,7 @@ function PhaseCard({
         <div className="p-3 border-t border-gray-800">
           <button
             onClick={onNext}
-            className="w-full px-4 py-2 bg-green-600 hover:bg-green-500 text-gray-50 text-sm rounded-lg"
+            className="w-full px-4 py-2 bg-green-500 hover:bg-green-400 text-gray-50 text-sm rounded-2xl active:scale-[0.98]"
           >
             Next Phase &rarr;
           </button>

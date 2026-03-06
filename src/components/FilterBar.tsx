@@ -45,13 +45,13 @@ export default function FilterBar({ filter, onChange, clubs }: Props) {
 
       {filter.onlyWithTargets && (
         <div className="flex items-center gap-1.5 text-xs text-gray-400">
-          <span>±</span>
+          <span>&plusmn;</span>
           <input
             type="number"
             value={filter.targetWindow ?? ''}
             onChange={(e) => update({ targetWindow: e.target.value ? parseFloat(e.target.value) : null })}
             placeholder="any"
-            className="w-14 px-1 py-0.5 bg-gray-800 border border-gray-700 rounded text-gray-50 text-xs"
+            className="w-14 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
           />
           <span>yd window</span>
         </div>
@@ -61,7 +61,7 @@ export default function FilterBar({ filter, onChange, clubs }: Props) {
         <select
           value={filter.clubNames?.[0] ?? ''}
           onChange={(e) => update({ clubNames: e.target.value ? [e.target.value] : undefined })}
-          className="px-2 py-1 text-xs bg-gray-800 border border-gray-700 rounded text-gray-50"
+          className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
         >
           <option value="">All clubs</option>
           {clubs.map((c) => (

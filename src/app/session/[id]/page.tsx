@@ -74,7 +74,7 @@ function SessionDetail({ sessionId }: { sessionId: string }) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-50">{session?.name ?? 'Session'}</h1>
+          <h1 className="text-xl sm:text-[28px] font-bold text-gray-50 tracking-tight">{session?.name ?? 'Session'}</h1>
           <div className="flex flex-wrap gap-3 text-sm text-gray-500 mt-1">
             {session?.played_at && <span>{new Date(session.played_at).toLocaleDateString()}</span>}
             <span>{shots.length} shots</span>
@@ -84,19 +84,19 @@ function SessionDetail({ sessionId }: { sessionId: string }) {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => downloadFile(shotsToCSV(filteredShots), `${session?.name ?? 'shots'}.csv`)}
-            className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
+            className="px-3 py-1.5 text-xs bg-gray-900 hover:bg-gray-800 rounded-xl text-gray-300"
           >
             Export Shots CSV
           </button>
           <button
             onClick={() => downloadFile(statsToCSV(stats), `${session?.name ?? 'stats'}-stats.csv`)}
-            className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
+            className="px-3 py-1.5 text-xs bg-gray-900 hover:bg-gray-800 rounded-xl text-gray-300"
           >
             Export Stats CSV
           </button>
           <button
             onClick={() => downloadFile(statsToJSON(stats), `${session?.name ?? 'stats'}-stats.json`, 'application/json')}
-            className="px-3 py-1.5 text-xs bg-gray-800 hover:bg-gray-700 rounded text-gray-300"
+            className="px-3 py-1.5 text-xs bg-gray-900 hover:bg-gray-800 rounded-xl text-gray-300"
           >
             Export Stats JSON
           </button>
@@ -110,13 +110,13 @@ function SessionDetail({ sessionId }: { sessionId: string }) {
         <div className="flex gap-1 ml-auto">
           <button
             onClick={() => setMode('carry')}
-            className={`px-2 py-1 text-xs rounded ${mode === 'carry' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
+            className={`px-4 py-2 text-xs rounded-full ${mode === 'carry' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
           >
             Carry
           </button>
           <button
             onClick={() => setMode('total')}
-            className={`px-2 py-1 text-xs rounded ${mode === 'total' ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
+            className={`px-4 py-2 text-xs rounded-full ${mode === 'total' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
           >
             Total
           </button>
@@ -126,13 +126,13 @@ function SessionDetail({ sessionId }: { sessionId: string }) {
           <div className="flex gap-1">
             <button
               onClick={() => setDistanceMode('observed')}
-              className={`px-2 py-1 text-xs rounded ${distanceMode === 'observed' ? 'bg-blue-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
+              className={`px-4 py-2 text-xs rounded-full ${distanceMode === 'observed' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
             >
               Observed
             </button>
             <button
               onClick={() => setDistanceMode('normalized')}
-              className={`px-2 py-1 text-xs rounded ${distanceMode === 'normalized' ? 'bg-blue-600 text-gray-50' : 'bg-gray-800 text-gray-400'}`}
+              className={`px-4 py-2 text-xs rounded-full ${distanceMode === 'normalized' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'}`}
             >
               Normalized
             </button>
@@ -149,8 +149,8 @@ function SessionDetail({ sessionId }: { sessionId: string }) {
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className={`px-3 py-1.5 text-sm rounded ${
-                  tab === t ? 'bg-gray-800 text-gray-50' : 'text-gray-500 hover:text-gray-300'
+                className={`px-4 py-2 text-sm rounded-full ${
+                  tab === t ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
                 }`}
               >
                 {t === 'chart' ? 'Dispersion Chart' : t === 'table' ? 'Shot Table' : 'Recommendations'}

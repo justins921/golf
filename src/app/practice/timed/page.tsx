@@ -62,12 +62,12 @@ function DrillByTime() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold text-gray-50 mb-2">Drill By Time</h1>
+      <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-2">Drill By Time</h1>
       <p className="text-sm text-gray-500 mb-6">Pick a focus and time — get a workout that fits exactly.</p>
 
       {/* Location */}
       <div className="mb-6">
-        <label className="block text-xs text-gray-500 mb-2">Where?</label>
+        <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Where?</label>
         <div className="flex flex-wrap gap-2">
           {([
             { value: 'range', label: 'Range' },
@@ -78,10 +78,10 @@ function DrillByTime() {
             <button
               key={loc.value}
               onClick={() => { setLocation(loc.value); setSelectedDrill(null); }}
-              className={`px-3 py-1.5 text-sm rounded-md border ${
+              className={`px-4 py-2 text-sm rounded-full transition-colors ${
                 location === loc.value
-                  ? 'border-blue-500 bg-blue-600/20 text-gray-50'
-                  : 'border-gray-700 bg-gray-800 text-gray-400'
+                  ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
+                  : 'bg-gray-800 text-gray-400'
               }`}
             >
               {loc.label}
@@ -92,7 +92,7 @@ function DrillByTime() {
 
       {/* Category */}
       <div className="mb-6">
-        <label className="block text-xs text-gray-500 mb-2">Category</label>
+        <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Category</label>
         <div className="flex flex-wrap gap-2">
           {([
             { value: 'wedges', label: 'Wedges' },
@@ -104,10 +104,10 @@ function DrillByTime() {
             <button
               key={cat.value}
               onClick={() => { setCategory(cat.value); setSelectedDrill(null); }}
-              className={`px-3 py-1.5 text-sm rounded-md border ${
+              className={`px-4 py-2 text-sm rounded-full transition-colors ${
                 category === cat.value
-                  ? 'border-blue-500 bg-blue-600/20 text-gray-50'
-                  : 'border-gray-700 bg-gray-800 text-gray-400'
+                  ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
+                  : 'bg-gray-800 text-gray-400'
               }`}
             >
               {cat.label}
@@ -118,16 +118,16 @@ function DrillByTime() {
 
       {/* Time */}
       <div className="mb-6">
-        <label className="block text-xs text-gray-500 mb-2">How long?</label>
+        <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">How long?</label>
         <div className="flex flex-wrap gap-2">
           {[5, 10, 15, 20, 30, 45, 60].map((m) => (
             <button
               key={m}
               onClick={() => setMinutes(m)}
-              className={`px-3 py-1.5 text-sm rounded-md border ${
+              className={`px-4 py-2 text-sm rounded-full transition-colors ${
                 minutes === m
-                  ? 'border-blue-500 bg-blue-600/20 text-gray-50'
-                  : 'border-gray-700 bg-gray-800 text-gray-400'
+                  ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30'
+                  : 'bg-gray-800 text-gray-400'
               }`}
             >
               {m} min
@@ -139,16 +139,16 @@ function DrillByTime() {
       {/* Drill selection */}
       {category && availableDrills.length > 0 && (
         <div className="mb-6">
-          <label className="block text-xs text-gray-500 mb-2">Pick a drill</label>
+          <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Pick a drill</label>
           <div className="space-y-2">
             {availableDrills.map((drill) => (
               <button
                 key={drill.id}
                 onClick={() => setSelectedDrill(drill)}
-                className={`block w-full text-left bg-gray-900 border rounded-lg p-4 transition-colors ${
+                className={`block w-full text-left bg-gray-900 rounded-2xl p-4 transition-colors ${
                   selectedDrill?.id === drill.id
-                    ? 'border-blue-500 bg-blue-600/10'
-                    : 'border-gray-700 hover:border-gray-600'
+                    ? 'ring-1 ring-green-500/30 bg-green-500/10'
+                    : 'hover:bg-gray-800'
                 }`}
               >
                 <h4 className="text-sm font-medium text-gray-50">{drill.name}</h4>
@@ -160,16 +160,18 @@ function DrillByTime() {
       )}
 
       {category && availableDrills.length === 0 && (
-        <p className="text-sm text-gray-500 mb-6">No drills available for this category and location combination.</p>
+        <div className="py-16 text-center mb-6">
+          <p className="text-[15px] text-gray-400">No drills available for this category and location combination.</p>
+        </div>
       )}
 
       {/* Optional clubs */}
       {selectedDrill && (
         <div className="mb-6">
-          <label className="block text-xs text-gray-500 mb-2">Clubs (optional)</label>
+          <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Clubs (optional)</label>
           <div className="flex flex-wrap gap-2 mb-2">
             {customClubs.map((c) => (
-              <div key={c} className="flex items-center gap-1 bg-gray-800 border border-gray-700 rounded-md px-2 py-1">
+              <div key={c} className="flex items-center gap-1 bg-gray-800 rounded-full px-3 py-1">
                 <span className="text-sm text-gray-300">{c}</span>
                 <button onClick={() => setCustomClubs(customClubs.filter((x) => x !== c))} className="text-xs text-gray-500 hover:text-red-400">&times;</button>
               </div>
@@ -181,9 +183,9 @@ function DrillByTime() {
               onChange={(e) => setCustomClub(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addClub(); } }}
               placeholder="Add club..."
-              className="px-2 py-1 text-sm bg-gray-800 border border-gray-700 rounded text-gray-50 placeholder-gray-600 w-32"
+              className="bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 placeholder-gray-600 w-32 focus:outline-none focus:ring-2 focus:ring-green-500/40"
             />
-            <button onClick={addClub} className="px-2 py-1 text-xs bg-gray-700 text-gray-300 rounded hover:bg-gray-600">Add</button>
+            <button onClick={addClub} className="px-3 py-2 text-xs bg-gray-700 text-gray-300 rounded-xl hover:bg-gray-600 transition-colors">Add</button>
           </div>
         </div>
       )}
@@ -193,7 +195,7 @@ function DrillByTime() {
         <button
           onClick={handleStart}
           disabled={starting}
-          className="px-5 py-2 text-sm bg-blue-600 text-gray-50 rounded-md hover:bg-blue-500 disabled:opacity-50"
+          className="w-full px-5 py-3 text-sm bg-green-500 text-gray-50 rounded-2xl hover:bg-green-400 disabled:opacity-50 active:scale-[0.98] transition-all"
         >
           {starting ? 'Starting...' : `Start ${minutes}-Min ${selectedDrill.name}`}
         </button>

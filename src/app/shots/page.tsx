@@ -105,15 +105,15 @@ function ShotDashboard() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-50 mb-4">Shot Data</h1>
+        <h1 className="text-[28px] font-bold text-gray-50 tracking-tight mb-4">Shot Data</h1>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+        <div className="bg-gray-900 rounded-2xl p-6">
           <h2 className="text-lg font-medium text-gray-200 mb-2">Import Sessions</h2>
           <p className="text-sm text-gray-500 mb-4">
             Upload Garmin Approach R50 &quot;DrivingRange-*.csv&quot; exports. You can select multiple files.
           </p>
 
-          <label className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-500 text-gray-50 font-medium rounded-md cursor-pointer transition-colors">
+          <label className="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-400 text-white font-medium rounded-xl cursor-pointer transition-colors">
             {uploading ? 'Uploading...' : 'Choose CSV Files'}
             <input
               type="file"
@@ -137,13 +137,13 @@ function ShotDashboard() {
       <div className="flex flex-wrap gap-3 mb-6">
         <button
           onClick={() => router.push('/compare')}
-          className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-sm text-gray-300 transition-colors"
+          className="px-4 py-2 bg-gray-900 hover:bg-gray-800 rounded-full text-sm text-gray-300 transition-colors"
         >
           Compare Sessions
         </button>
         <button
           onClick={() => router.push('/yardage')}
-          className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-sm text-gray-300 transition-colors"
+          className="px-4 py-2 bg-gray-900 hover:bg-gray-800 rounded-full text-sm text-gray-300 transition-colors"
         >
           Yardage Card
         </button>
@@ -154,7 +154,7 @@ function ShotDashboard() {
         {loading ? (
           <div className="text-gray-500">Loading sessions...</div>
         ) : sessions.length === 0 ? (
-          <div className="text-gray-600 bg-gray-900 border border-gray-800 rounded-lg p-8 text-center">
+          <div className="text-center py-16 text-[15px] text-gray-400 bg-gray-900 rounded-2xl">
             No sessions yet. Upload a CSV to get started.
           </div>
         ) : (
@@ -162,7 +162,7 @@ function ShotDashboard() {
             {sessions.map((session) => (
               <div
                 key={session.id}
-                className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-center justify-between hover:border-gray-700 transition-colors cursor-pointer"
+                className="bg-gray-900 rounded-2xl p-4 flex items-center justify-between hover:bg-gray-800/70 transition-colors cursor-pointer"
                 onClick={() => router.push(`/session/${session.id}`)}
               >
                 <div>
@@ -186,7 +186,7 @@ function ShotDashboard() {
                       e.stopPropagation();
                       handleDelete(session.id);
                     }}
-                    className="px-2 py-1 text-xs text-red-400 hover:text-red-300 hover:bg-gray-800 rounded"
+                    className="px-2 py-1 text-xs text-gray-500 hover:text-red-400 rounded"
                   >
                     Delete
                   </button>
