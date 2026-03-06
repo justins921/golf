@@ -170,12 +170,12 @@ function LessonsTracker() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-50">Lessons</h1>
+          <h1 className="text-[28px] font-bold text-gray-50 tracking-tight">Lessons</h1>
           <p className="text-sm text-gray-500">Track coaching sessions, drills & swing feels</p>
         </div>
         <button
           onClick={() => { resetForm(); setShowForm(!showForm); }}
-          className="px-4 py-2 bg-green-600 hover:bg-green-500 text-gray-50 text-sm font-medium rounded-lg transition-colors"
+          className="px-4 py-2 bg-green-500 hover:bg-green-400 text-white text-sm font-medium rounded-xl transition-colors"
         >
           {showForm ? 'Cancel' : '+ Log Lesson'}
         </button>
@@ -187,8 +187,8 @@ function LessonsTracker() {
           <button
             key={v}
             onClick={() => setView(v)}
-            className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
-              view === v ? 'bg-gray-700 text-gray-50' : 'text-gray-400 hover:text-gray-50 hover:bg-gray-800'
+            className={`px-4 py-2 text-sm rounded-full transition-colors ${
+              view === v ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/30' : 'bg-gray-800 text-gray-400'
             }`}
           >
             {v === 'list' ? 'Lessons' : v === 'feels' ? 'Swing Feels' : 'Stats'}
@@ -198,7 +198,7 @@ function LessonsTracker() {
 
       {/* Form */}
       {showForm && (
-        <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 sm:p-5 mb-6 space-y-4">
+        <div className="bg-gray-900 rounded-2xl p-4 sm:p-5 mb-6 space-y-4">
           <h2 className="text-lg font-semibold text-gray-50">
             {editingId ? 'Edit Lesson' : 'Log New Lesson'}
           </h2>
@@ -206,30 +206,30 @@ function LessonsTracker() {
           {/* Row 1: date, coach, type, duration */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Date</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Date</label>
               <input
                 type="date"
                 value={lessonDate}
                 onChange={(e) => setLessonDate(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Coach</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Coach</label>
               <input
                 type="text"
                 value={coachName}
                 onChange={(e) => setCoachName(e.target.value)}
                 placeholder="Coach name"
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Type</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Type</label>
               <select
                 value={lessonType}
                 onChange={(e) => setLessonType(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               >
                 {LESSON_TYPES.map((t) => (
                   <option key={t} value={t}>{LESSON_TYPE_LABELS[t]}</option>
@@ -237,19 +237,19 @@ function LessonsTracker() {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Duration (min)</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Duration (min)</label>
               <input
                 type="number"
                 value={durationMin}
                 onChange={(e) => setDurationMin(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
           </div>
 
           {/* Focus areas */}
           <div>
-            <label className="block text-xs text-gray-400 mb-2">Focus Areas</label>
+            <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Focus Areas</label>
             {/* Goal-suggested areas inline */}
             {activeGoals.length > 0 && (
               <div className="mb-2 text-xs text-gray-500">
@@ -261,9 +261,9 @@ function LessonsTracker() {
                     <button
                       key={area}
                       onClick={() => { if (!focusAreas.includes(area)) setFocusAreas([...focusAreas, area]); }}
-                      className={`inline-block ml-1 mb-1 px-2 py-0.5 rounded transition-colors ${
+                      className={`inline-block ml-1 mb-1 px-2 py-0.5 rounded-full transition-colors ${
                         focusAreas.includes(area)
-                          ? 'bg-green-600/20 text-green-400'
+                          ? 'bg-green-500/20 text-green-400'
                           : 'bg-gray-800 text-gray-400 hover:text-gray-50 cursor-pointer'
                       }`}
                     >
@@ -277,9 +277,9 @@ function LessonsTracker() {
                 <button
                   key={area}
                   onClick={() => toggleFocus(area)}
-                  className={`px-2 py-1 rounded text-xs transition-colors ${
+                  className={`px-2 py-1 rounded-full text-xs transition-colors ${
                     focusAreas.includes(area)
-                      ? 'bg-green-600 text-gray-50'
+                      ? 'bg-green-500 text-white'
                       : 'bg-gray-800 text-gray-400 hover:text-gray-50'
                   }`}
                 >
@@ -292,14 +292,14 @@ function LessonsTracker() {
           {/* Rating + Notes — always visible core fields */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-gray-400 mb-2">Rating</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Rating</label>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((r) => (
                   <button
                     key={r}
                     onClick={() => setRating(r)}
-                    className={`w-10 h-10 rounded-lg text-sm font-bold transition-colors ${
-                      rating >= r ? 'bg-green-600 text-gray-50' : 'bg-gray-800 text-gray-500'
+                    className={`w-10 h-10 rounded-xl text-sm font-bold transition-colors ${
+                      rating >= r ? 'bg-green-500 text-white' : 'bg-gray-800 text-gray-500'
                     }`}
                   >
                     {r}
@@ -308,13 +308,13 @@ function LessonsTracker() {
               </div>
             </div>
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Notes</label>
+              <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Notes</label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={2}
                 placeholder="Key takeaways..."
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 resize-none focus:outline-none focus:ring-2 focus:ring-green-500/40"
               />
             </div>
           </div>
@@ -323,7 +323,7 @@ function LessonsTracker() {
           {!showOptional && (
             <button
               onClick={() => setShowOptional(true)}
-              className="w-full py-2 text-sm text-gray-400 hover:text-gray-50 border border-dashed border-gray-700 rounded-lg transition-colors"
+              className="w-full py-2 text-sm text-gray-400 hover:text-gray-50 border border-dashed border-gray-700 rounded-2xl transition-colors"
             >
               + Add swing feels, drills & next goals
             </button>
@@ -334,7 +334,7 @@ function LessonsTracker() {
             <div className="space-y-4 border-t border-gray-800 pt-4">
               {/* Swing Feels */}
               <div>
-                <label className="block text-xs text-gray-400 mb-2">Swing Feels / Cues</label>
+                <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Swing Feels / Cues</label>
                 <div className="flex gap-2 mb-2">
                   <input
                     type="text"
@@ -342,16 +342,16 @@ function LessonsTracker() {
                     onChange={(e) => setNewFeel(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && addFeel()}
                     placeholder='e.g. "Feel left hip clear first"'
-                    className="flex-1 bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                    className="flex-1 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                   />
-                  <button onClick={addFeel} className="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-gray-50 text-sm rounded">
+                  <button onClick={addFeel} className="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-gray-50 text-sm rounded-xl">
                     Add
                   </button>
                 </div>
                 {swingFeels.length > 0 && (
                   <div className="flex flex-wrap gap-1.5">
                     {swingFeels.map((f, i) => (
-                      <span key={i} className="inline-flex items-center gap-1 px-2 py-1 bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 rounded text-xs">
+                      <span key={i} className="inline-flex items-center gap-1 px-2 py-1 bg-yellow-500/10 text-yellow-400 rounded-full text-xs">
                         {f}
                         <button onClick={() => setSwingFeels(swingFeels.filter((_, j) => j !== i))} className="text-yellow-400/60 hover:text-yellow-400">x</button>
                       </span>
@@ -362,11 +362,11 @@ function LessonsTracker() {
 
               {/* Drills Assigned */}
               <div>
-                <label className="block text-xs text-gray-400 mb-2">Drills Assigned</label>
+                <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Drills Assigned</label>
                 {drills.length > 0 && (
                   <div className="space-y-1 mb-2">
                     {drills.map((d, i) => (
-                      <div key={i} className="flex items-center gap-2 bg-gray-800 rounded px-3 py-2 text-sm">
+                      <div key={i} className="flex items-center gap-2 bg-gray-800 rounded-xl px-3 py-2 text-sm">
                         <span className="text-gray-50 font-medium">{d.name}</span>
                         {d.reps && <span className="text-gray-500">({d.reps})</span>}
                         <button onClick={() => setDrills(drills.filter((_, j) => j !== i))} className="ml-auto text-gray-500 hover:text-red-400 text-xs">remove</button>
@@ -380,16 +380,16 @@ function LessonsTracker() {
                     value={drillName}
                     onChange={(e) => setDrillName(e.target.value)}
                     placeholder="Drill name"
-                    className="flex-1 bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                    className="flex-1 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                   />
                   <input
                     type="text"
                     value={drillReps}
                     onChange={(e) => setDrillReps(e.target.value)}
                     placeholder="Reps"
-                    className="w-20 bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                    className="w-20 bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                   />
-                  <button onClick={addDrill} className="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-gray-50 text-sm rounded">
+                  <button onClick={addDrill} className="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-gray-50 text-sm rounded-xl">
                     Add
                   </button>
                 </div>
@@ -397,13 +397,13 @@ function LessonsTracker() {
 
               {/* Next lesson goals */}
               <div>
-                <label className="block text-xs text-gray-400 mb-1">Goals for Next Lesson</label>
+                <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Goals for Next Lesson</label>
                 <input
                   type="text"
                   value={nextGoals}
                   onChange={(e) => setNextGoals(e.target.value)}
                   placeholder="What to work on next time"
-                  className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-gray-50"
+                  className="w-full bg-gray-800 border-0 rounded-xl px-4 py-3 text-[15px] text-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500/40"
                 />
               </div>
             </div>
@@ -411,7 +411,7 @@ function LessonsTracker() {
 
           <button
             onClick={handleSubmit}
-            className="w-full py-2 bg-green-600 hover:bg-green-500 text-gray-50 text-sm font-medium rounded-lg transition-colors"
+            className="w-full py-2 bg-green-500 hover:bg-green-400 text-white text-sm font-medium rounded-2xl transition-colors active:scale-[0.98]"
           >
             {editingId ? 'Update Lesson' : 'Save Lesson'}
           </button>
@@ -419,20 +419,20 @@ function LessonsTracker() {
       )}
 
       {loading ? (
-        <div className="text-center text-gray-600 py-12 text-sm">Loading lessons...</div>
+        <div className="text-center py-16 text-[15px] text-gray-400">Loading lessons...</div>
       ) : view === 'list' ? (
         /* Lesson list */
         lessons.length === 0 ? (
-          <div className="text-center text-gray-600 py-12">
-            <p className="text-sm">No lessons logged yet</p>
-            <p className="text-xs mt-1">Log your first coaching session to start tracking progress</p>
+          <div className="text-center py-16">
+            <p className="text-[15px] text-gray-400">No lessons logged yet</p>
+            <p className="text-xs mt-1 text-gray-500">Log your first coaching session to start tracking progress</p>
           </div>
         ) : (
           <div className="space-y-2">
             {lessons.map((l) => {
               const expanded = expandedId === l.id;
               return (
-                <div key={l.id} className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
+                <div key={l.id} className="bg-gray-900 rounded-2xl overflow-hidden">
                   {/* Summary row — always visible */}
                   <div
                     className="flex items-center gap-3 p-4 cursor-pointer hover:bg-gray-800/30 transition-colors"
@@ -441,7 +441,7 @@ function LessonsTracker() {
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                         <span className="text-sm font-medium text-gray-50">{l.lesson_date}</span>
-                        <span className="text-xs px-2 py-0.5 rounded bg-gray-800 text-gray-400">
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-gray-800 text-gray-400">
                           {LESSON_TYPE_LABELS[l.lesson_type] || l.lesson_type}
                         </span>
                         {l.coach_name && (
@@ -455,7 +455,7 @@ function LessonsTracker() {
                       {l.focus_areas.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1.5">
                           {l.focus_areas.map((a) => (
-                            <span key={a} className="text-xs px-2 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">
+                            <span key={a} className="text-xs px-2 py-0.5 rounded-full bg-green-500/10 text-green-400">
                               {a}
                             </span>
                           ))}
@@ -478,7 +478,7 @@ function LessonsTracker() {
                           <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Feels</span>
                           <div className="flex flex-wrap gap-1 mt-1">
                             {l.swing_feels.map((f, i) => (
-                              <span key={i} className="text-xs px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
+                              <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400">
                                 {f}
                               </span>
                             ))}
@@ -522,14 +522,14 @@ function LessonsTracker() {
       ) : view === 'feels' ? (
         /* Swing Feels view */
         allFeels.length === 0 ? (
-          <div className="text-center text-gray-600 py-12 text-sm">No swing feels recorded yet</div>
+          <div className="text-center py-16 text-[15px] text-gray-400">No swing feels recorded yet</div>
         ) : (
           <div className="space-y-2">
             <p className="text-sm text-gray-500 mb-4">
               All swing feels and cues from your lessons, newest first.
             </p>
             {allFeels.map((f, i) => (
-              <div key={i} className="flex items-start gap-3 bg-gray-900 border border-gray-800 rounded-lg px-4 py-3">
+              <div key={i} className="flex items-start gap-3 bg-gray-900 rounded-2xl px-4 py-3">
                 <span className="text-yellow-400 mt-0.5 text-lg leading-none">&bull;</span>
                 <div className="flex-1">
                   <span className="text-sm text-gray-50">{f.feel}</span>
@@ -544,24 +544,24 @@ function LessonsTracker() {
       ) : (
         /* Stats view */
         !stats ? (
-          <div className="text-center text-gray-600 py-12 text-sm">Log some lessons to see stats</div>
+          <div className="text-center py-16 text-[15px] text-gray-400">Log some lessons to see stats</div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+            <div className="bg-gray-900 rounded-2xl p-4">
               <div className="text-xs text-gray-500 uppercase tracking-wider">Total Lessons</div>
               <div className="text-2xl font-bold text-green-400 mt-1">{stats.totalLessons}</div>
             </div>
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+            <div className="bg-gray-900 rounded-2xl p-4">
               <div className="text-xs text-gray-500 uppercase tracking-wider">Avg Rating</div>
               <div className="text-2xl font-bold text-yellow-400 mt-1">{stats.avgRating.toFixed(1)}/5</div>
             </div>
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+            <div className="bg-gray-900 rounded-2xl p-4">
               <div className="text-xs text-gray-500 uppercase tracking-wider">Coaches</div>
               <div className="text-sm text-gray-50 mt-2">
                 {stats.coaches.length > 0 ? stats.coaches.join(', ') : 'None recorded'}
               </div>
             </div>
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 col-span-2 sm:col-span-3">
+            <div className="bg-gray-900 rounded-2xl p-4 col-span-2 sm:col-span-3">
               <div className="text-xs text-gray-500 uppercase tracking-wider mb-3">Top Focus Areas</div>
               <div className="space-y-2">
                 {stats.topFocus.map(([area, count]) => (

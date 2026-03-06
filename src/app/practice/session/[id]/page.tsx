@@ -294,7 +294,7 @@ function SessionLogger() {
           </button>
           <button
             onClick={handleComplete}
-            className="px-3 py-1.5 text-xs bg-red-600/80 text-gray-50 rounded hover:bg-red-600"
+            className="px-3 py-1.5 text-xs bg-red-600/80 text-gray-50 rounded-full hover:bg-red-600"
           >
             End
           </button>
@@ -319,7 +319,7 @@ function SessionLogger() {
 
       {/* Current target display */}
       {progress && !progress.isComplete && (
-        <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6 text-center">
+        <div className="bg-gray-900 rounded-2xl p-6 mb-6 text-center">
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
             {progress.block.name}
             {progress.currentClub ? ` — ${progress.currentClub}` : ''}
@@ -381,7 +381,7 @@ function SessionLogger() {
             <p className="text-[10px] text-gray-600 mb-2">{voice.supported ? 'Or type manually:' : 'Enter carry distance:'}</p>
             <div className="flex items-end gap-3 justify-center">
               <div>
-                <label className="block text-xs text-gray-500 mb-1">Carry (yds)</label>
+                <label className="block text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Carry (yds)</label>
                 <input
                   ref={inputRef}
                   type="number"
@@ -389,7 +389,7 @@ function SessionLogger() {
                   onChange={(e) => setCarryInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleLogShot(); }}
                   placeholder="Enter carry..."
-                  className="w-28 px-3 py-3 text-lg bg-gray-800 border border-gray-700 rounded text-gray-50 text-center placeholder-gray-600 font-mono"
+                  className="w-28 bg-gray-800 border-0 rounded-xl px-4 py-3 text-lg text-gray-50 text-center placeholder-gray-600 font-mono focus:outline-none focus:ring-2 focus:ring-green-500/40"
                   autoFocus={!voice.supported}
                 />
               </div>
@@ -401,13 +401,13 @@ function SessionLogger() {
                   onChange={(e) => setLateralInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleLogShot(); }}
                   placeholder="±"
-                  className="w-20 px-2 py-3 text-lg bg-gray-800 border border-gray-700 rounded text-gray-50 text-center placeholder-gray-600 font-mono"
+                  className="w-20 bg-gray-800 border-0 rounded-xl px-2 py-3 text-lg text-gray-50 text-center placeholder-gray-600 font-mono focus:outline-none focus:ring-2 focus:ring-green-500/40"
                 />
               </div>
               <button
                 onClick={handleLogShot}
                 disabled={!carryInput}
-                className="px-5 py-3 text-sm bg-green-600 text-gray-50 rounded hover:bg-green-500 disabled:opacity-50"
+                className="px-5 py-3 text-sm bg-green-500 text-gray-50 rounded-2xl hover:bg-green-400 disabled:opacity-50 active:scale-[0.98] transition-all"
               >
                 Log
               </button>
@@ -428,7 +428,7 @@ function SessionLogger() {
       {/* Recent shots (last 5) */}
       {scoredShots.length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-gray-400 mb-2">Recent Shots</h3>
+          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-1">Recent Shots</h3>
           <ShotLogTable shots={scoredShots.slice(-8).reverse()} onToggleMishit={toggleMishit} compact />
         </div>
       )}
@@ -442,7 +442,7 @@ function SessionLogger() {
 
 function StatCard({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-center">
+    <div className="bg-gray-900 rounded-2xl p-3 text-center">
       <div className={`text-xl font-bold ${highlight ? 'text-green-400' : 'text-gray-50'}`}>{value}</div>
       <div className="text-[10px] text-gray-500">{label}</div>
     </div>
@@ -459,10 +459,10 @@ function ShotLogTable({
   compact?: boolean;
 }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="bg-gray-900 rounded-2xl overflow-hidden">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-gray-800 text-gray-500 text-left text-xs">
+          <tr className="border-b border-gray-800/60 text-gray-500 text-left text-xs">
             <th className="py-1.5 px-2">Club</th>
             <th className="py-1.5 px-2">Target</th>
             <th className="py-1.5 px-2">Carry</th>
@@ -472,9 +472,9 @@ function ShotLogTable({
             <th className="py-1.5 px-2" />
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-gray-800/60">
           {shots.map((s) => (
-            <tr key={s.id} className={`border-b border-gray-800/50 ${s.is_mishit ? 'opacity-50' : ''}`}>
+            <tr key={s.id} className={`${s.is_mishit ? 'opacity-50' : ''}`}>
               <td className="py-1.5 px-2 text-gray-300">{s.club_name}</td>
               <td className="py-1.5 px-2 text-gray-400">{s.target_distance_yd}</td>
               <td className="py-1.5 px-2 text-gray-300">{s.carry_distance_yd}</td>
